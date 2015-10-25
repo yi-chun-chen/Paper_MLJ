@@ -1,4 +1,4 @@
-\begin{thebibliography}{13}
+\begin{thebibliography}{14}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -15,6 +15,11 @@ M.~Boull\'e.
 G.~F. Cooper and E.~Herskovits.
 \newblock A bayes method for the induction of probabilistic network from data.
 \newblock \emph{Machine Learning}, 9:\penalty0 pp.309--147, 1992.
+
+\bibitem[Cormen et~al.(2009)Cormen, Leiserson, Rivest, and Stain]{algo_2009}
+T.~H. Cormen, C.~E. Leiserson, R.~L. Rivest, and C.~Stain.
+\newblock \emph{Introduction to algorithms}.
+\newblock The MIT Press, 3 edition, 2009.
 
 \bibitem[Dougherty et~al.(1995)Dougherty, Kohavi, and Sahami]{Dougherty_1995}
 J.~Dougherty, R.~Kohavi, and M.~Sahami.

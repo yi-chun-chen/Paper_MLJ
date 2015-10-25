@@ -121,37 +121,54 @@ For a Bayesian network with multiple continuous variables, we apply the discreti
 
 Finally, we can combine the new discretization method with K2 structure learning alorithm \citep{K2}. We first prediscretize all continuous variables before K2 learning, since K2 algorithm requires all variables are discrete. Everytime when an edge is added by K2 algorithm procedure, we rediscretize the relevant variables in Bayesian network and store the result for next K2 algorithm iteration. By this principle, we are able to learn a discrete-valued Bayesian network from mixed data.
 
-The rest of the paper is organized as follows: we prepare the preliminaries and notations of Bayesian network in Section 2. Related work, including MDL principle discretization \citep{Friedman_1996} and MODL discretization by \citet{Boulle_2006}, are summarized in Section 3. In Section 4, we introduce the new discretization method, including formulation of objective function and algorithms. One continuous variable case and multiple continuous variable case are also included in this section. Finally, in Section 5, we apply the new discretization method to real-world data and show the result.
-%
-%\section{Related Work}
-%\label{relat_work}
-%
-%\section{Notation and Preliminaries}
-%\label{notat_pre}
-%\subsection{Bayesian Network}
-%\label{BN}
-%A Bayesian network $B$ is defined by a pair $(G,\Theta)$, where $G = (X,E)$ is a directed acyclic graph whose nodes correspond to a set of random variable $X = \{  X_1, X_2, \cdots, X_n \}$, and whose edges $E$ represents probabilistic dependencies among nodes. The graph structure $G$ encodes the Markov property: each node $X_i$ is independent of its non-descendants given its parents in $G$. The second component of $B$, namely $\Theta$, contains a set of parameter that qualifies the network. Elements of $\Theta$ take the form $\theta_{x_i|\Pi_{x_i}} = P(x_i|\Pi_{x_i})$ for each possible value $x_i$ of $X_i$, and $\Pi_{x_i}$ of $\Pi_{X_i}$ (the set of parents of $X_i$ in $G$). Due to Markov property, we can represent the multivariate joint distribution over $X$ as
-%\begin{equation*}
-%P_B (X_1 , \cdots, X_n) = \prod_{i=1}^{n} P_B (X_i | \Pi_{X_i}) = \prod_{i=1}^{n} \theta_{x_i|\Pi_{x_i}}
-%\end{equation*}\\
-%For a Bayesian network, we can generate its data instances by forward sampling, i.e., sampling variables one by one in a topological order. A topological order is obtained by breadth-first search. Given a instance of $X_i$'s parent set $\Pi_{X_i}$, value of $X_i$ can be sampled according to conditional probability relation $P(X_i | \Pi_{X_i})$. Furthermore, this parent-child sampling order can be reversed if we know the marginal probability of child variable $P(X_i)$. By Bayes rule,
-%\begin{equation*}
-%P(X_i | \Pi_{X_i}) \cdot \prod_{j = 1}^{ Pa( X_i)} P( \{ \Pi_{X_i} \}_j) = P(X_i) \cdot P(\Pi_{X_i} | X_i),
-%\end{equation*}
-%where $Pa( X_i)$ is the number of parents of $X_i$, we can first sample $X_i$ by $P(X_i)$, then sample the parent varaibles simultaneously by $P(\Pi_{X_i} | X_i)$. That is to say, $X_i$ becomes the starting point for sampling. $X_i$'s descendants are sampled in the same way as forward sampling. $X_i$'s ancestors are sampled in a reverse order.
-%\subsection{K2 Structure Learning}
-%\label{K2}
-%
-%\section{Section title}
-%\label{sec:1}
-%\subsection{Subsection title}
-%\label{sec:2}
-%as required. Don't forget to give each section
-%and subsection a unique label (see Sect.~\ref{sec:1}).
-%\paragraph{Paragraph headings} Use paragraph headings as needed.
-%\begin{equation}
-%a^2+b^2=c^2
-%\end{equation}
+The rest of the paper is organized as follows: we prepare the preliminaries of Bayesian network in Section 2. Related work, including MDL principle discretization \citep{Friedman_1996} and MODL discretization by \citet{Boulle_2006}, are summarized in Section 3. In Section 4, we introduce the new discretization method, including formulation of objective function and algorithms. One continuous variable case and multiple continuous variable case are also included in this section. Finally, in Section 5, we apply the new discretization method to real-world data and show the result.
+
+\section{Preliminaries}
+\label{Prelim}
+\subsection{Bayesian Network}
+\label{BN_basic}
+A Bayesian network $B$ is defined by a pair $(G,\Theta)$, where $G = (X,E)$ is a directed acyclic graph whose nodes correspond to a set of random variable $X = \{  X_1, X_2, \cdots, X_n \}$, and whose edges $E$ represents probabilistic dependencies among nodes. The graph structure $G$ encodes the Markov property: each node $X_i$ is independent of its non-descendants given its parents in $G$. The second component of $B$, namely $\Theta$, contains a set of parameter that qualifies the network. Elements of $\Theta$ take the form $\theta_{x_i|\Pi_{x_i}} = P(x_i|\Pi_{x_i})$ for each possible value $x_i$ of $X_i$, and $\Pi_{x_i}$ of $\Pi_{X_i}$ (the set of parents of $X_i$ in $G$). Due to Markov property, we can represent the multivariate joint distribution over $X$ as
+\begin{equation*}
+P_B (X_1 , \cdots, X_n) = \prod_{i=1}^{n} P_B (X_i | \Pi_{X_i}) = \prod_{i=1}^{n} \theta_{x_i|\Pi_{x_i}}
+\end{equation*}\\
+For a given Bayesian network, we can generate its data instances by forward sampling, i.e., sampling variables one by one in a topological order \citep[see][chap.~22]{algo_2009}. Given a instance of $X_i$'s parent set $\Pi_{X_i}$, value of $X_i$ can be sampled according to the conditional probability table $P(X_i | \Pi_{X_i})$. Furthermore, this parent-child sampling order can be reversed if we know the marginal probability of child variable $P(X_i)$. By Bayes rule,
+\begin{equation*}
+P(X_i | \Pi_{X_i}) \cdot \prod_{j = 1}^{ Pa( X_i)} P( \{ \Pi_{X_i} \}_j) = P(X_i) \cdot P(\Pi_{X_i} | X_i),
+\end{equation*}
+where $Pa( X_i)$ is the number of parents of $X_i$, and $\{ \Pi_{X_i} \}_j$ is the $j$th parent of $X_i$. We can first sample $X_i$ by $P(X_i)$, then sample all the parent varaibles simultaneously by $P(\Pi_{X_i} | X_i)$. That is to say, $X_i$ becomes the starting point for sampling.
+
+\subsection{K2 Structure Learning}
+\label{intro_K2}
+K2 ...
+
+\section{Related Work}
+\label{relat_work}
+\subsection{MDL Principle Discretization}
+\label{MDL}
+
+\subsection{MODL Discretization}
+\label{MODL}
+
+\section{Discretize One Continuous Variable}
+\label{one-conti}
+
+\subsection{Notations}
+\label{Notation}
+
+\subsection{Objective Function}
+\label{obj}
+
+\subsection{Algorithm}
+\label{algo}
+
+\subsection{Approximation}
+\label{approx}
+
+\section{Discretizing Multiple Continuous Variable with Structure Learning}
+\label{multiple-conti}
+
+\section{Experiments}
+
 
 
 

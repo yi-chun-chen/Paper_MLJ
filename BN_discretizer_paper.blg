@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: BN_discretizer_paper.aux
 The style file: plainnat.bst
 Database file #1: my_bib.bib
-You've used 13 entries,
+You've used 14 entries,
             2773 wiz_defined-function locations,
-            672 strings with 6865 characters,
-and the built_in function-call counts, 5365 in all, are:
-= -- 462
-> -- 276
+            675 strings with 6966 characters,
+and the built_in function-call counts, 5830 in all, are:
+= -- 497
+> -- 315
 < -- 11
-+ -- 94
-- -- 81
-* -- 361
-:= -- 820
-add.period$ -- 41
-call.type$ -- 13
-change.case$ -- 64
-chr.to.int$ -- 13
-cite$ -- 26
-duplicate$ -- 288
-empty$ -- 491
-format.name$ -- 108
-if$ -- 1153
++ -- 107
+- -- 93
+* -- 403
+:= -- 896
+add.period$ -- 44
+call.type$ -- 14
+change.case$ -- 71
+chr.to.int$ -- 14
+cite$ -- 28
+duplicate$ -- 309
+empty$ -- 524
+format.name$ -- 121
+if$ -- 1247
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 15
-newline$ -- 73
-num.names$ -- 52
-pop$ -- 155
+missing$ -- 17
+newline$ -- 78
+num.names$ -- 56
+pop$ -- 171
 preamble$ -- 1
-purify$ -- 53
+purify$ -- 59
 quote$ -- 0
-skip$ -- 212
+skip$ -- 227
 stack$ -- 0
-substring$ -- 124
-swap$ -- 31
+substring$ -- 126
+swap$ -- 32
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 133
+type$ -- 139
 warning$ -- 0
-while$ -- 43
+while$ -- 46
 width$ -- 0
-write$ -- 168
+write$ -- 181
