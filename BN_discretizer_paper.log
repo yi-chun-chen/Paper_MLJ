@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  25 OCT 2015 02:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  26 OCT 2015 02:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -302,22 +302,36 @@ e
 ))
 SVJour3 warning: Missing \journalname
 [1{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-[2] [3] (./BN_discretizer_paper.bbl
+[2]
+Underfull \vbox (badness 2970) has occurred while \output is active []
+
+ [3]
+Overfull \hbox (8.02835pt too wide) in paragraph at lines 143--145
+\OT1/cmr/m/n/10 constraint-based struc-ture learn-ing, score-based struc-ture l
+earn-ing, and Bayesian
+ []
+
+
+Package amsmath Warning: Foreign command \over;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 147.
+
+[4] (./BN_discretizer_paper.bbl
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [4]
-Underfull \vbox (badness 4060) has occurred while \output is active []
+ [5]
+Underfull \vbox (badness 1383) has occurred while \output is active []
 
- [5])
-[6] (./BN_discretizer_paper.aux) ) 
+ [6])
+[7] (./BN_discretizer_paper.aux) ) 
 Here is how much of TeX's memory you used:
- 3761 strings out of 493089
- 53110 string characters out of 6134842
- 118882 words of memory out of 5000000
- 7199 multiletter control sequences out of 15000+600000
+ 3764 strings out of 493089
+ 53164 string characters out of 6134842
+ 119920 words of memory out of 5000000
+ 7202 multiletter control sequences out of 15000+600000
  10075 words of font info for 36 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,8n,24p,1857b,295s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,10n,24p,1927b,299s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmbsy10.pfb></usr/local/texlive/2015/texmf-dist/fonts/typ
 e1/public/amsfonts/cm/cmbx10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type
@@ -327,15 +341,16 @@ public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/publi
 c/amsfonts/cm/cmr10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmr7.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmr8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmsy10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmsy7.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmti10.pfb>
-Output written on BN_discretizer_paper.pdf (6 pages, 170512 bytes).
+amsfonts/cm/cmr5.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmr7.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmr8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmsy10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmsy7.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmti10.pfb>
+Output written on BN_discretizer_paper.pdf (7 pages, 183966 bytes).
 PDF statistics:
- 75 PDF objects out of 1000 (max. 8388607)
- 53 compressed objects within 1 object stream
+ 84 PDF objects out of 1000 (max. 8388607)
+ 60 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
