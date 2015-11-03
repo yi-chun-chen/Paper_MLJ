@@ -1,4 +1,4 @@
-\begin{thebibliography}{15}
+\begin{thebibliography}{21}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -27,6 +27,13 @@ J.~Dougherty, R.~Kohavi, and M.~Sahami.
 \newblock In \emph{12th International Conference on Maching Learning (ICML)}.
   Morgan Kaufman Publishers, San Francisco, CA, 1995.
 
+\bibitem[Fayyad and Irani(1993)]{Fayyad_1993}
+U.M. Fayyad and K.B. Irani.
+\newblock Multi-interval discretization of continuous-valued attributes for
+  classification learning.
+\newblock In \emph{13th International Joint Conference on Artificial
+  Intelligence}, pages pp.1022--1027. Morgan Kaufman, 1993.
+
 \bibitem[Friedman and Goldszmidt(1996)]{Friedman_1996}
 N.~Friedman and M.~Goldszmidt.
 \newblock Discretizing continuous attributes while learning bayesian networks.
@@ -38,10 +45,27 @@ N.~Friedman, D.~Geiger, and M.~Goldszmidt.
 \newblock Bayesian network classifiers.
 \newblock \emph{Machine Learning}, 29:\penalty0 pp.131--163, 1997.
 
+\bibitem[Gr{\"u}nwald(2007)]{Grunwald_2009}
+P.~D. Gr{\"u}nwald.
+\newblock \emph{Minimum description length principle}.
+\newblock The MIT Press, 2007.
+
+\bibitem[Holte(1993)]{Holte_1993}
+R.C. Holte.
+\newblock Very simple classification rules perform well on most commonly used
+  datasets.
+\newblock \emph{Machine Learning}, 11:\penalty0 pp.63--90, 1993.
+
 \bibitem[Ihler and McAllester(2009)]{Ihler_2009}
 A.~Ihler and D.~McAllester.
 \newblock Particle belief propagation.
 \newblock In \emph{Artificial Intelligence and Statistics}, 2009.
+
+\bibitem[Kerber(1992)]{Kerber_1992}
+R.~Kerber.
+\newblock Chimerge: Discretization of numeric attributes.
+\newblock In \emph{10th National Conference on Artificial Intelligence}, pages
+  pp.123--128. MIT Press, 1992.
 
 \bibitem[Kochenderfer(2015)]{DMU_2015}
 M.~J. Kochenderfer.
@@ -79,11 +103,22 @@ J.~Pearl.
   inference.
 \newblock \emph{Morgan Kaufman Publishers, Inc.}, 1988.
 
+\bibitem[Rissanen(1978)]{MDL_1978}
+J.~Rissanen.
+\newblock Modeling by shortest data description.
+\newblock \emph{Automatica}, pages pp.465--471, 1978.
+
 \bibitem[Stech and Jaakkola(2007)]{Steck_2007}
 H.~Stech and T.~Jaakkola.
 \newblock Predictive discretization during model selection.
 \newblock In \emph{11th International Conference on Artificial Intelligence and
   Statistics}, 2007.
+
+\bibitem[Vit\'enyi and Li(2000)]{VL_2000}
+P.~M.~B. Vit\'enyi and M.~Li.
+\newblock Minimum description length induction, bayesianism, and kolmogorov
+  complexity.
+\newblock \emph{IEEE Transactions on Information Theory}, 2000.
 
 \bibitem[Weiss and Freeman(2001)]{Weiss_2011}
 Y.~Weiss and W.~T. Freeman.
