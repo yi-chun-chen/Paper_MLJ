@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  3 NOV 2015 13:23
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  6 NOV 2015 02:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -231,12 +231,6 @@ LaTeX Info: Redefining \cite on input line 694.
 
 LaTeX Warning: Label `euclid' multiply defined.
 
-
-LaTeX Warning: Label `euclid' multiply defined.
-
-
-LaTeX Warning: Label `euclid' multiply defined.
-
 )
 \openout1 = `BN_discretizer_paper.aux'.
 
@@ -329,22 +323,17 @@ Package amsmath Warning: Foreign command \over;
 (amsmath)                \frac or \genfrac should be used instead
 (amsmath)                 on input line 136.
 
-
-Package amsmath Warning: Foreign command \atopwithdelims;
-(amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 138.
-
 [4] [5] [6]
 Underfull \hbox (badness 10000) in paragraph at lines 189--192
 
  []
 
-
+[7]
 Underfull \hbox (badness 10000) in paragraph at lines 207--208
 
  []
 
-[7] <graph1.png, id=42, 488.82625pt x 431.6125pt>
+<graph1.png, id=42, 488.82625pt x 431.6125pt>
 File: graph1.png Graphic file (type png)
  <use graph1.png>
 Package pdftex.def Info: graph1.png used on input line 236.
@@ -354,18 +343,27 @@ Underfull \hbox (badness 10000) in paragraph at lines 242--243
 
  []
 
+
+Package amsmath Warning: Foreign command \atopwithdelims;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 248.
+
 [8] [9 <./graph1.png>]
 Underfull \hbox (badness 10000) in paragraph at lines 264--266
 
  []
 
-[10] [11] [12] [13] <graph2.png, id=71, 1606.0pt x 803.0pt>
+[10] [11]
+Underfull \vbox (badness 1178) has occurred while \output is active []
+
+ [12]
+<graph2.png, id=67, 1606.0pt x 803.0pt>
 File: graph2.png Graphic file (type png)
  <use graph2.png>
-Package pdftex.def Info: graph2.png used on input line 405.
+Package pdftex.def Info: graph2.png used on input line 363.
 (pdftex.def)             Requested size: 256.0748pt x 128.02927pt.
-
-[14 <./graph2.png>] (./BN_discretizer_paper.bbl [15]
+ [13 <./graph2.png>]
+[14] (./BN_discretizer_paper.bbl [15]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [16])
@@ -375,40 +373,40 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3916 strings out of 493089
- 55161 string characters out of 6134842
- 129436 words of memory out of 5000000
- 7344 multiletter control sequences out of 15000+600000
- 12617 words of font info for 44 fonts, out of 8000000 for 9000
+ 3926 strings out of 493089
+ 55315 string characters out of 6134842
+ 132411 words of memory out of 5000000
+ 7353 multiletter control sequences out of 15000+600000
+ 12918 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,14n,24p,2069b,322s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 38i,14n,24p,2061b,311s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pf
 b></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx5.pfb></
 usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></us
+r/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></us
 r/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr
-/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></
-usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
-sr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr
-/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/l
-ocal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/loc
-al/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local
-/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local
-/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb></usr/l
-ocal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></u
-sr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/lo
-cal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local
-/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/te
-xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texli
-ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texliv
-e/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/
-2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/20
-15/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2015
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2015/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on BN_discretizer_paper.pdf (17 pages, 418154 bytes).
+/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
+local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/lo
+cal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/loca
+l/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/
+texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/te
+xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/local/te
+xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib5.pfb></usr/loca
+l/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmmib7.pfb></usr/
+local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/lo
+cal/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local
+/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/te
+xlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texli
+ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/
+2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2
+015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/local/texlive/201
+5/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2015/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2015/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2015/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+Output written on BN_discretizer_paper.pdf (17 pages, 429369 bytes).
 PDF statistics:
  168 PDF objects out of 1000 (max. 8388607)
  118 compressed objects within 2 object streams
