@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  6 NOV 2015 15:35
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  6 NOV 2015 21:33
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -183,6 +183,58 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen123
 \Gin@req@width=\dimen124
 )
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/epstopdf.sty
+Package: epstopdf 2010/02/09 v2.5 Conversion with epstopdf on the fly (HO)
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
+Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/grfext.sty
+Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
+Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+))
+(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package ifluatex Info: LuaTeX not detected.
+)
+Package etexcmds Info: Could not find \expanded.
+(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
+(etexcmds)             that some package has redefined \expanded.
+(etexcmds)             In the latter case, load this package earlier.
+)))
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
+Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+Package pdftexcmds Info: LuaTeX not detected.
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+)
+Package grfext Info: Graphics extension search list:
+(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
+G,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 452.
+
+(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
+e
+)))
 (/usr/local/texlive/2015/texmf-dist/tex/latex/algorithms/algorithm.sty
 Package: algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating enviro
 nment
@@ -234,20 +286,20 @@ LaTeX Warning: Label `euclid' multiply defined.
 )
 \openout1 = `BN_discretizer_paper.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 68.
-LaTeX Font Info:    ... okay on input line 68.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 69.
+LaTeX Font Info:    ... okay on input line 69.
 
 Unknown journal: specify \journalname{<name of your journal>} in preambel
 
@@ -264,54 +316,7 @@ Unknown journal: specify \journalname{<name of your journal>} in preambel
 \MPnumerator=\count132
 \makeMPintoPDFobject=\count133
 \everyMPtoPDFconversion=\toks26
-) (/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
-Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
-
-(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ifluatex.sty
-Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
-Package ifluatex Info: LuaTeX not detected.
-)
-(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
-)
-Package pdftexcmds Info: LuaTeX not detected.
-Package pdftexcmds Info: \pdf@primitive is available.
-Package pdftexcmds Info: \pdf@ifprimitive is available.
-Package pdftexcmds Info: \pdfdraftmode found.
-)
-(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
-Package: epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
-
-(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/grfext.sty
-Package: grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
-
-(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/kvdefinekeys.sty
-Package: kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
-))
-(/usr/local/texlive/2015/texmf-dist/tex/latex/oberdiek/kvoptions.sty
-Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
-
-(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
-Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
-
-(/usr/local/texlive/2015/texmf-dist/tex/generic/oberdiek/etexcmds.sty
-Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
-Package etexcmds Info: Could not find \expanded.
-(etexcmds)             That can mean that you are not using pdfTeX 1.50 or
-(etexcmds)             that some package has redefined \expanded.
-(etexcmds)             In the latter case, load this package earlier.
-)))
-Package grfext Info: Graphics extension search list:
-(grfext)             [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPE
-G,.JBIG2,.JB2,.eps]
-(grfext)             \AppendGraphicsExtensions on input line 452.
-
-(/usr/local/texlive/2015/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
-))
 SVJour3 warning: Missing \journalname
 [1{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 [2]
@@ -321,49 +326,82 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 Package amsmath Warning: Foreign command \over;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 136.
+(amsmath)                 on input line 137.
 
 [4] [5] [6]
-Underfull \hbox (badness 10000) in paragraph at lines 189--192
+Underfull \hbox (badness 10000) in paragraph at lines 190--193
 
  []
 
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 207--208
+Underfull \hbox (badness 10000) in paragraph at lines 208--209
 
  []
 
-<graph1.png, id=42, 488.82625pt x 431.6125pt>
-File: graph1.png Graphic file (type png)
- <use graph1.png>
-Package pdftex.def Info: graph1.png used on input line 236.
-(pdftex.def)             Requested size: 170.71652pt x 150.73734pt.
+Package epstopdf Info: Source file: <graph1.eps>
+(epstopdf)                    date: 2015-11-06 21:20:09
+(epstopdf)                    size: 3954155 bytes
+(epstopdf)             Output file: <graph1-eps-converted-to.pdf>
+(epstopdf)             Command: <repstopdf --outfile=graph1-eps-converted-to.pd
+f graph1.eps>
+(epstopdf)             \includegraphics on input line 237.
+runsystem(repstopdf --outfile=graph1-eps-converted-to.pdf graph1.eps)...execute
+d safely (allowed).
 
-Underfull \hbox (badness 10000) in paragraph at lines 242--243
+Package epstopdf Info: Result file: <graph1-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-11-06 21:33:28
+(epstopdf)                    size: 54935 bytes.
+<graph1-eps-converted-to.pdf, id=42, 440.64626pt x 371.3875pt>
+File: graph1-eps-converted-to.pdf Graphic file (type pdf)
+
+<use graph1-eps-converted-to.pdf>
+Package pdftex.def Info: graph1-eps-converted-to.pdf used on input line 237.
+(pdftex.def)             Requested size: 170.71652pt x 143.88283pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 243--244
 
  []
 
 
 Package amsmath Warning: Foreign command \atopwithdelims;
 (amsmath)                \frac or \genfrac should be used instead
-(amsmath)                 on input line 248.
+(amsmath)                 on input line 249.
 
-[8] [9 <./graph1.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 264--266
+[8]
+Underfull \hbox (badness 10000) in paragraph at lines 265--267
 
  []
 
-[10] [11]
+[9 <./graph1-eps-converted-to.pdf>]
+Underfull \vbox (badness 1715) has occurred while \output is active []
+
+ [10]
+[11]
 Underfull \vbox (badness 1178) has occurred while \output is active []
 
  [12]
-<graph2.png, id=67, 1606.0pt x 803.0pt>
-File: graph2.png Graphic file (type png)
- <use graph2.png>
-Package pdftex.def Info: graph2.png used on input line 363.
-(pdftex.def)             Requested size: 256.0748pt x 128.02927pt.
- [13 <./graph2.png>]
-[14] (./BN_discretizer_paper.bbl [15]
+Package epstopdf Info: Source file: <graph2.eps>
+(epstopdf)                    date: 2015-11-06 21:18:31
+(epstopdf)                    size: 7009392 bytes
+(epstopdf)             Output file: <graph2-eps-converted-to.pdf>
+(epstopdf)             Command: <repstopdf --outfile=graph2-eps-converted-to.pd
+f graph2.eps>
+(epstopdf)             \includegraphics on input line 364.
+runsystem(repstopdf --outfile=graph2-eps-converted-to.pdf graph2.eps)...execute
+d safely (allowed).
+
+Package epstopdf Info: Result file: <graph2-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-11-06 21:33:30
+(epstopdf)                    size: 51891 bytes.
+
+<graph2-eps-converted-to.pdf, id=70, 737.75626pt x 393.47pt>
+File: graph2-eps-converted-to.pdf Graphic file (type pdf)
+
+<use graph2-eps-converted-to.pdf>
+Package pdftex.def Info: graph2-eps-converted-to.pdf used on input line 364.
+(pdftex.def)             Requested size: 256.0748pt x 136.56981pt.
+ [13 <./graph2-eps-converted-to.pdf>] [14]
+(./BN_discretizer_paper.bbl [15]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [16])
@@ -373,13 +411,13 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 3926 strings out of 493089
- 55315 string characters out of 6134842
- 132411 words of memory out of 5000000
- 7353 multiletter control sequences out of 15000+600000
+ 3931 strings out of 493089
+ 55642 string characters out of 6134842
+ 132315 words of memory out of 5000000
+ 7357 multiletter control sequences out of 15000+600000
  12918 words of font info for 45 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 38i,14n,24p,2061b,311s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 42i,14n,24p,2061b,309s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pf
 b></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
@@ -406,10 +444,10 @@ ve/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2015/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2015/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
-Output written on BN_discretizer_paper.pdf (17 pages, 429383 bytes).
+Output written on BN_discretizer_paper.pdf (17 pages, 462778 bytes).
 PDF statistics:
- 168 PDF objects out of 1000 (max. 8388607)
- 118 compressed objects within 2 object streams
+ 172 PDF objects out of 1000 (max. 8388607)
+ 121 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  11 words of extra memory for PDF output out of 10000 (max. 10000000)
 
