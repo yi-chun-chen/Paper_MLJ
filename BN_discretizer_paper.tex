@@ -52,6 +52,8 @@ grestore
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage[round]{natbib}
+\usepackage{tikz}
+\usetikzlibrary{bayesnet}
 \setcitestyle{aysep={ }} %Author-Year SEParator
 %
 % \usepackage{mathptmx}      % use Times fonts if available on your TeX system
@@ -230,15 +232,13 @@ The graph structure allows us to only consider the interations between $X$ and o
 P(D_{ P_1,P_2,P_3 } \mid M) \cdot P( D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}) \cdot P(D_{C_2} \mid M,D_{ S_2  }).
 \end{equation} 
 
-% For one-column wide figures use
-\begin{figure}
-% Use the relevant command to insert your figure file.
-% For example, with the graphicx package use
-  \includegraphics[width=6cm]{graph1.eps}
-% figure caption is below the figure
-\caption{Factorization of $P(D \mid M)$}
-\label{fig:1}       % Give a unique label
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph1}
+    \end{tabular}
+  \caption{Factorization of $P(D \mid M)$}
 \end{figure}
+
 
 The concept behind the factorization is similar to sampling in a Bayesian network. Once we have the distribution of $X$ and sample $X$ for it, then we can further sample $\Pi_x$. Since the samples of $P_1,P_2,\ldots,P_{n_p}$ given a value of $X$ are not independent, we can not further factorize $P(D_{\Pi_x} \mid M)$ into $\prod_i P(D_{P_i} \mid M)$. Similarly, once we have samples of $X$ and $\boldsymbol{S_i}$, we can sample $C_i$. Since the sampling processes of child variables are independent from each other, we have the product $\prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$.\\
 
@@ -355,16 +355,19 @@ With the approximated objective function, Equation 17, we now have a more clear 
 &  \left. \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} +  \log \left( { {{{n}_i}!}\over{ {n^{(p_1)}_{i,1} !}\cdots {n^{(p_1)}_{i,J_{p_1}} !}}} \right) +{ {{{n}_i}!}\over{ {n^{(p_2}_{i,1} !}\cdots {n^{(p_2)}_{i,J_{p_2}} !}}}  \right] \right\rbrace\\ .
 \end{aligned}
 \end{equation}
+
+
 In Equation18, each child variable carries two terms, as shown in the first square bracket, and two parent variables only carry three terms, as shown in the second square bracket. Therefore, in this case, child variables are more determinative than parent variables even though the numbers of child variables and parent variables are equal. However, if $C_2$ has the other parent variable $S_2$, as shown in the right graph of Figure 2, the importances of $C_2$ will be debiliated, since the information from $C_2$ is now adulterated by $S_2$. These argument shows that our proposed method, either before or after approximation, indeed involves graph structures to discretize continuous variables.
 
-
-\begin{figure}
-% Use the relevant command to insert your figure file.
-% For example, with the graphicx package use
-  \includegraphics[width=9cm]{graph2.eps}
-% figure caption is below the figure
-\caption{Two example networks}
-\label{fig:2}       % Give a unique label
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph2_left} 
+      \end{tabular}
+     \hspace{5em}
+      \begin{tabular}{cc}
+      \input{graph2_right} 
+    \end{tabular}
+  \caption{Two example networks}
 \end{figure}
 
 \section{Discretizing Multiple Continuous Variable with Structure Learning}
