@@ -53,7 +53,7 @@ grestore
 \usepackage[noend]{algpseudocode}
 \usepackage[round]{natbib}
 \usepackage{tikz}
-\usepackage{cleverref}
+% \usepackage[capitalize]{cleveref}
 \usetikzlibrary{bayesnet}
 \setcitestyle{aysep={ }} %Author-Year Separator
 %
@@ -159,24 +159,31 @@ I recommend having one paragraph that starts with `In this paper we propose \ldo
 
 % Finally, we can combine our new discretization method with the K2 structure learning alorithm \citep{K2}. We first prediscretize all continuous variables before the K2 learning, since the K2 algorithm requires all variables to be discrete. Each time an edge is added in the K2 algorithm procedure, we rediscretize the continuous variables based on the updated Bayesian network and store the result for the next K2 algorithm iteration. By this principle, we are able to learn a discrete-valued Bayesian network from mixed data.
 
-\tim{Is the long citation format required?)
-The rest of the paper is organized as follows: related work, including MDL principle discretization \citep{Friedman_1996} and MODL discretization \citet{Boulle_2006} are summarized in \todo{Section 2. replace all of these throughout the paper with cref, ex: \cref{relat_work}} Preliminaries and notation are covered in Section 3. The proposed single-variable discretization method is derived in Section 4 and is extended to Bayesian networks with multiple continuous variables and combined with Bayesian structure learning in Section 5. The paper concludes with the comparison of the proposed methods against prior work on real-world data in Section 6.
+\tim{Is the long citation format required?}
+The rest of the paper is organized as follows: related work, including MDL principle discretization \citep{Friedman_1996} and MODL discretization \citet{Boulle_2006} are summarized in \todo{Section 2. replace all of these throughout the paper with cref, ex: $cref{relat_work}$} Preliminaries and notation are covered in Section 3. The proposed single-variable discretization method is derived in Section 4 and is extended to Bayesian networks with multiple continuous variables and combined with Bayesian structure learning in Section 5. The paper concludes with the comparison of the proposed methods against prior work on real-world data in Section 6.
 
 \section{Related Work}
 \label{relat_work} % NOTE(tim): I recommend doing \label{sec:relat_work} for sections, eq: for equations, fig: for figures, etc.
-\tim{Try to avoid `we'}
-In this section reviews MDL principle discretization \citep{Friedman_1996} and MODL discretization \citep{Boulle_2006}. The former is the predominant discretization method for continuous variables in Bayesian networks, and we will compare it with our proposed method in Section 6. The latter is a discretization method for one continuous attribute according to a target class. Our proposed method is a generalization of this method. Note that MODL discretization is a Bayesian approach. The asymptotical equivalence between MDL approach and Bayesian approach has been examined in \citep{VL_2000}.
+\tim{Try to avoid we}
+This section reviews MDL principle discretization \citep{Friedman_1996} and MODL discretization \citep{Boulle_2006}. The former is the predominant discretization method for continuous variables in Bayesian networks, and we will compare it to our proposed method in Section 6. The latter is a discretization method for one continuous variable against a discrete target class. Our proposed method generalizes the MODL Bayesian discretization approach to Bayesian networks. The asymptotical equivalence between the MDL and MODL methods were examined in \citep{VL_2000}.
+
 \subsection{MDL Principle Discretization}
 \label{MDL}
-The MDL principle was first proposed by \cite{MDL_1978}. It provides a way to compress data, that is to say, describe data with fewer number of symbols than the number of symbols needed to describe the data literally \citep{Grunwald_2009}. MDL chooses a model that trades off goodness-of-fit for the complexity of model. Therefore it has an advantage that automatically avoids overfitting. In the case of Bayesian networks, \cite{Friedman_1996} applied the MDL concept to determine the number of intervals of each continuous variable after discretization and also the positions of discretization boundaries. Here is the mechanism: MDL principle discretization selects a discretization policy that minimizes sum of description lengths of discretized Bayesian network and the necessary information that recovers original data from discretized data. If there is only one continuous variable and other variables are discrete, the objective function is
+The MDL principle was first proposed by \cite{MDL_1978}, and states that the best model for a dataset is one which minimizes the amount of information needed to describe it \citep{Grunwald_2009}. MDL methods trade off goodness-of-fit against model complexity to avoid overfitting. In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and optimal the positions of their discretization boundaries. Their approach selects a discretization policy that minimizes the sum of the description length of discretized Bayesian network and the description length of the information necessary for recovering the original continuous values from the discretized data. In the single continuous variable case, the objective function is
+\tim{Do you need double vertical bars? If we use single bars it might fit without having to use the small font size.}
+
+\begin{small}
 \begin{equation}
 \begin{aligned}
-&{1 \over 2} \log(N) \left\lbrace  \lVert \Pi_{X_i} \rVert (\lVert X^*_i \rVert - 1) +
+\frac{1}{2} \log(N) \left\lbrace  \lVert \Pi_{X_i} \rVert (\lVert X^*_i \rVert - 1) +
  {\sum_{j,X_i \in \Pi_{X_i}}} \lVert \Pi_{X^*_j} \rVert (\lVert X_j \rVert - 1) \right\rbrace + \log(\lVert {X^*_i} \rVert) \\
-& + (N_i-1) H \left( {{||X^*_i|| - 1}\over{N_i -1}}  \right) -N \cdot \left[ I(X^*_i,\Pi_{X_i}) + {\sum_{j,X_i \in \Pi_{X_i}}} I(X_j, \Pi_{X^*_j}) \right],
+ + (N_i-1) H \left( {{||X^*_i|| - 1}\over{N_i -1}}  \right) -N \cdot \left[ I(X^*_i,\Pi_{X_i}) + {\sum_{j,X_i \in \Pi_{X_i}}} I(X_j, \Pi_{X^*_j}) \right],
 \end{aligned}
 \end{equation}
-where function $I(\boldsymbol{A},\boldsymbol{B}) = \sum_{\boldsymbol{a},\boldsymbol{b}} \hat{P}_D (\boldsymbol{a},\boldsymbol{b}) \log {{\hat{P}_D (\boldsymbol{a},\boldsymbol{b})}\over{\hat{P}_D (\boldsymbol{a}),\hat{P}_D (\boldsymbol{b})}}$ is the mutual information between two sets of variables $\boldsymbol{A}$ and $\boldsymbol{B}$, $||\boldsymbol{X}||$ means the cardinality of a variable set $\boldsymbol{X}$, $X^*_i$ is the discretized version of continuous variable $X_i$ and $H(p) = -p \log(p) - (1-p) \log(1-p)$. The optimal discretization policy can be found by dynamical programming. If there are multiple continuous variables in a Bayesian network, we apply the algorithm on one variable at a time and iterate over all continuous variables. While iterating, only one variable is treated as continuous and other continuous variables are discretized based on initial prediscretization or the discretization result of previous iteration.
+\end{small}
+
+\noindent
+where $I(\boldsymbol{A},\boldsymbol{B}) = \sum_{\boldsymbol{a},\boldsymbol{b}} \hat{P}_D (\boldsymbol{a},\boldsymbol{b}) \log {{\hat{P}_D (\boldsymbol{a},\boldsymbol{b})}\over{\hat{P}_D (\boldsymbol{a}),\hat{P}_D (\boldsymbol{b})}}$ \tim{consider deleting the right half of equation} is the mutual information between two discrete variables $\boldsymbol{A}$ and $\boldsymbol{B}$, $||\boldsymbol{X}||$ is the cardinality of discrete variable $\boldsymbol{X}$, $X^*_i$ is the discretized version of continuous variable $X_i$ and $H(p) = -p \log(p) - (1-p) \log(1-p)$. The optimal discretization policy can be found by dynamical programming. If there are multiple continuous variables in a Bayesian network, we apply the algorithm on one variable at a time and iterate over all continuous variables. While iterating, only one variable is treated as continuous and other continuous variables are discretized based on initial prediscretization or the discretization result of previous iteration.
 
 For the above discretization processes, the network structure is known in advance. If the network structure is not given, we can alternate between structure learning and discretization learning. We start with some discretization, and learn a network structure given this discretization. Then, we rediscretize based on the learned network. This cycle continues until no improvement in objective function is made.
 \subsection{MODL Discretization}
