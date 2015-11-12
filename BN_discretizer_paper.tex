@@ -52,6 +52,7 @@ grestore
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage[round]{natbib}
+\usepackage{amsfonts} % for mathbb
 \usepackage{tikz}
 % \usepackage[capitalize]{cleveref}
 \usetikzlibrary{bayesnet}
@@ -76,8 +77,8 @@ grestore
 \newcommand{\bigo}{\mathcal{O}} % NOTE(tim): if you prefer normal O change it here.
 
 \newcommand{\paren}[1]{\mathopen{}\mathclose\bgroup\left(#1\aftergroup\egroup\right)}
-\newcommand{\brock}[1]{\mathopen{}\mathclose\bgroup\left[#1\aftergroup\egroup\right\right]}
-\newcommand{\curly}[1]{\mathopen{}\mathclose\bgroup\left\{#1\aftergroup\egroup\right\right\}}
+\newcommand{\brock}[1]{\mathopen{}\mathclose\bgroup\left[#1\aftergroup\egroup\right]}
+\newcommand{\curly}[1]{\mathopen{}\mathclose\bgroup\left\{#1\aftergroup\egroup\right\}}
 \newcommand{\anglebrackets}[1]{\langle #1 \rangle}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
@@ -100,9 +101,9 @@ grestore
 
 %\titlerunning{Short form of title}        % if too long for running head
 
-\author{First Author         \and
-        Second Author         \and
-        Third Author%etc.
+\author{Yi-Chun Chen           \and
+        Tim A. Wheeler         \and
+        Mykel J. Kochenderfer
 }
 
 %\authorrunning{Short form of author list} % if too long for running head
@@ -134,6 +135,8 @@ subject classification numbers as needed.
 % \subclass{MSC code1 \and MSC code2 \and more}
 \end{abstract}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Introduction}
 \label{intro}
 Bayesian networks \citep{Pearl_1988, PGM_2009} are an increasingly popular method for modeling uncertainty and causality in science and engineering. They provide an efficient factorization of the joint probability distribution over a set of random variables. Bayesian networks first emerged from artificial intelligence research and have been applied to a wide variety of problems, ranging from decision-making systems \citep{DMU_2015} to medical diagnoses~\todo{[cite]}. In most cases, we assume that all random variables in Bayesian networks are discrete, since many Bayesian network learning algorithms are unable to deal with continuous variables efficiently. However, many applications
@@ -159,16 +162,15 @@ I recommend having one paragraph that starts with `In this paper we propose \ldo
 
 % Finally, we can combine our new discretization method with the K2 structure learning alorithm \citep{K2}. We first prediscretize all continuous variables before the K2 learning, since the K2 algorithm requires all variables to be discrete. Each time an edge is added in the K2 algorithm procedure, we rediscretize the continuous variables based on the updated Bayesian network and store the result for the next K2 algorithm iteration. By this principle, we are able to learn a discrete-valued Bayesian network from mixed data.
 
-\tim{Is the long citation format required?}
-The rest of the paper is organized as follows: related work, including MDL principle discretization \citep{Friedman_1996} and MODL discretization \citet{Boulle_2006} are summarized in \todo{Section 2. replace all of these throughout the paper with cref, ex: $cref{relat_work}$} Preliminaries and notation are covered in Section 3. The proposed single-variable discretization method is derived in Section 4 and is extended to Bayesian networks with multiple continuous variables and combined with Bayesian structure learning in Section 5. The paper concludes with the comparison of the proposed methods against prior work on real-world data in Section 6.
+The rest of the paper is organized as follows: related work, including MDL principle discretization \citep{Friedman_1996} and MODL discretization \citet{Boulle_2006} are summarized in Section \ref{sec:related_work}. Preliminaries and notation are covered in Section \ref{sec:preliminaries}. The proposed single-variable discretization method is derived in Section \ref{sec:single_var} and is extended to Bayesian networks with multiple continuous variables and combined with Bayesian structure learning in Section \ref{sec:multi_var}. The paper concludes with the comparison of the proposed methods against prior work on real-world data in Section \ref{sec:experiments}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Related Work}
-\label{relat_work} % NOTE(tim): I recommend doing \label{sec:relat_work} for sections, eq: for equations, fig: for figures, etc.
-\tim{Try to avoid we}
-This section reviews MDL principle discretization \citep{Friedman_1996} and MODL discretization \citep{Boulle_2006}. The former is the predominant discretization method for continuous variables in Bayesian networks, and we will compare it to our proposed method in Section 6. The latter is a discretization method for one continuous variable against a discrete target class. Our proposed method generalizes the MODL Bayesian discretization approach to Bayesian networks. The asymptotical equivalence between the MDL and MODL methods were examined in \citep{VL_2000}.
+\label{sec:related_work}
+This section reviews MDL principle discretization \citep{Friedman_1996} and MODL discretization \citep{Boulle_2006}. The former is the predominant discretization method for continuous variables in Bayesian networks, and is compared to our proposed method in Section \ref{sec:experiments}. The latter is a discretization method for one continuous variable against a discrete target class. Our proposed method generalizes the MODL Bayesian discretization approach to Bayesian networks. The asymptotical equivalence between the MDL and MODL methods were examined in \citep{VL_2000}.
 
 \subsection{MDL Principle Discretization}
-\label{MDL}
 The MDL principle was first proposed by \cite{MDL_1978}, and states that the best model for a dataset is one which minimizes the amount of information needed to describe it \citep{Grunwald_2009}. MDL methods trade off goodness-of-fit against model complexity to avoid overfitting. In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and optimal the positions of their discretization boundaries. Their approach selects a discretization policy that minimizes the sum of the description length of discretized Bayesian network and the description length of the information necessary for recovering the original continuous values from the discretized data. In the single continuous variable case, the objective function is
 \tim{Do you need double vertical bars? If we use single bars it might fit without having to use the small font size.}
 
@@ -177,66 +179,93 @@ The MDL principle was first proposed by \cite{MDL_1978}, and states that the bes
 \begin{aligned}
 \frac{1}{2} \log(N) \left\lbrace  \lVert \Pi_{X_i} \rVert (\lVert X^*_i \rVert - 1) +
  {\sum_{j,X_i \in \Pi_{X_i}}} \lVert \Pi_{X^*_j} \rVert (\lVert X_j \rVert - 1) \right\rbrace + \log(\lVert {X^*_i} \rVert) \\
- + (N_i-1) H \left( {{||X^*_i|| - 1}\over{N_i -1}}  \right) -N \cdot \left[ I(X^*_i,\Pi_{X_i}) + {\sum_{j,X_i \in \Pi_{X_i}}} I(X_j, \Pi_{X^*_j}) \right],
+ + (N_i-1) H \left( {{\|X^*_i\| - 1}\over{N_i -1}}  \right) -N \cdot \left[ I(X^*_i,\Pi_{X_i}) + {\sum_{j,X_i \in \Pi_{X_i}}} I(X_j, \Pi_{X^*_j}) \right],
 \end{aligned}
 \end{equation}
 \end{small}
 
 \noindent
-where $I(\boldsymbol{A},\boldsymbol{B}) = \sum_{\boldsymbol{a},\boldsymbol{b}} \hat{P}_D (\boldsymbol{a},\boldsymbol{b}) \log {{\hat{P}_D (\boldsymbol{a},\boldsymbol{b})}\over{\hat{P}_D (\boldsymbol{a}),\hat{P}_D (\boldsymbol{b})}}$ \tim{consider deleting the right half of equation} is the mutual information between two discrete variables $\boldsymbol{A}$ and $\boldsymbol{B}$, $||\boldsymbol{X}||$ is the cardinality of discrete variable $\boldsymbol{X}$, $X^*_i$ is the discretized version of continuous variable $X_i$ and $H(p) = -p \log(p) - (1-p) \log(1-p)$. The optimal discretization policy can be found by dynamical programming. If there are multiple continuous variables in a Bayesian network, we apply the algorithm on one variable at a time and iterate over all continuous variables. While iterating, only one variable is treated as continuous and other continuous variables are discretized based on initial prediscretization or the discretization result of previous iteration.
+where $I(\boldsymbol{A},\boldsymbol{B}) = \sum_{\boldsymbol{a},\boldsymbol{b}} \hat{P}_D (\boldsymbol{a},\boldsymbol{b}) \log {{\hat{P}_D (\boldsymbol{a},\boldsymbol{b})}\over{\hat{P}_D (\boldsymbol{a}),\hat{P}_D (\boldsymbol{b})}}$ \tim{consider deleting the right half of equation} is the mutual information between two discrete variables $\boldsymbol{A}$ and $\boldsymbol{B}$, $\|\boldsymbol{X}\|$ is the cardinality of discrete variable $\boldsymbol{X}$, $X^*_i$ is the discretized version of continuous variable $X_i$ and $H(p) = -p \log(p) - (1-p) \log(1-p)$. The optimal discretization policy is found with dynamical programming. If there are multiple continuous variables in a Bayesian network, we apply the algorithm to one variable at a time and iterate over all continuous variables. While iterating, only one variable is treated as continuous and other continuous variables are discretized based on an initial discretization scheme or the discretization result from a previous iteration.
 
-For the above discretization processes, the network structure is known in advance. If the network structure is not given, we can alternate between structure learning and discretization learning. We start with some discretization, and learn a network structure given this discretization. Then, we rediscretize based on the learned network. This cycle continues until no improvement in objective function is made.
+The network structure is not always known in advance. Bayesian network structure learning can be extended to distributions including continuous variables by alternating between traditional discrete structure learning and optimal discretization. Starting with some preliminary discretization scheme, one applys a structure learning algorithm to identify the locally optimal graph structure. The discretization scheme is refined based on the learned network. The cycle is continued until convergence.
+
 \subsection{MODL Discretization}
-\label{MODL}
-MODL discretization \citep{Boulle_2006} is a Bayesian-approach discretization. It discretizes a continuous feature according to a class variable. The best discretization model is found by maximizing the probability $P(\textit{Model} \mid \textit{Data})$ of the model given the data. Using Bayes' rule and since $P(\textit{Data})$ is a constant while varying the discretization model, this is equivalent to maximize:
+\tim{Does MODL stand for something?}
+MODL discretization \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable. Bayesian methods maximize the probability of the model given the data, $P(\textit{Model} \mid \textit{Data})$. An application of Bayes' rule and constant $P(\textit{Data})$ shows that this is equivalent to maximizing:
 \begin{align}
-P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model}).
+P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})\text{,}
 \end{align}
-Once the prior distribution of the discretization model is fixed, each term in Eq (3) can be evaluated. Usually, $P(\textit{Data} \mid \textit{Model})$ increases as the number of intervals of discretization model increases, since more intervals means that the model contains more information and thus it is easier to reproduce the original data. On the other hand, $P(\textit{Model})$ decreases as the number of intervals increases. Thus, maximizing $P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})$ provides a trade-off to determine number of intervals after discretization.
 
-The MODL method adapts dynamical programming to find the optimal discretization model, and it takes running time $O(N^3 + ||\text{Class}|| \cdot N^2)$, where $N$ is number of data instances. \cite{Lustgarten_2011} provide a different prior to evaluate $P(\text{Model})$ term. This prior could include the assumption of uniform prior probabilities over discretization in MODL as a special case. Additionally, it reduces runing time to $O(||\text{Class}|| \cdot N^2)$.
+\noindent
+where $P(\textit{Model})$ is a prior over models and $P(\textit{Data} \mid \textit{Model})$ is the data likelihood.
+The data likelihood usually increases with the number of discretization intervals, as more intervals allow for more detailed representations.
+The prior usually decreases as the number of discretization intervals increases to favor simpler models and penalize overfitting.
+Thus, maximizing $P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})$ requires a trade-off when determining the number of discretization intervals.
 
+The MODL method uses dynamic programming to find the optimal discretization scheme, and has a $\bigo\paren{N^3 + \|\text{Class}\| \cdot N^2}$ runtime, where $N$ is the of number of data instances. \cite{Lustgarten_2011} suggest several formulations for the prior term $P(\text{Model})$\tim{Did I state this correctly?}. If the prior is chosen to reflect uniform prior probability over discretizations the runtime can be reduced to $\bigo\paren{\|\text{Class}\| \cdot N^2}$.\tim{Is a sacrifice made? It is sub-optimal, right?}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Preliminaries}
-\label{Prelim_Notation}
-In this section we provide a brief review of Bayesian networks, including the factorization of joint probability distribution, sampling from a given network, and structure learning. These concepts will be used in later sections. In addition, the formal definition of a discretization policy on a continuous variable is also introduced.
+\label{sec:preliminaries}
+This section provides a brief overview of Bayesian networks, including the factorization of joint probability distributions, sampling from a Bayesian network, and structure learning. These concepts will be used in later sections. The formal definition of a discretization policy for a continuous variable is also given.
 
-\subsection{Bayesian Network and Structure Learning}
-\label{BN_basic}
-A Bayesian network $B$ is defined by a pair $(G,\Theta)$, where $G = (X,E)$ is a directed acyclic graph whose nodes correspond to a set of random variable $X = \{  X_1, X_2, \cdots, X_n \}$, and whose edges $E$ represents probabilistic dependencies among nodes. The graph structure $G$ encodes the Markov property: each node $X_i$ is independent of its non-descendants given its parents in $G$. The second component of $B$, namely $\Theta$, contains a set of parameters that qualify the network. Elements of $\Theta$ take the form $\theta_{x_i \mid \Pi_{x_i}} = P(x_i \mid \Pi_{x_i})$ for each possible value $x_i$ of $X_i$, and $\Pi_{x_i}$ of $\Pi_{X_i}$ (the set of parents of $X_i$ in $G$). Applying Markov property, we can represent the multivariate joint distribution over $X$ as
+\subsection{Bayesian Networks and Structure Learning}
+
+A Bayesian network $B$ is defined by a pair $(G,\Theta)$, where $G = (X,E)$ is a directed acyclic graph whose nodes correspond to a set of random variables $X = \brock{X_1, X_2, \cdots, X_n}$, and whose edges $E$ represent probabilistic dependencies among nodes. The graph structure $G$ encodes the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pi{X_i}$ in $G$. The conditional relations are parameterized by the elements of $\Theta$, which take the form $\theta_{x_i \mid \Pi_{x_i}} = P(x_i \mid \Pi_{x_i})$ for each possible value $x_i$ of $X_i$, and $\Pi_{x_i}$ of $\Pi_{X_i}$. The joint distribution over $X$ factors according to the Markov property:
 \begin{equation}
-P_B (X_1 , \cdots, X_n) = \prod_{i=1}^{n} P_B (X_i \mid \Pi_{X_i}) = \prod_{i=1}^{n} \theta_{x_i \mid \Pi_{x_i}}
+P_B (X_1 , \cdots, X_n) = \prod_{i=1}^{n} P_B (X_i \mid \Pi_{X_i}) = \prod_{i=1}^{n} \theta_{x_i \mid \Pi_{x_i}}\text{.}
 \end{equation}
 
-For a given Bayesian network, we can generate its data instances by forward sampling, i.e., sampling variables one by one in a topological order \citep[see][chap.~22]{algo_2009}. Given an instance of $X_i$'s parent set, $\Pi_{X_i}$, values of $X_i$ can be sampled according to the conditional probability table $P(X_i \mid \Pi_{X_i})$. Furthermore, this parent-child sampling order can be reversed if we know the marginal probability of child variable $P(X_i)$. By Bayes' rule,
+Samples can be drawn from the joint distribution represented by a Bayesian network by forward sampling.
+Variables are sampled in topological order such that parental instantiations are always known~\citep[see][chap.~22]{algo_2009}.
+Furthermore, the parent\rightarrow child sampling order can be reversed if the marginal probability of child variable $P(X_i)$ is known.\tim{Do we use this later?}
+By Bayes' rule,
+
 \begin{equation}
 P(X_i \mid \Pi_{X_i}) \cdot \prod_{j = 1}^{ Pa( X_i)} P( \{ \Pi_{X_i} \}_j) = P(X_i) \cdot P(\Pi_{X_i} \mid X_i),
 \end{equation}
-where $Pa( X_i)$ is the number of parents of $X_i$, and $\{ \Pi_{X_i} \}_j$ is the $j$th parent of $X_i$. We can first sample $X_i$ by $P(X_i)$, then sample all the parent variables simultaneously by $P(\Pi_{X_i} \mid X_i)$. That is to say, $X_i$ becomes the starting point of sampling.
 
-If we don't know the structure of the Bayesian network in advance, then we need to learn it from data. Roughly speaking, there are three approaches to learn a Bayesian network structure from data \citep[see][chap.~18]{PGM_2009}: constraint-based structure learning, score-based structure learning, and Bayesian model averaging. Here we review the K2 structure learning algorithm \citep{K2}, which is one of the most successful score-based structure learning methods. Similar to most structure learning algorithms, the K2 algorithm requires all variables to be discrete. The score of a learned network is defined as $\prod_i f(X_i, \Pi_{X_i})$, where
+\noindent
+where $Pa(X_i)$ is the number of parents of $X_i$ and $\brock{\Pi_{X_i}}_j$ is the $j$th parent of $X_i$.
+% One can first sample $X_i$ by $P(X_i)$, then sample all the parent variables simultaneously by $P(\Pi_{X_i} \mid X_i)$. That is to say, $X_i$ becomes the starting point of sampling.
+
+It is often necessary to infer the structure of a Bayesian network from data.
+Three common approaches to Bayesian network structure learning are constraint-based structure learning, score-based structure learning, and Bayesian model averaging \citep[see][chap.~18]{PGM_2009}. This work uses the K2 structure learning algorithm \citep{K2}, one of the most successful score-based structure learning methods.
+Score-based structure learning methods over discrete variables commonly evaluate candidate structures are scored according to their likelihood, $\prod_i f(X_i, \Pi_{X_i})$, where
+
 \begin{align}
-f(X_i, \Pi_{X_i}) = \prod_{j=1}^{||\Pi_{X_i}||} {{(||X_i||-1)!}\over{(N_{ij} + ||X_i||-1)!}} \prod_{k=1}^{||X_i||} \alpha_{ijk}!.
+f(X_i, \Pi_{X_i}) = \prod_{j=1}^{\|\Pi_{X_i}\|} {{(\|X_i\|-1)!}\over{(N_{ij} + \|X_i\|-1)!}} \prod_{k=1}^{\|X_i\|} \alpha_{ijk}!\text{.}
 \end{align}
-$||X_i||$ is the cardinality of variable $X_i$. $||\Pi_{X_i}||$ is number of all possible instantiations of the parent variables of $X_i$, i.e., $|\Pi_{X_i}| = \prod_{Y \in \Pi_{X_i}} |Y|$. $\alpha_{ijk}$ is the number of instances in a data set that variable $X_i$ is instantiated with its $k$th value, and the parent of $X_i$ are instantiated with the $j$th value of $\Pi_{X_i}$. $N_{ij} = \sum_{k=1}^{|X_i|} \alpha_{ijk}$.
 
-The K2 algorithm searches the network structure with the highest score, which can be interpreted as the most probable network with the given data. In addition, the K2 requires a topological order of variables to be known before the scoring can start. This constraint can prevent cycles from being introduced. The searching for high-score network is an iterative process. There is no way to find the optimal network directly, since there are $2^{O(n^2)}$ possible structures, where $n$ is number of variables. In order to compensate for this, we run the K2 algorithm many times, and each time we start with a different order of variables. The network with the highest score in iterations is the desired one.
+\noindent
+$\|X_i\|$ is the cardinality of $X_i$, $\|\Pi_{X_i}\|$ is number of possible instantiations of the parent variables of $X_i$, $\alpha_{ijk}$ is the number of instances of the $k$th value of $X_i$ and the $j$th parental instantiation, and $N_{ij} = \sum_{k=1}^{|X_i|} \alpha_{ijk}$.\tim{Mykel uses $\alpha_{ij0}$}
+The optimal structure is the most probably structure given the data.
+The space of acyclic graphcs is superexponential in the number of nodes \citep{PGM_2009} so it is common to rely on heuristic search strategies.
 
-\subsection{Discretization Policy}
-\label{Disc_p}
-A Discretization Policy $M_C = < t_1,t_2, \ldots, t_{k-1} >$ on a continuous variable $C$ is a mapping from $\boldsymbol{R}$ to $\{1,2,3,\ldots,k \}$ such that
+The K2 algorithm assumes a topological ordering of variables and greedily adds parents to nodes to maximally increase the likelihood score.
+A fixed ordering ensures acyclicity but does not guarantee a globally optimal network structure.
+K2 is typically run multiple times with random topological orderings and the network with the highest likelihood is retained.
+
+\subsection{Discretization Policies}
+
+A discretization policy $M_C = \anglebrackets{t_1 < t_2 < \ldots < t_{k-1}}$ for a continuous variable $C$ is a mapping from $\mathbb{R}$ to $\brock{1,2,3,\ldots,k}$ such that
 \begin{equation}
   M_C (x)=\begin{cases}
     1, & \text{if $x<t_1$}.\\
-    i, & \text{if $t_{i-1} \leq x < t_i$}.\\
-    k, & \text{if $t_k \leq x$}
+    i, & \text{if $t_{i-1} \leq x < t_i$}\text{.}\\
+    k, & \text{if $t_{k-1} \leq x$}
   \end{cases}
 \end{equation}
-That is to say, the policy discretizes the continuous variable $C$ into $k$ intervals. Furthermore, we assume that the discretization edge $t_i$ can only take values on middle points of two consective values of data of $C$. By this assumption, we can obtain an integer representation of $M_C$ as follows:
-we sort the data of continuous variable $C$ in an increasing order, $\{ c_1,c_2,\ldots,c_N \}$, and if $t_i = (c_{s_{i}} + c_{s_{i}+1})/2$ for $i=1,2,\ldots,k$, then $M_C = < t_1,t_2, \ldots, t_{k-1} > \equiv [n_1,n_2,..n_k]$, where $n_1 = s_1$ and $n_i = s_{i} - s_{i-1}$ for $i = 2,\ldots,k$.\\
 
-\section{Discretize One Continuous Variable}
-\label{one-conti}
+\noindent
+The policy discretizes the continuous variable $C$ into $k$ intervals. Furthermore, we restrict the discretization edges $t_\cdot$ to midpoints between two sorted instances of $C$. An integer representation of $M_C$ can be obtained by sorting the samples of $C$ in an increasing order, $\curly{c_1,c_2,\ldots,c_N}$, and if $t_i = (c_{s_{i}} + c_{s_{i}+1})/2$ for $i=1,2,\ldots,k$, then $M_C = \anglebrackets{t_1,t_2, \ldots, t_{k-1}} \equiv \brock{n_1,n_2,..n_k}$, where $n_1 = s_1$ and $n_i = s_{i} - s_{i-1}$ for all $i = 2,\ldots,k$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Discretization of a Single Continuous Variable}
+\label{sec:single_var}
+
 In this section, we consider the case that only one variable in a Bayesian network is continuous and the others are discrete. Before we formulate the objective function, we introduce some notations that will make the following calculation easier.
 \subsection{Notations}
 \label{Notation}
@@ -286,14 +315,14 @@ The concept behind the factorization is similar to sampling in a Bayesian networ
 
 For the following part, we evaluate $P(D_{\Pi_x} \mid M)$  and $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$ based on discretization policy $M = [n_1,n_2,\ldots,n_k]$ and dataset $D$.
 \subsubsection{Evaluate $P(D_{\Pi_x} \mid M)$}
-Assume that $J_P = \prod_{i=1}^{n_p} || P_i ||$. Then we have:
+Assume that $J_P = \prod_{i=1}^{n_p} \| P_i \|$. Then we have:
 \begin{equation}
 P(D_{\Pi_X} \mid M) = \prod_{i=1}^k  {{1}\over{{n_i + J_P - 1}\choose{J_P -1}}}
 {{1}\over{ {{{n}_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}  }},
 \end{equation}
-where $n^{(p)}_{i,j}$ is the number of instances in $i$th discretized interval with $j$th value of $\Pi_X$. Note that $n_i = \sum_{j=1}^{|| \Pi_x ||} n^{(p)}_{i,j}$. The two factors on RHS comes from the second prior: all distributions of values of $\Pi_X$ in a given interval are equiprobable. According to the forth prior, the distribution in each interval is independent, so we multiply all the two factors together.
+where $n^{(p)}_{i,j}$ is the number of instances in $i$th discretized interval with $j$th value of $\Pi_X$. Note that $n_i = \sum_{j=1}^{\| \Pi_x \|} n^{(p)}_{i,j}$. The two factors on RHS comes from the second prior: all distributions of values of $\Pi_X$ in a given interval are equiprobable. According to the forth prior, the distribution in each interval is independent, so we multiply all the two factors together.
 \subsubsection{Evaluate $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$}
-Assume for each pair of $(C_j, \boldsymbol{S_j})$, we have $||C_j || = J_j$ and $|| \boldsymbol{S_j} || = L_j = \prod_{v \in \boldsymbol{S_j}} || v ||$. Therefore,
+Assume for each pair of $(C_j, \boldsymbol{S_j})$, we have $\|C_j \| = J_j$ and $\| \boldsymbol{S_j} \| = L_j = \prod_{v \in \boldsymbol{S_j}} \| v \|$. Therefore,
 \begin{equation}
 P(D_{C_j}  \mid M, D_{S_j}) =
 \prod_{i=1}^{k} \prod_{l=1}^{L_j} {{1}\over{{n_{i,l} + J_j - 1}\choose{J_j-1}}}
@@ -377,7 +406,7 @@ Notice that Algorithm1 leads to the non-polynomial runtime $O({v'_{max}}^{n_p} \
 \begin{equation}
 {{{{n}_i}!}\over{ {{n^{(p)}}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}} \approx \prod_{r=1}^{n_p} { {{{n}_i}!}\over{ {n^{(p_r)}_{i,1} !} {n^{(p_r)}_{i,2} !} \cdots {n^{(p_r)}_{i,J_{p_r}} !}}},
 \end{equation}
-where $J_{p_r} = || P_r||$ and ${n^{(p_r)}_{i,j} !}$ is the number of instances in $i$th interval with $j$th value of $P_r$. Applying this approximation, the approximated objective function is
+where $J_{p_r} = \| P_r\|$ and ${n^{(p_r)}_{i,j} !}$ is the number of instances in $i$th interval with $j$th value of $P_r$. Applying this approximation, the approximated objective function is
 \begin{equation}
 \begin{aligned}
 & \sum_{i=1}^{k-1} - \log(1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}) +  \sum_{i=1}^{k} L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}} +\\
@@ -387,7 +416,7 @@ where $J_{p_r} = || P_r||$ and ${n^{(p_r)}_{i,j} !}$ is the number of instances 
 \end{equation}
 
 
-As we will see in Section 6, the approximated algorithm is more sensitive to the distribution of other variables' values and usually leads to slightly more discretization edges. With the approximation, we can reduce runtime of Algorithm 1 from $O(n_c  {v'_{max}} \cdot N^2 + {v'_{max}}^{n_p} \cdot N^2)$ to $O( {v'_{max}} (n_c + n_p) \cdot N^2)$. The rigorous proof of the approximation have not been proposed.
+As we will see in Section \ref{sec:experiments}, the approximated algorithm is more sensitive to the distribution of other variables' values and usually leads to slightly more discretization edges. With the approximation, we can reduce runtime of Algorithm 1 from $O(n_c  {v'_{max}} \cdot N^2 + {v'_{max}}^{n_p} \cdot N^2)$ to $O( {v'_{max}} (n_c + n_p) \cdot N^2)$. The rigorous proof of the approximation have not been proposed.
 
 With the approximated objective function, Equation 17, we now have a more clear way to see that how child variables and parent variables contribute to the objective function differently. For example, in the left graph of Figure 2, the corresponding sqaure brackets in Equation 17 are
 \begin{equation}
@@ -412,10 +441,13 @@ In Equation18, each child variable carries two terms, as shown in the first squa
   \caption{Two example networks}
 \end{figure}
 
-\section{Discretizing Multiple Continuous Variable with Structure Learning}
-\label{DMC_SL}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Extension to Multiple Continuous Variables}
+\label{sec:multi_var}
+
 \subsection{Discretization of Multiple Continuous Variables}
-\label{DMC}
+
 If there are multiple continuous variables in a Bayesian network, we iterate the one-variable discretization method discussed above for all continuous variables. While discretizing a continuous variable, other continuous variables must be discretized, either by a prediscretization that was done before the first iteration or by the discretization result of the latest iteration. The prediscretization can be done by equal-width discretization, which is defined as follows:
 \begin{equation}
 M_X =  \{ min_X, min_X + \delta, min_X + 2\delta, \ldots, \delta, max_X \},
@@ -433,7 +465,7 @@ When the number of intervals after discretization and the positions of discretiz
 \State $n \leftarrow$ the number of variables in Bayesian network
 \State $D^*_i \leftarrow M[i] (D_i)$, the discretized $D_i$ by $M[i]$
 \State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
-\State $k \leftarrow median\{ ||v||, v\notin C\}$
+\State $k \leftarrow median\{ \|v\|, v\notin C\}$
 \State
 \For {$i = 1$ to $n$}
 \If {$i \in C$}
@@ -445,7 +477,7 @@ When the number of intervals after discretization and the positions of discretiz
 \State $cycle \leftarrow 0$
 \While {$M$ is not converged  \textbf{and} $cycle \leq u_{cycle}$}
 \State {$cycle  \leftarrow cycle  + 1$}
-\For {$j = 1$ to $||C||$}
+\For {$j = 1$ to $\|C\|$}
 \State $D^*_{\backslash C(j)} \leftarrow D^*$ without $D^*_{C(j)}$.
 \State {$M[C(j)] \leftarrow $ DISCRETIZE($D_{C(j)}$,$D^*_{ \backslash C(j)}$,graph)}
 \State {$D^*_{C(j)}  \leftarrow$ $M[C(j)](D''_{C(j)}) $}
@@ -457,7 +489,7 @@ When the number of intervals after discretization and the positions of discretiz
 \end{algorithm}
 
 \subsection{Discretization of Continuous Variables While Structure Learning}
-\label{SL}
+
 In many situations the network structure is not known in advance, then we need to learn it from data. We use an alternative approach to combine our proposed discretization method with the K2 structure learning algorithm \citep{K2}. That is to say, we start with some prediscretizations on continuous variables and run the K2 algorithm given the discretized data. Each time an edge is added by the K2 algorithm, we rediscretize the continuous variables based on the current network. Then the new discretization policies update the discretized data of all continuous variables, and we continue the next K2 step with the updated discretized data. This cycle is repeated until no edge is added by the K2 algorithm. The detail of the procedure is shown in Algorithm 3. Here we have five inputs: $D'$, the mixed data we plan to learn from, $C$, the set of all continuous variables, $order$, the variable order which is required by the $K2$, $u_{parent}$, the upper bound of number of parents which is also required by the $K2$, and $u_{cycle}$, the upper bound of times of cycles. Notice that in the usual structure learning from discrete data, one usually run the K2 algorithm many times with different orders, and choose the structure with the highest K2 score. We do the same thing: run Algorithm 3 many times, each time with a different order, and pick the discretized Bayesian network with the highest K2 score.
 \begin{algorithm}
 \caption{ Learning a discrete-valued Bayesian network}
@@ -466,7 +498,7 @@ In many situations the network structure is not known in advance, then we need t
 \State
 
 \State $n \leftarrow$ the number of variables in Bayesian network
-\State $k \leftarrow median\{ ||v||, v\notin C\}$
+\State $k \leftarrow median\{ \|v\|, v\notin C\}$
 \State $M[i] \leftarrow$ the discretization policy of $i$th variable
 \State $D^*_i \leftarrow M[i] (D_i)$, the discretized $D_i$ by $M[i]$
 \State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
@@ -482,7 +514,7 @@ In many situations the network structure is not known in advance, then we need t
 \For {$i =1$ to $n$}
 \State $P_{old} \leftarrow f(X^*_i,\Pi_{X^*_i})$: Equation 5
 \State OKToProceed $\leftarrow$ \textbf{true}
-\While OKToProceed \textbf{and} $||\Pi_{X^*_i}|| < u_{parent}$
+\While OKToProceed \textbf{and} $\|\Pi_{X^*_i}\| < u_{parent}$
 \State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pi_X$
 \State $P_{new} \leftarrow f(X^*_i,\Pi_{X^*_i} \cup Y)$
 \If {$P_{new} > P_{old}$}
@@ -500,9 +532,10 @@ In many situations the network structure is not known in advance, then we need t
 \end{algorithmic}
 \end{algorithm}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Experiments}
-
+\label{sec:experiments}
 
 
 
@@ -522,17 +555,19 @@ In many situations the network structure is not known in advance, then we need t
 \bibliographystyle{spbasic}
 \bibliography{my_bib}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section*{Appendices}
 
 \begin{algorithm}
 \caption{ Calculation of function $h(u,v)$ for all $u \leq v$}\label{euclid}
 \begin{algorithmic}[1]
 \State Initialize $H$ as an $N \times N$ matrix that all elements are 0.
-\State $count_p$ is an $N \times N \times ||\Pi_X||$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pi_X$. This matrix can be calculated in $O(||\Pi_X|| \cdot N^2)$
+\State $count_p$ is an $N \times N \times \|\Pi_X\|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pi_X$. This matrix can be calculated in $O(\|\Pi_X\| \cdot N^2)$
 \For {$u = 1$ to $N$}
 \For {$v = u$ to $N$}
 \State $H(u,v) \leftarrow H(u,v) + \log((v-u + J_p)!) - \log((J_p -1)!)$
-\For {$w = 1$ to $||\Pi_X||$}
+\For {$w = 1$ to $\|\Pi_X\|$}
 \State $H(u,v) \leftarrow H(u,v) - \log( count_p(u,v,w)!)$
 \EndFor
 \EndFor
