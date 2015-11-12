@@ -156,7 +156,7 @@ The discretization technique proposed by \citet{Friedman_1996} is the most well-
 The commented material below is good, but feels like too much detail for the intro. Is it possible to move it to later sections?
 I recommend having one paragraph that starts with `In this paper we propose \ldots' and then lists the specific contributions. (Bayesian discretization for arbitrary networks, a faster algorithm, demonstrate that performance is preserved, etc.). Then we should have the final paragraph below that discusses organization.}
 
-% In this paper, we propose a new Bayesian discretization method for continuous variables in Bayesian networks. This method extends the Bayesian single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}. We begin our method with the assumption that only one variable in a given Bayesian network is continuous and other variables are discrete. Furthermore we assume that the network structure is known in advance. Under this situation, we look for the most probable discretization policy $M$ given the data $D$ on other discrete variables. That is to say, the desired policy is $\textrm{arg}_M P(M \mid D)$. With Bayes' rule, $P(M \mid D) $ can be rewritten as $P(M) \cdot P(D \mid M) / P(D)$ , which is proportional to $P(M)\cdot P(D \mid M)$. Usually, $P(D \mid M)$ increases as the number of discretized intervals increases, since more intervals can provide more accuracy. $P(M)$, on the other hand, is designed to decrease as the number of intervals rises. As a result, we can automatically determine the number of intervals after discretization by maximizing  $P(M)\cdot P(D \mid M)$. In addition, the $P(D \mid M)$ can be factorized according to Bayesian network structure. With the proposed priors, we are able to restrict the number of discretized intervals so that it will not exceed the largest cardinality of variables in the Markov blanket by too much. This is important, since for most algorithms on Bayesian networks, their running times exponentially depend on the cardinality of variables. Another advantage of our method is the running time for learning. If there is only one continuous variable, the running time is $O(n_c  {v_{max}} \cdot N^2 + {v_{max}}^{n_p} \cdot N^2)$, which is significantly shorter than the running time of MDL principle discretization \citep{Friedman_1996}. With the approximation proposed in this paper, we can further reduce running time to $O({v_{max}}(n_p+n_c)N^2)$.
+% In this paper, we propose a new Bayesian discretization method for continuous variables in Bayesian networks. This method extends the Bayesian single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}. We begin our method with the assumption that only one variable in a given Bayesian network is continuous and other variables are discrete. Furthermore we assume that the network structure is known in advance. Under this situation, we look for the most probable discretization policy $M$ given the data $D$ on other discrete variables. That is to say, the desired policy is $\textrm{arg}_M P(M \mid D)$. With Bayes' rule, $P(M \mid D) $ can be rewritten as $P(M) \cdot P(D \mid M) / P(D)$ , which is proportional to $P(M)\cdot P(D \mid M)$. Usually, $P(D \mid M)$ increases as the number of discretized intervals increases, since more intervals can provide more accuracy. $P(M)$, on the other hand, is designed to decrease as the number of intervals rises. As a result, we can automatically determine the number of intervals after discretization by maximizing  $P(M)\cdot P(D \mid M)$. In addition, the $P(D \mid M)$ can be factorized according to Bayesian network structure. With the proposed priors, we are able to restrict the number of discretized intervals so that it will not exceed the largest cardinality of variables in the Markov blanket by too much. This is important, since for most algorithms on Bayesian networks, their running times exponentially depend on the cardinality of variables. Another advantage of our method is the running time for learning. If there is only one continuous variable, the running time is $O(n_c  {v_\text{max}} \cdot N^2 + {v_\text{max}}^{n_p} \cdot N^2)$, which is significantly shorter than the running time of MDL principle discretization \citep{Friedman_1996}. With the approximation proposed in this paper, we can further reduce running time to $O({v_\text{max}}(n_p+n_c)N^2)$.
 
 % For a Bayesian network with multiple continuous variables, we apply the discretization method discussed above iteratively. In the beginning, we prediscretize each continuous variable by equal-width method. The number of intervals for equal-width discretization is equal to largest cardinality of discrete variables. Then we iterate the one-variable discretization on each continuous variable in the following order: from the variable with highest topological order (leaves) to the variable with lowest topological order (root). Each time we finish a discretization procedure on one variable, we store the discretization result for later iterations. Experiments on real-world data show that with the same iteration order, our discretization method provides better discretization results than MDL principle method in terms of likelihood. The MDL principle method is easily stuck at local minima and also discretizes variables into too few intervals.
 
@@ -306,12 +306,18 @@ where $L$ is the largest cardinality of discrete variables in $X$'s Markov blank
 The prior term $P(M)$ has the form:
 
 \begin{equation}
-P(M) = \prod_{i=1}^k \{ [1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}] \cdot \exp(L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}}) \},
+\label{eq:p_M}
+P(M) = \prod_{i=1}^k \brock{ [1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}] \cdot \exp(L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}}) }\text{,}
 \end{equation}
+
+\noindent
 where $s_i = \sum_{j=1}^k n_j$, $s_k = N$, and $s_0 = 0$. Before evaluating $P(D \mid M)$, note that
+
 \begin{equation}
+\label{eq:p_D_given_M}
 P(D \mid M) \propto P(D_{\Pi_x} \mid M) \cdot \prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})\text{.}
 \end{equation}
+
 The graph structure allows us to only consider the interations between $X$ and the other variables in its Markov blanket, thus allowing for convenient factorization. For example, $P(D \mid M)$ for Figure \ref{fig:one} factors according to
 \begin{equation}
 P(D_{ P_1,P_2,P_3 } \mid M) \cdot P( D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}) \cdot P(D_{C_2} \mid M,D_{ S_2  })\text{.}
@@ -338,6 +344,7 @@ It is thus necessary to formulate $P(D_{\Pi_x} \mid M)$  and $P(D_{C_i} \mid M, 
 Let $J_P = \prod_{i=1}^{n_p} \| P_i \|$. It follows that
 
 \begin{equation}
+\label{eq:likelihood_one}
 P(D_{\Pi_X} \mid M) = \prod_{i=1}^k  {{1}\over{{n_i + J_P - 1}\choose{J_P -1}}}
 {{1}\over{ {{{n}_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}  }}\text{,}
 \end{equation}
@@ -363,6 +370,7 @@ where $n^{(j)}_{i,m,l}$ is the number of instances in $i$th interval with $m$th 
 The two factors on the right hand side come from the third prior: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable. According to the forth prior, these distributions are independent from each other, and one thus takes their product. If $S_j = \emptyset$, then Equation \ref{eq:likelihood_two} is equivalent to
 
 \begin{equation}
+\label{eq:likelihood_three}
 P(D_{C_j}  \mid M) =
 \prod_{i=1}^{k}  {{1}\over{{n_{i} + J_j - 1}\choose{J_j-1}}}
 {{1}\over{ {{n_{i}}!}\over{ {n^{(j)}_{i,1,\emptyset} !} {n^{(j)}_{i,2,\emptyset} !} \cdots {n^{(j)}_{i,J_j,\emptyset} !}}  }}\text{,}
@@ -371,54 +379,75 @@ P(D_{C_j}  \mid M) =
 \noindent
 where $n^{(j)}_{i,m,\emptyset}$ is the number of instances in the $i$th interval with the $m$th value of $C_j$, and $\sum_{m=1}^{J_j} n^{(j)}_{i,m,\emptyset} = n_i$.
 
-The objective function can be formulated given equations \todo{8,9,11,12}, and \ref{eq:likelihood_two}.
-Instead of maximizing $P(M) \cdot P(D|M)$, the log-inverse is minimized for computational convenience.
-The objective function is
+The objective function can be formulated given equations \ref{eq:p_M}, \ref{eq:p_D_given_M},\ref{eq:likelihood_one}, and \ref{eq:likelihood_three}.
+The log-inverse of $P(M) \cdot P(D|M)$ is minimized for computational convenience:
 
 \begin{equation}
+\label{eq:opt_prob}
 \begin{aligned}
 & \sum_{i=1}^{k-1} - \log(1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}) +  \sum_{i=1}^{k} L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}} +\\
 &  \sum_{j=1}^{n_c} \sum_{i=1}^{k}  \sum_{l=1}^{L_j} \left[  \log{{n_{i,l} + J_j - 1}\choose{J_j-1}} + \log \left( { {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}} } \right) \right] + \\
-& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_p} !}} } \right) \right].
+& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_p} !}} } \right) \right]\text{.}
 \end{aligned}
 \end{equation}
-All parameters and variables in the objective function are explained in previous subsections.
+
 \subsection{Algorithm}
-\label{algo}
-Once the objective function is established, the next problem is how to find a discretization model that minimizes the objective function. Note that the objective function is cumulative on intervals. Therefore, if a partition of continuous variable $X$ into $k$ intervals with lengths $n_1,n_2,\ldots,n_k$ is an optimal discretization policy, then $\{ n_2, n_3,\ldots,n_k \}$ is optimal for the subproblem, i.e., the last $N - n_1$ instances of the dataset which has been sorted in ascending order of $D_X$. With this property, we can adapt dynamical programming to solve this optimization problem.
 
-If there is no repeated value in $D_X$, all middle points of two consecutive values can a discretization edge. If there exists repeated values in $D_X$, only the middle points of two consecutive and different values can be a discretization edge. Assume there are $M$ unique values in $D_X$, then ${D'_X} = \{ x'_1,x'_2,\ldots,x'_M \}$ is the set of unique values of $D_X$ in ascending order. Since $D_X$ is also sorted, let $b = \{ b_0,b_1,b_2,\ldots,b_M \}$ be an increasing sequence of integers such that $b_0 = 0$ and $x_{b_{i-1} + 1} = x_{b_{i-1} + 2} = \ldots = x_{{b_i}} = x'_i$. By this definition, the allowable discretization positions are $d_i = ( x_{b_{i}} + x_{{b_i}+1})/2$ for all $i = 1,2,\ldots,M-1$.
+This section describes the procedure used to minimize the objective function.
+Note that the objective function is cumulative over intervals, thus, if a partition of $X$ into $k$ intervals with lengths $n_1,n_2,\ldots,n_k$ is an optimal discretization policy, then any subinterval is optimal for the corresponding subproblem.
+It follows that dynamic programming can be used to solve the optimization problem exactly.
 
-Before doing the dynamical programming, in order to save runtime, we first calculate the following function $h(u,v)$ for a interval $I_q$ starting from $x_{u}$ to $x_{v}$ with all $u$,$v$ satisfying $u \leq v$:
+Every midpoint between two nonequal consecutive values in $D_X$ is a candidate discretization edge.
+Let ${D'_X} = \brock{x'_1,x'_2,\ldots,x'_M}$ be the set of unique values of $D_X$ sorted in ascending order, where $M$ is the number unique values in $D_X$.
+Recall that $D_X$ is also sorted.
+Let $b = \brock{b_0,b_1,b_2,\ldots,b_M}$ be an increasing sequence of integers marking the repeated value intervals in $D_X$ such that $b_0 = 0$ and $x_{b_{i-1} + 1} = x_{b_{i-1} + 2} = \ldots = x_{b_i} = x'_i$.
+By this definition, the allowable discretization positions are $d_i = \paren{x_{b_{i}} + x_{{b_i}+1}}/2$ for all $i = 1,2,\ldots,M-1$.
+
+Precomutation can be done to reduce runtime.
+Compute $h(u,v)$ for each interval $I_q$ starting from $x_{u}$ to $x_{v}$ for all $(u,v)$ satisfying $u \leq v$:
+
+\begin{small}
 \begin{equation}
 \begin{aligned}
 h(u,v) &=  \log {{n_{q} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_q}!}\over{ {n^{(p)}_{q,1} !} {n^{(p)}_{q,2} !} \cdots {n^{(p)}_{q,J_p} !}} } \right) \\
 & + \sum_{j=1}^{n_c} \sum_{l=1}^{L_j} \left[  \log{{n_{q,l} + J_j - 1}\choose{J_j-1}} + \log \left( { {{n_{q,l}}!}\over{ {n^{(j)}_{q,1,l} !} {n^{(j)}_{q,2,l} !} \cdots {n^{(j)}_{q,J_j,l} !}} } \right) \right]
 \end{aligned}
 \end{equation}
+\end{small}
 
-The evaluation of function $h(u,v)$ for all $u \leq v$ is summerized in Algorithm 4 in Appendix. The calculation can be done in $O(n_c  {v'_{max}} \cdot N^2 + {v'_{max}}^{n_p} \cdot N^2)$, where $n_c$ and $n_p$ are the numbers of child and parent variables, respectively, and $v'_{max}$ is the largest cardinality of variables that directly connects to $X$. Notice that due to repeated values in $D_X$, for some pairs of $u$ and $v$, the value of $h(u,v)$ might depend on the sorting method of $D_X$ and $D$. However, this does not influence the optimization result, since these pairs of $u$ and $v$ will not form valid intervals.
+The evaluation of $h(u,v)$ for all $u \leq v$ is summarized in Algorithm \ref{alg:h} in the appendix.
+The calculation has a $O(n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2)$ runtime, where $n_c$ and $n_p$ are the numbers of child and parent variables respectively, and $v'_\text{max}$ is the largest cardinality of variables that directly connect to $X$.
 
-Now we are able to solve the optimization problem with the objective function in Equation 14. The dynamical programming procedure is shown in Algorithm 1. We have three inputs: $D_X$, the data of continuous variable $X$ in the ascending order, $D$, the data of other variables and sorted according to $D_X$, and $G$, the network structure. The runtime of Algorithm 1 is also $O(n_c  {v'_{max}} \cdot N^2 + {v'_{max}}^{n_p} \cdot N^2)$, since the dynamical programming procedure does not increase the time complexity beyond the calculation of $h(u,v)$. There are other methods that lead to suboptimal results but runs faster than dynamical programming method. Please refer to \citep{Boulle_2006}.
+% \tim{I think we can leave this out if it doesn't affect the algorithm results, and people will always sort in ascending order}
+% Due to repeated values in $D_X$, for some pairs $(u,v)$, $h(u,v)$ may depend on the sorting method of $D_X$ and $D$.
+% However, this does not influence the optimization result, since these pairs of $u$ and $v$ will not form valid intervals.
+
+Now we are able to solve the optimization problem over Equation \ref{eq:opt_prob}.
+The dynamic programming procedure is shown in Algorithm \ref{alg:disc_one}.
+It takes two inputs: $D$, the joint samples over all variables sorted in ascending order according to $D_X$, and $G$, the network structure.
+The runtime of Algorithm \ref{alg:disc_one} is also $O(n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2)$, because the runtime of the dynamic programming procedure is less than the runtime for computing $h(u,v)$.
+Algorithm \ref{alg:disc_one} is guaranteed to be optimal.
+For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
 
 \begin{algorithm}
-\caption{ Discretization of one continuous variable}\label{euclid}
+\caption{Discretization of one continuous variable in a Bayesian network}
+\label{alg:disc_one}
 \begin{algorithmic}[5]
-\Function{Discretize}{$D_X$, $D$, $G$}
+\Function{Discretize}{$D$, $G$}
 \State
 \State $N \leftarrow$ the number of instances
-\State $N' \leftarrow$ the number of non-repeated values of $D_X$
-\State $H \leftarrow$ an $N \times N$ matrix such that $H[u,v] = h(u,v)$ as Algorithm 4 in Appendix
-\State $b \leftarrow$ the increasing sequence of $M$ integers defined in the previous discussion
-\State $L \leftarrow$ the largest cardinality over all discrete variables in the Markov blanket
-\State $S[u] \leftarrow$ the optimal objective value of a subproblem with instances from $1$ to $u$
-\State $M[u] \leftarrow$ the optimal discretization of a subproblem with instances from $1$ to $u$
+\State $N' \leftarrow$ the number of unique values in $D_X$
+\State $H \leftarrow$ an $N \times N$ matrix such that $H[u,v] = h(u,v)$ per Algorithm \ref{alg:h} in the appendix
+\State $b \leftarrow$ the increasing sequence of $M$ integers as previously defined
+\State $L \leftarrow$ the largest cardinality over all discrete variables in the Markov blanket of $X$
+\State $S[u] \leftarrow$ the optimal objective value of subproblems with instances from $1$ to $u$
+\State $M[u] \leftarrow$ the optimal discretization for subproblems with instances from $1$ to $u$
 \State $W[u]  \leftarrow - \log(1 - {\exp(- L \cdot{ {{x_{b(u)+1} - x_{b(u)}}\over{x_N - x_1}})}})$ for $u = 1,2, \ldots,N'-1$ and $L(N') \leftarrow 0$
 \State
 \For {$v = 1$ to $N'$}
 \If {$v = 1$}
-\State $S[v] = g \left(1,b[v] \right) + L[v]$
-\State $M[v] = \{ ({x_{b[v]} + x_{b[v]+1}}) / 2\}$
+\State $S[v] \leftarrow g \left(1,b[v] \right) + L[v]$
+\State $M[v] \leftarrow \{ ({x_{b[v]} + x_{b[v]+1}}) / 2\}$
 \Else
 \State $s \leftarrow \infty$ and $boundary \leftarrow \infty$
 \For {$u = 1$ to $v$}
@@ -439,24 +468,34 @@ Now we are able to solve the optimization problem with the objective function in
 
 
 \subsection{Approximation}
-\label{approx}
-Notice that Algorithm1 leads to the non-polynomial runtime $O({v'_{max}}^{n_p} \cdot N^2)$ in the discretization process. Therefore, we have an empirical approximation to the objective function that can reduce runtime and still preserve the quality of discretization. The approximation is as follows: for the dominator of the last factor in Equation 11, we have
+
+Algorithm \ref{alg:disc_one} has an exponential $\bigo\paren{\paren{v'_\text{max}}^{n_p} \cdot N^2}$ runtime.
+This exponential runtime is severely limiting for networks with a large number of discretization edges.
+This section introduces an approximation to the objective function that significantly reduces the runtime and still preserves the quality of discretization.
+The approximation replaces the dominator of the last factor in Equation \ref{eq:likelihood_one} with
+
 \begin{equation}
-{{{{n}_i}!}\over{ {{n^{(p)}}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}} \approx \prod_{r=1}^{n_p} { {{{n}_i}!}\over{ {n^{(p_r)}_{i,1} !} {n^{(p_r)}_{i,2} !} \cdots {n^{(p_r)}_{i,J_{p_r}} !}}},
+{\frac{{n_i}!}{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}} \approx \prod_{r=1}^{n_p} { {{{n}_i}!}\over{ {n^{(p_r)}_{i,1} !} {n^{(p_r)}_{i,2} !} \cdots {n^{(p_r)}_{i,J_{p_r}} !}}}\text{,}
 \end{equation}
-where $J_{p_r} = \| P_r\|$ and ${n^{(p_r)}_{i,j} !}$ is the number of instances in $i$th interval with $j$th value of $P_r$. Applying this approximation, the approximated objective function is
+
+\noindent
+where $J_{p_r} = \| P_r\|$ and ${n^{(p_r)}_{i,j} !}$ is the number of instances in the $i$th interval with the $j$th value of $P_r$.
+The approximated objective function is
+
 \begin{equation}
 \begin{aligned}
+\label{eq:opt_prob_approx}
 & \sum_{i=1}^{k-1} - \log(1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}) +  \sum_{i=1}^{k} L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}} +\\
 &  \sum_{j=1}^{n_c} \sum_{i=1}^{k}  \sum_{l=1}^{L_j} \left[  \log{{n_{i,l} + J_j - 1}\choose{J_j-1}} + \log \left( { {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}} } \right) \right] + \\
-& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \sum_{q=1}^{n_p} \log \left( { {{{n}_i}!}\over{ {n^{(p_q)}_{i,1} !} {n^{(p_q)}_{i,2} !} \cdots {n^{(p_q)}_{i,J_{p_q}} !}}} \right) \right].
+& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \sum_{q=1}^{n_p} \log \left( { {{{n}_i}!}\over{ {n^{(p_q)}_{i,1} !} {n^{(p_q)}_{i,2} !} \cdots {n^{(p_q)}_{i,J_{p_q}} !}}} \right) \right]\text{.}
 \end{aligned}
 \end{equation}
 
+The approximation reduces the runtime of Algorithm \ref{alg:disc_one} to a polynomial, $\bigo\paren{ {v'_\text{max}} \cdot (n_c + n_p) \cdot N^2}$.
+\tim{`The rigorous proof of the approximation have not been proposed.' Do you mean that we are not proving that the approximation always holds, or that the algorithm conserves optimality, or something else?}
+It will be shown in Section \ref{sec:experiments} that the approximation is more sensitive to the distribution over other variables and is biased towards slightly higher interval counts.
 
-As we will see in Section \ref{sec:experiments}, the approximated algorithm is more sensitive to the distribution of other variables' values and usually leads to slightly more discretization edges. With the approximation, we can reduce runtime of Algorithm 1 from $O(n_c  {v'_{max}} \cdot N^2 + {v'_{max}}^{n_p} \cdot N^2)$ to $O( {v'_{max}} (n_c + n_p) \cdot N^2)$. The rigorous proof of the approximation have not been proposed.
-
-With the approximated objective function, Equation 17, we now have a more clear way to see that how child variables and parent variables contribute to the objective function differently. For example, in the left graph of Figure 2, the corresponding sqaure brackets in Equation 17 are
+With the approximated objective function, Equation \ref{eq:opt_prob_approx}, we now have a more clear way to see that how child variables and parent variables contribute to the objective function differently. For example, in the left graph of Figure 2, the corresponding sqaure brackets in Equation 17 are
 \begin{equation}
 \begin{aligned}
  \sum_{i=1}^k & \left\lbrace   \left[ \log{{n_{i} + J_{C_1} - 1}\choose{J_{C_1}-1}} + \log \left(  {{{n_i}!} \over { {n^{(1)}_{i,1,\emptyset} !} \cdots {n^{(1)}_{i,J_{C_1},\emptyset} !}} }  \right)  +  \right. \right.\\
@@ -598,7 +637,8 @@ In many situations the network structure is not known in advance, then we need t
 \section*{Appendices}
 
 \begin{algorithm}
-\caption{ Calculation of function $h(u,v)$ for all $u \leq v$}\label{euclid}
+\caption{ Calculation of function $h(u,v)$ for all $u \leq v$}
+\label{alg:h}
 \begin{algorithmic}[1]
 \State Initialize $H$ as an $N \times N$ matrix that all elements are 0.
 \State $count_p$ is an $N \times N \times \|\Pi_X\|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pi_X$. This matrix can be calculated in $O(\|\Pi_X\| \cdot N^2)$
