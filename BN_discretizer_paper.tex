@@ -235,6 +235,7 @@ Three common approaches to Bayesian network structure learning are constraint-ba
 Score-based structure learning methods over discrete variables commonly evaluate candidate structures are scored according to their likelihood, $\prod_i f(X_i, \Pi_{X_i})$, where
 
 \begin{align}
+\label{eq:f_x_p}
 f(X_i, \Pi_{X_i}) = \prod_{j=1}^{\|\Pi_{X_i}\|} {{(\|X_i\|-1)!}\over{(N_{ij} + \|X_i\|-1)!}} \prod_{k=1}^{\|X_i\|} \alpha_{ijk}!\text{.}
 \end{align}
 
@@ -532,22 +533,41 @@ This argument shows that the proposed method, both before and after approximatio
 
 \subsection{Discretization of Multiple Continuous Variables}
 
-If there are multiple continuous variables in a Bayesian network, we iterate the one-variable discretization method discussed above for all continuous variables. While discretizing a continuous variable, other continuous variables must be discretized, either by a prediscretization that was done before the first iteration or by the discretization result of the latest iteration. The prediscretization can be done by equal-width discretization, which is defined as follows:
-\begin{equation}
-M_X =  \{ min_X, min_X + \delta, min_X + 2\delta, \ldots, \delta, max_X \},
-\end{equation}
-where $min_X$ and $max_X$ are minimal and maximal values of $D_X$, respectively, $\delta =  (max_X - min_X)/k$, and $k$ is the desired number of intervals after equal-width discretization. $k$ is same for all continuous variables and is set to be median value of all discrete variables' cardinalities. After prediscretization, we iterate the one-variable discretization on each continuous variable in the following order: from the continuous variable with highest topological order (leaves) to the continuous variable with lowest topological order (root). We call one such series of discretizations as a cycle. The advange of the order is that, for the first cycle of iteration, we can use less number of unsupervised discretization result. For example, in the right graph of Figure 2, assume $S_2$ is the only discrete variable. If we begin the iteration with $P_1$, then the discretization of $P_1$ will involve the prediscretization results of both $P_2$ and $X$. However, if we begin the iteration with $C_1$, then the discretization of $C_1$ will only involve the prediscretization result of $X$.
+The single-variable discretization method can be extended to Bayesian networks with multiple continuous variables by iteratively discretizing variables individually.
+The discretization process for a single variable requires that all other variables be discrete.
+The iterative approach thus requires a prediscretization policy from which to initialize the process.
+This work uses prediscretization with equal-width intervals, defined by
 
-When the number of intervals after discretization and the positions of discretization edges converge, we stop the iterations and output the discretization policy on each continuous variable. Since the convergence is not guaranteed, we also set up a maximal number of cycles to prevent infinite iterations. In our test on real-world data, the iteration results usually converge within few cycles. Even if it does not converge, 10 cycles usually produce good enough discretization result. The pseudocode of multi-variable discretization is shown in Algorithm 2, where we require four inputs: $D''$, the mixed data of all variables that we plan to learn from, $G$, the network structure, $C$, the set of all continuous variables in a reverse topological order, and $u_{cycle}$, the upper bound of times of cycles.
+\begin{equation}
+M_X =  \curly{X_\text{min}, X_\text{min} + \delta, X_\text{min} + 2\delta, \ldots, \delta, X_\text{max}}\text{,}
+\end{equation}
+
+\noindent
+where $X_\text{min}$ and $X_\text{max}$ are the extrema values of $D_X$, $\delta = (X_\text{max} - X_\text{min})/k$, and $k$ is the desired number of intervals.
+This work sets $k$ to the median value of the cardinalities of initially discrete variables in the network.
+After prediscretization, the one-variable discretization methis is iteratively applied over each continuous variable in reverse topoligical order, from the leaves to the root.
+Let one such series of discretizations be a cycle.
+Reverse topological order has the advantage of using less prediscretized instantiations during the first cycle.
+For example, in the right-hand graph of Figure \ref{fig:example_networks}, assume $S_2$ is the only discrete variable.
+The discretization of $P_1$ involves both $P_2$ and $X$, whereas the discretization of $C_1$ only involves $X$.
+
+The algorithm is terminated when the number of discretization intervals and their associated edges converge for all variables.
+A maximum cycle count is enforced to prevent infinite iterations when convergence does not occur.
+The algorithm typically converges within a few cycles when tested on real-world data.
+In cases where it does not converge, ten cycles usually produce decent discretization results.
+
+The pseudocode for the multi-variable discretization procedure is shown in Algorithm \ref{alg:disc_two}.
+It requires four inputs: $D''$, the joint samples from all network variables; $G$, the network structure; $C$, the set of all continuous variables in a reverse topological order; and $u_{cycle}$, the upper bound of times of cycles.
 
 \begin{algorithm}
-\caption{ Discretization of multiple continuous variables}
+\label{alg:disc_two}
+\caption{Discretization of multiple continuous variables \todo{Fix label reference number}}
 \begin{algorithmic}[5]
 \Function{Discretize}{$D''$, $G$, $C$, $u_{cycle}$}
 \State
-\State $M[i] \leftarrow$ the discretization policy of $i$th variable
-\State $n \leftarrow$ the number of variables in Bayesian network
-\State $D^*_i \leftarrow M[i] (D_i)$, the discretized $D_i$ by $M[i]$
+\State $M[i] \leftarrow$ the discretization policy for the $i$th variable
+\State $n \leftarrow$ the number of variables in the Bayesian network
+\State $D^*_i \leftarrow M[i] (D_i)$, list of samples $D_i$ discretized according to $M[i]$
 \State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
 \State $k \leftarrow median\{ \|v\|, v\notin C\}$
 \State
@@ -564,7 +584,7 @@ When the number of intervals after discretization and the positions of discretiz
 \For {$j = 1$ to $\|C\|$}
 \State $D^*_{\backslash C(j)} \leftarrow D^*$ without $D^*_{C(j)}$.
 \State {$M[C(j)] \leftarrow $ DISCRETIZE($D_{C(j)}$,$D^*_{ \backslash C(j)}$,graph)}
-\State {$D^*_{C(j)}  \leftarrow$ $M[C(j)](D''_{C(j)}) $}
+\State {$D^*_{C(j)}  \leftarrow$ $M[C(j)](D''_{C(j)})$}
 \EndFor
 \EndWhile
 \State \Return $M$
@@ -572,46 +592,59 @@ When the number of intervals after discretization and the positions of discretiz
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Discretization of Continuous Variables While Structure Learning}
+\subsection{Combining Discretization with Structure Learning}
 
-In many situations the network structure is not known in advance, then we need to learn it from data. We use an alternative approach to combine our proposed discretization method with the K2 structure learning algorithm \citep{K2}. That is to say, we start with some prediscretizations on continuous variables and run the K2 algorithm given the discretized data. Each time an edge is added by the K2 algorithm, we rediscretize the continuous variables based on the current network. Then the new discretization policies update the discretized data of all continuous variables, and we continue the next K2 step with the updated discretized data. This cycle is repeated until no edge is added by the K2 algorithm. The detail of the procedure is shown in Algorithm 3. Here we have five inputs: $D'$, the mixed data we plan to learn from, $C$, the set of all continuous variables, $order$, the variable order which is required by the $K2$, $u_{parent}$, the upper bound of number of parents which is also required by the $K2$, and $u_{cycle}$, the upper bound of times of cycles. Notice that in the usual structure learning from discrete data, one usually run the K2 algorithm many times with different orders, and choose the structure with the highest K2 score. We do the same thing: run Algorithm 3 many times, each time with a different order, and pick the discretized Bayesian network with the highest K2 score.
+In many situations the network structure is not known in advance and must be learned from data.
+Traditional Bayesian structure learning algorithms require discretized data, whereas the proposed discretization algorithm requires a network structure.
+This section combines the proposed discretization method with the K2 structure learning algorithm \citep{K2} in an interative fassion to simultaneously perform Bayesian structure learning and discretization of continuous variables.
+
+The proposed algorithm alternates between K2 structure learning and discretization.
+K2 is run on the discretized dataset corresponding to prediscretizations for all continuous variables.
+The affected continuous variables are rediscretized every time an edge is added by K2.
+The resulting discretization policies are used to update the discretized dataset, and the next step of the K2 algorithm is executed.
+This cycle is repeated until the K2 algorithm reaches a local maximum.
+
+This procedure is given in Algorithm \ref{alg:structure_learn}.
+It takes five inputs: $D'$, the joint samples from all network variables; $C$, the set of all continuous variables; $order$, the permutation of variable for $K2$; $u_{parent}$, the upper bound on the number of parents per node for $K2$; and $u_{cycle}$, the upper bound on the cycle count.
+It is common practice to run K2 multiple times with different permutations of the variables and to then choose the structure with the highest score.
+This work runs Algorithm \ref{alg:structure_learn} multiple times, each with a different order, and picks the discretized Bayesian network with the highest score.
+
 \begin{algorithm}
+\label{alg:structure_learn}
 \caption{ Learning a discrete-valued Bayesian network}
 \begin{algorithmic}[5]
 \Function{Learn\_DBN}{$D''$, $C$, $order$, $u_{parent}$, $C$, $u_{cycle}$}
-\State
-
-\State $n \leftarrow$ the number of variables in Bayesian network
-\State $k \leftarrow median\{ \|v\|, v\notin C\}$
-\State $M[i] \leftarrow$ the discretization policy of $i$th variable
-\State $D^*_i \leftarrow M[i] (D_i)$, the discretized $D_i$ by $M[i]$
-\State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
-\State $G \leftarrow$ the initial graph (no edges between nodes)
-\State
-\For {$i = 1$ to $n$}
-\If {$i \in C$}
-\State $M[i] \leftarrow$  equal-width discretization with $k$ intervals
-\State $D^*_i \leftarrow  M[i] (D''_i)$
-\EndIf
-\EndFor
-\State
-\For {$i =1$ to $n$}
-\State $P_{old} \leftarrow f(X^*_i,\Pi_{X^*_i})$: Equation 5
-\State OKToProceed $\leftarrow$ \textbf{true}
-\While OKToProceed \textbf{and} $\|\Pi_{X^*_i}\| < u_{parent}$
-\State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pi_X$
-\State $P_{new} \leftarrow f(X^*_i,\Pi_{X^*_i} \cup Y)$
-\If {$P_{new} > P_{old}$}
-\State $P_{old} \leftarrow P_{new}$
-\State $\Pi_{X_i} \leftarrow \Pi_{X_i} \cup Y $
-\State $M \leftarrow$ {DISCRETIZE}({$D''$, $G$, $C$, $u_{cycle}$}): Algorithm 2
-\State $D* = M(D'')$
-\Else
-\State OKToProceed $\leftarrow$ \textbf{false}
-\EndIf
-\EndWhile
-\EndFor
-\State \Return $G$, $M$
+  \State $n \leftarrow$ the number of variables in the Bayesian network
+  \State $k \leftarrow median\{ \|v\|, v\notin C\}$
+  \State $M[i] \leftarrow$ the discretization policy for the $i$th variable
+  \State $D^*_i \leftarrow M[i] (D_i)$, list of samples $D_i$ discretized according to $M[i]$
+  \State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
+  \State $G \leftarrow$ the initial edgeless graph structure
+  \State
+  \For {$i = 1$ to $n$}
+    \If {$i \in C$}
+      \State $M[i] \leftarrow$  equal-width discretization with $k$ intervals
+      \State $D^*_i \leftarrow  M[i] (D''_i)$
+    \EndIf
+  \EndFor
+  \State
+  \For {$i =1$ to $n$}
+    \State $P_{old} \leftarrow f(X^*_i,\Pi_{X^*_i})$: Equation \ref{eq:f_x_p}
+    \State OKToProceed $\leftarrow$ \textbf{true}
+    \While {OKToProceed \textbf{and} $\|\Pi_{X^*_i}\| < u_{parent}$}
+      \State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pi_X$
+      \State $P_{new} \leftarrow f(X^*_i,\Pi_{X^*_i} \cup Y)$
+      \If {$P_{new} > P_{old}$}
+        \State $P_{old} \leftarrow P_{new}$
+        \State $\Pi_{X_i} \leftarrow \Pi_{X_i} \cup Y $
+        \State $M \leftarrow$ {DISCRETIZE}({$D''$, $G$, $C$, $u_{cycle}$}): Algorithm \ref{alg:disc_two}
+        \State $D* = M(D'')$
+      \Else
+        \State OKToProceed $\leftarrow$ \textbf{false}
+      \EndIf
+    \EndWhile
+  \EndFor
+  \State \Return $G$, $M$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
@@ -644,24 +677,24 @@ In many situations the network structure is not known in advance, then we need t
 \section*{Appendices}
 
 \begin{algorithm}
-\caption{ Calculation of function $h(u,v)$ for all $u \leq v$}
-\label{alg:h}
-\begin{algorithmic}[1]
-\State Initialize $H$ as an $N \times N$ matrix that all elements are 0.
-\State $count_p$ is an $N \times N \times \|\Pi_X\|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pi_X$. This matrix can be calculated in $O(\|\Pi_X\| \cdot N^2)$
-\For {$u = 1$ to $N$}
-\For {$v = u$ to $N$}
-\State $H(u,v) \leftarrow H(u,v) + \log((v-u + J_p)!) - \log((J_p -1)!)$
-\For {$w = 1$ to $\|\Pi_X\|$}
-\State $H(u,v) \leftarrow H(u,v) - \log( count_p(u,v,w)!)$
-\EndFor
-\EndFor
-\EndFor
+  \caption{ Calculation of $h(u,v)$ for all $u \leq v$}
+  \label{alg:h}
+  \begin{algorithmic}[1]
+    \State Initialize $H$ as an $N \times N$ matrix such that all elements are 0.
+    \State $count_p$ is an $N \times N \times \|\Pi_X\|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pi_X$. This matrix can be calculated in $O(\|\Pi_X\| \cdot N^2)$
+    \For {$u = 1$ to $N$}
+      \For {$v = u$ to $N$}
+        \State $H(u,v) \leftarrow H(u,v) + \log((v-u + J_p)!) - \log((J_p -1)!)$
+        \For {$w = 1$ to $\|\Pi_X\|$}
+          \State $H(u,v) \leftarrow H(u,v) - \log( count_p(u,v,w)!)$
+        \EndFor
+      \EndFor
+    \EndFor
 
-\For {$j = 1$ to $n_c$}
-\State XXX
-\EndFor
-\end{algorithmic}
+    \For {$j = 1$ to $n_c$}
+      \State XXX
+    \EndFor
+  \end{algorithmic}
 \end{algorithm}
 
 \end{document}
