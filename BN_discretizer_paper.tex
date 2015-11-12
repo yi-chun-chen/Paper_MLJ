@@ -495,19 +495,26 @@ The approximation reduces the runtime of Algorithm \ref{alg:disc_one} to a polyn
 \tim{`The rigorous proof of the approximation have not been proposed.' Do you mean that we are not proving that the approximation always holds, or that the algorithm conserves optimality, or something else?}
 It will be shown in Section \ref{sec:experiments} that the approximation is more sensitive to the distribution over other variables and is biased towards slightly higher interval counts.
 
-With the approximated objective function, Equation \ref{eq:opt_prob_approx}, we now have a more clear way to see that how child variables and parent variables contribute to the objective function differently. For example, in the left graph of Figure 2, the corresponding sqaure brackets in Equation 17 are
+With the approximated objective function, Equation \ref{eq:opt_prob_approx}, provides intuition into how child and parent variables contribute to the objective function.
+For example, in the left graph of Figure \ref{fig:example_networks}, the corresponding square brackets in the approximated object function are
+
 \begin{equation}
 \begin{aligned}
+\label{eq:example_approx}
  \sum_{i=1}^k & \left\lbrace   \left[ \log{{n_{i} + J_{C_1} - 1}\choose{J_{C_1}-1}} + \log \left(  {{{n_i}!} \over { {n^{(1)}_{i,1,\emptyset} !} \cdots {n^{(1)}_{i,J_{C_1},\emptyset} !}} }  \right)  +  \right. \right.\\
 & \left.  \log{{n_{i} + J_{C_2} - 1}\choose{J_{C_2}-1}} + \log \left(  {{{n_i}!} \over { {n^{(2)}_{i,1,\emptyset} !} \cdots {n^{(2)}_{i,J_{C_1},\emptyset} !}} }  \right)  \right] + \\
-&  \left. \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} +  \log \left( { {{{n}_i}!}\over{ {n^{(p_1)}_{i,1} !}\cdots {n^{(p_1)}_{i,J_{p_1}} !}}} \right) +{ {{{n}_i}!}\over{ {n^{(p_2}_{i,1} !}\cdots {n^{(p_2)}_{i,J_{p_2}} !}}}  \right] \right\rbrace\\ .
+&  \left. \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} +  \log \left( { {{{n}_i}!}\over{ {n^{(p_1)}_{i,1} !}\cdots {n^{(p_1)}_{i,J_{p_1}} !}}} \right) +{ {{{n}_i}!}\over{ {n^{(p_2}_{i,1} !}\cdots {n^{(p_2)}_{i,J_{p_2}} !}}}  \right] \right\rbrace \text{.}
 \end{aligned}
 \end{equation}
 
 
-In Equation18, each child variable carries two terms, as shown in the first square bracket, and two parent variables only carry three terms, as shown in the second square bracket. Therefore, in this case, child variables are more determinative than parent variables even though the numbers of child variables and parent variables are equal. However, if $C_2$ has the other parent variable $S_2$, as shown in the right graph of Figure 2, the importances of $C_2$ will be debiliated, since the information from $C_2$ is now adulterated by $S_2$. These argument shows that our proposed method, either before or after approximation, indeed involves graph structures to discretize continuous variables.
+In Equation \ref{eq:example_approx}, each child carries two terms, as shown in the first set of square brackets, but the two parent variables only carry a total of three terms, as shown in the second set of square brackets.
+In this case the child variables have greater effect than the parent variables even though the number of child and parent variables are the same.
+However, if $C_2$ has an additional parent $S_2$, as shown in the right graph of Figure \ref{fig:example_networks}, the importances of $C_2$ will be reduced, because the information from $C_2$ is now affected by $S_2$.
+This argument shows that the proposed method, both before and after approximation, indeed incorporates graph structure when discretizing continuous variables.
 
 \begin{figure}[ht]
+  \label{fig:example_networks}
     \begin{tabular}{cc}
       \input{graph2_left}
       \end{tabular}
