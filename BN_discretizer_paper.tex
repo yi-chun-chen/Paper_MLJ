@@ -219,7 +219,7 @@ P_B (X_1 , \cdots, X_n) = \prod_{i=1}^{n} P_B (X_i \mid \Pi_{X_i}) = \prod_{i=1}
 
 Samples can be drawn from the joint distribution represented by a Bayesian network by forward sampling.
 Variables are sampled in topological order such that parental instantiations are always known~\citep[see][chap.~22]{algo_2009}.
-Furthermore, the parent\rightarrow child sampling order can be reversed if the marginal probability of child variable $P(X_i)$ is known.\tim{Do we use this later?}
+Furthermore, the parent\rightarrow child sampling order can be reversed if the marginal probability of child variable $P(X_i)$ is known.
 By Bayes' rule,
 
 \begin{equation}
@@ -291,29 +291,30 @@ The optimal discretization policy maximizes $P(M)\cdot P(D\mid M)$.
 
 \subsection{Priors and Objective Function}
 
-We have the following four priors for the discretization model $M$ that enable us to evaluate $P(M)$ and $P(D \mid M)$:\\
+Four prior principles adapted from the MODL approach define $P(M)$ and $P(D \mid M)$:
 \begin{enumerate}
-\item For a discretization edge locating at $(x_i + x_{i+1})/2$ has probability
+\item A discretization edge at $(x_i + x_{i+1})/2$ has probability
 \begin{equation}
 1 - {\exp(- L \cdot {{x_{i+1} - x_i}\over{x_N - x_1}})},
 \end{equation}
-where $L$ is the largest cardinality number of discrete variables in $X$'s Markov blanket.
+where $L$ is the largest cardinality of discrete variables in $X$'s Markov blanket.
 \item For a given interval of $M$, every distribution of $\Pi_X$ is equiprobable.
-\item For each pair of $(C_i,\boldsymbol{S_i})$ and a given interval of $M$, every distribution of $C_i$ with a value of $\boldsymbol{S_i}$ is equiprobable.
-\item The distributions of each $C_i$ and $\Pi_X$ in each interval of $M$ with each value of $\boldsymbol{S_i}$ are independent from each other.
+\item For each pair $(C_i,\boldsymbol{S_i})$ and a given interval of $M$, every distribution over $C_i$ given $\boldsymbol{S_i}$ is equiprobable.
+\item The distributions over each $C_i$ and $\Pi_X$ in each interval of $M$ given each instantiation of $\boldsymbol{S_i}$ are independent.
 \end{enumerate}
 
-Owing to these priors, we are able to evaluate $P(M)$ and $P(D \mid M)$. For the former, we have
+The prior term $P(M)$ has the form:
+
 \begin{equation}
 P(M) = \prod_{i=1}^k \{ [1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}] \cdot \exp(L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}}) \},
 \end{equation}
-where $s_i = \sum_{j=1}^k n_j$ and $s_k = N$, $s_0 = 0$. Before evaluating $P(D \mid M)$, notice that
+where $s_i = \sum_{j=1}^k n_j$, $s_k = N$, and $s_0 = 0$. Before evaluating $P(D \mid M)$, note that
 \begin{equation}
-P(D \mid M) \propto P(D_{\Pi_x} \mid M) \cdot \prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}}).
+P(D \mid M) \propto P(D_{\Pi_x} \mid M) \cdot \prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})\text{.}
 \end{equation}
-The graph structure allows us to only consider the interations between $X$ and other variables in its Markov blanket and thus leads to the factorization. For example, in Figure 1., the corresponding $P(D \mid M)$ is factorized as
+The graph structure allows us to only consider the interations between $X$ and the other variables in its Markov blanket, thus allowing for convenient factorization. For example, $P(D \mid M)$ for Figure \ref{fig:one} factors according to
 \begin{equation}
-P(D_{ P_1,P_2,P_3 } \mid M) \cdot P( D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}) \cdot P(D_{C_2} \mid M,D_{ S_2  }).
+P(D_{ P_1,P_2,P_3 } \mid M) \cdot P( D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}) \cdot P(D_{C_2} \mid M,D_{ S_2  })\text{.}
 \end{equation}
 
 \begin{figure}[ht]
@@ -321,35 +322,59 @@ P(D_{ P_1,P_2,P_3 } \mid M) \cdot P( D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}) \cdo
       \input{graph1}
     \end{tabular}
   \caption{Factorization of $P(D \mid M)$}
+  \label{fig:one}
 \end{figure}
 
+The factorization arises from the conditional independencies in the Bayesian network.
+Given a distribution over $X$ and a specific instance $x$, one can directly determine the conditional distribution over the parents $\Pi_x$.
+The parents given $x$ are dependent, in general one cannot further factorize $P(D_{\Pi_x} \mid M)$.
+Similarly, a distribution over $C_i$ is fully defined given $x$ and $\boldsymbol{S_i}$.
+The children are independent given $X$, and thus factorize according to $\prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$.
 
-The concept behind the factorization is similar to sampling in a Bayesian network. Once we have the distribution of $X$ and sample $X$ for it, then we can further sample $\Pi_x$. Since the samples of $P_1,P_2,\ldots,P_{n_p}$ given a value of $X$ are not independent, we can not further factorize $P(D_{\Pi_x} \mid M)$ into $\prod_i P(D_{P_i} \mid M)$. Similarly, once we have samples of $X$ and $\boldsymbol{S_i}$, we can sample $C_i$. Since the sampling processes of child variables are independent from each other, we have the product $\prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$.\\
+It is thus necessary to formulate $P(D_{\Pi_x} \mid M)$  and $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$ based on discretization policy $M = [n_1,n_2,\ldots,n_k]$ in order to compute the likelihood term, $P(D \mid M)$. These components are outlined below.
 
-For the following part, we evaluate $P(D_{\Pi_x} \mid M)$  and $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$ based on discretization policy $M = [n_1,n_2,\ldots,n_k]$ and dataset $D$.
-\subsubsection{Evaluate $P(D_{\Pi_x} \mid M)$}
-Assume that $J_P = \prod_{i=1}^{n_p} \| P_i \|$. Then we have:
+\subsubsection{Evaluation of $P(D_{\Pi_x} \mid M)$}
+
+Let $J_P = \prod_{i=1}^{n_p} \| P_i \|$. It follows that
+
 \begin{equation}
 P(D_{\Pi_X} \mid M) = \prod_{i=1}^k  {{1}\over{{n_i + J_P - 1}\choose{J_P -1}}}
-{{1}\over{ {{{n}_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}  }},
+{{1}\over{ {{{n}_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}  }}\text{,}
 \end{equation}
-where $n^{(p)}_{i,j}$ is the number of instances in $i$th discretized interval with $j$th value of $\Pi_X$. Note that $n_i = \sum_{j=1}^{\| \Pi_x \|} n^{(p)}_{i,j}$. The two factors on RHS comes from the second prior: all distributions of values of $\Pi_X$ in a given interval are equiprobable. According to the forth prior, the distribution in each interval is independent, so we multiply all the two factors together.
-\subsubsection{Evaluate $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$}
-Assume for each pair of $(C_j, \boldsymbol{S_j})$, we have $\|C_j \| = J_j$ and $\| \boldsymbol{S_j} \| = L_j = \prod_{v \in \boldsymbol{S_j}} \| v \|$. Therefore,
+
+\noindent
+where $n^{(p)}_{i,j}$ is the number of instances in the $i$th discretized interval with the $j$th value of $\Pi_X$.
+Note that $n_i = \sum_{j=1}^{\| \Pi_x \|} n^{(p)}_{i,j}$.
+The two factors on the right hand side comes from the second prior: all distributions of values of $\Pi_X$ in a given interval are equiprobable. According to the fourth prior, the distribution in each interval is independent, so the two factors are multiplied together.
+
+\subsubsection{Evaluation of $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$}
+
+For each pair $(C_j, \boldsymbol{S_j})$, let $\|C_j \| = J_j$ and $\| \boldsymbol{S_j} \| = L_j = \prod_{v \in \boldsymbol{S_j}} \| v \|$. It follows that
+
 \begin{equation}
+\label{eq:likelihood_two}
 P(D_{C_j}  \mid M, D_{S_j}) =
 \prod_{i=1}^{k} \prod_{l=1}^{L_j} {{1}\over{{n_{i,l} + J_j - 1}\choose{J_j-1}}}
-{{1}\over{ {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}}  }},
+{{1}\over{ {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}}  }}\text{,}
 \end{equation}
-where $n^{(j)}_{i,m,l}$ is the number of instances in $i$th interval with $m$th value of $C_j$ and $l$th value of $\boldsymbol{S_j}$, $n_{i,l} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,l}$, and $n_i = \sum_{l=1}^{L_j} n_{i,l}$. The two factors on RHS comes from the third prior: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable. According to the forth prior, these distributions are independent from each other, therefore we multiply all factors. If $S_j = \emptyset$, then Equation 13. is equivalent to
+
+\noindent
+where $n^{(j)}_{i,m,l}$ is the number of instances in $i$th interval with $m$th value of $C_j$ and $l$th value of $\boldsymbol{S_j}$, $n_{i,l} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,l}$, and $n_i = \sum_{l=1}^{L_j} n_{i,l}$.
+The two factors on the right hand side come from the third prior: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable. According to the forth prior, these distributions are independent from each other, and one thus takes their product. If $S_j = \emptyset$, then Equation \ref{eq:likelihood_two} is equivalent to
+
 \begin{equation}
 P(D_{C_j}  \mid M) =
 \prod_{i=1}^{k}  {{1}\over{{n_{i} + J_j - 1}\choose{J_j-1}}}
-{{1}\over{ {{n_{i}}!}\over{ {n^{(j)}_{i,1,\emptyset} !} {n^{(j)}_{i,2,\emptyset} !} \cdots {n^{(j)}_{i,J_j,\emptyset} !}}  }},
+{{1}\over{ {{n_{i}}!}\over{ {n^{(j)}_{i,1,\emptyset} !} {n^{(j)}_{i,2,\emptyset} !} \cdots {n^{(j)}_{i,J_j,\emptyset} !}}  }}\text{,}
 \end{equation}
-where $n^{(j)}_{i,m,\emptyset}$ is the number of instances in $i$th interval with $m$th value of $C_j$, and $\sum_{m=1}^{J_j} n^{(j)}_{i,m,\emptyset} = n_i$. \\
 
-With Equation 8,9,11,12, and 13, now we are able to write down the objective function. Instead of maximizing $P(M) \cdot P(D|M)$, we minimize its log-inverse for convenience. The objective function is
+\noindent
+where $n^{(j)}_{i,m,\emptyset}$ is the number of instances in the $i$th interval with the $m$th value of $C_j$, and $\sum_{m=1}^{J_j} n^{(j)}_{i,m,\emptyset} = n_i$.
+
+The objective function can be formulated given equations \todo{8,9,11,12}, and \ref{eq:likelihood_two}.
+Instead of maximizing $P(M) \cdot P(D|M)$, the log-inverse is minimized for computational convenience.
+The objective function is
+
 \begin{equation}
 \begin{aligned}
 & \sum_{i=1}^{k-1} - \log(1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}) +  \sum_{i=1}^{k} L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}} +\\
