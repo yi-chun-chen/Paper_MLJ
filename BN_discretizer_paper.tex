@@ -266,18 +266,31 @@ The policy discretizes the continuous variable $C$ into $k$ intervals. Furthermo
 \section{Discretization of a Single Continuous Variable}
 \label{sec:single_var}
 
-In this section, we consider the case that only one variable in a Bayesian network is continuous and the others are discrete. Before we formulate the objective function, we introduce some notations that will make the following calculation easier.
-\subsection{Notations}
-\label{Notation}
-Assume the continuous variable is $X$. It has $n_p$ parent variables, $\Pi_X = \{ P_1, P_2, P_3,\ldots,P_{n_p}\}$. It also has $n_c$ child variables $\{ C_1, C_2,\ldots,C_{n_c}\}$. Each child variable $C_i$ of $X$ has other parent variables, which forms a set $\boldsymbol{S_i}$. Before we do the discretization, we sort the data instances by its attribute of $X$.
+This section covers discretization of a single continuous variable in a Bayesian network where all other variables are discrete.
+Before we formulate the objective function, we introduce some notations that will make the following calculation easier.
 
-Let $D \cup D_X$ be a dataset of $N$ instances which we plan to learn discretization from. $D_X$ only contains the data of $X$. $D$ contains the data of all variables except $X$.  Assume $D \cup D_X$ has been sorted in the ascending order of $D_X$. In the following content, $D_{\boldsymbol{Y}}$ means the data instances of a set of variable $\boldsymbol{Y}$. Let $D_X = \{ x_1,x_2,x_3,\ldots,x_N \}$. In order to make the discretization mechanism more understandable, we temporarily assume there is no repeated values in $D_X$, i.e., $x_1 < x_2 < \ldots < x_N$. We will remove this assumption later in the algorithm section. Therefore, a discretization policy $M$ on $X$ can be written as $M = [n_1,n_2,\ldots,n_k]$, where $k$, $n_1$, $n_2$, $\ldots,n_k$ are positive integers satisfying $N = \sum_{i=1}^k n_i$.
+\subsection{Notations}
+
+\tim{We should move the notation section to preliminaries}
+
+\tim{Earlier the continuous variable was denoted $C$. Now it is $X$. Slightly confusing with $c$ also meaning child.}
+
+Consider continuous variable $X$.
+It has $n_p$ parents, $\Pi_X = \{ P_1, P_2, P_3,\ldots,P_{n_p}\}$ and $n_c$ children, $\{ C_1, C_2,\ldots,C_{n_c}\}$.
+Each child $C_i$ of $X$ may possess other parents, our spouses of $X$, whose set is denoted $\boldsymbol{S_i}$.
+
+Let $D$ be a dataset of $N$ joint instances from which discretization will be learned, sorted in ascending order according to $X$.
+Let $D_{\boldsymbol{Y}}$ will refer to the data instances associated with variables $\boldsymbol{Y}$.
+Thus $D_X = \{ x_1,x_2,x_3,\ldots,x_N \}$.
+In order to facilitate understanding, we temporarily assume all values in $D_X$ are unique, that is, $x_1 < x_2 < \ldots < x_N$.
+It follows that a discretization policy $M$ on $X$ can be written as $M_X = \brock{n_1,n_2,\ldots,n_k}$, where $k$, $n_1$, $n_2$, $\ldots,n_k$ are positive integers satisfying $N = \sum_{i=1}^k n_i$.
+The optimal discretization policy maximizes $P(M)\cdot P(D\mid M)$.
 
 %Furthermore, since there might have repeated values for $D_x$, we assume there are $N'$ unique values of $D_x$ and $N' \leq N$. Note that the allowable discretization edges happens between two consective values of non-repeated value of $D_x$. For example, if $D_X = \{ 1.0,1.0,2.0\}$, then the only possible discretization edge is on $1.5$.
 
 
 \subsection{Priors and Objective Function}
-\label{obj}
+
 We have the following four priors for the discretization model $M$ that enable us to evaluate $P(M)$ and $P(D \mid M)$:\\
 \begin{enumerate}
 \item For a discretization edge locating at $(x_i + x_{i+1})/2$ has probability
