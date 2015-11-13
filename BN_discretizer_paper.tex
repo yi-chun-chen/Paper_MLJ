@@ -292,29 +292,34 @@ An optimal discretization policy maximizes $P(M)\cdot P(D\mid M)$ for some prior
 
 \subsection{Priors and Objective Function}
 
-We have the following four priors for the discretization model $M$ that enable us to evaluate $P(M)$ and $P(D \mid M)$:\\
+The following four principles for the optimal discretization policy, modivated by MODL, enable the formulation of $P(M)$ and $P(D \mid M)$:
 \begin{enumerate}
-\item For a discretization edge locating at $(x_i + x_{i+1})/2$ has probability
+\item A discretization edge located at $(x_i + x_{i+1})/2$ has probability
 \begin{equation}
 1 - {\exp(- L \cdot {{x_{i+1} - x_i}\over{x_N - x_1}})},
 \end{equation}
-where $L$ is the largest cardinality number of discrete variables in $X$'s Markov blanket.
+where $L$ is the largest cardinality number of discrete variables in $X$'s Markov blanket. \tim{Where does this come from? Is there an intuitive explanation?}
 \item For a given interval of $M$, every distribution of $\Pi_X$ is equiprobable.
 \item For each pair of $(C_i,\boldsymbol{S_i})$ and a given interval of $M$, every distribution of $C_i$ with a value of $\boldsymbol{S_i}$ is equiprobable.
 \item The distributions of each $C_i$ and $\Pi_X$ in each interval of $M$ with each value of $\boldsymbol{S_i}$ are independent from each other.
 \end{enumerate}
 
-Owing to these priors, we are able to evaluate $P(M)$ and $P(D \mid M)$. For the former, we have
+From the first principle one obtains
 \begin{equation}
-P(M) = \prod_{i=1}^k \{ [1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}] \cdot \exp(L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}}) \},
+P(M) = \prod_{i=1}^k \curly{ \brock{1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}} \cdot \exp\paren{L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}}}},
 \end{equation}
-where $s_i = \sum_{j=1}^k n_j$ and $s_k = N$, $s_0 = 0$. Before evaluating $P(D \mid M)$, notice that
+
+\noindent
+where $s_i = \sum_{j=1}^k n_j$ and $s_k = N$, $s_0 = 0$.
+The Bayesian network graph structure causes the likelihood term $P(D \mid M)$ to factorizes according to $X$'s Markov blanket:
+
 \begin{equation}
-P(D \mid M) \propto P(D_{\Pi_x} \mid M) \cdot \prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}}).
+P\paren{D \mid M} \propto P\paren{D_{\Pi_x} \mid M} \cdot \prod_{i = 1}^{n_c} P\paren{D_{C_i} \mid M, D_{\boldsymbol{S_i}}}\text{.}
 \end{equation}
-The graph structure allows us to only consider the interations between $X$ and other variables in its Markov blanket and thus leads to the factorization. For example, in Figure 1., the corresponding $P(D \mid M)$ is factorized as
+
+For example, in Figure 1., the corresponding $P(D \mid M)$ is factorized as
 \begin{equation}
-P(D_{ P_1,P_2,P_3 } \mid M) \cdot P( D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}) \cdot P(D_{C_2} \mid M,D_{ S_2  }).
+P\paren{D_{ P_1,P_2,P_3 } \mid M} \cdot P\paren{ D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}} \cdot P\paren{D_{C_2} \mid M,D_{ S_2  }}\text{.}
 \end{equation}
 
 \begin{figure}[ht]
@@ -325,18 +330,22 @@ P(D_{ P_1,P_2,P_3 } \mid M) \cdot P( D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}) \cdo
 \end{figure}
 
 
-The concept behind the factorization is similar to sampling in a Bayesian network. Once we have the distribution of $X$ and sample $X$ for it, then we can further sample $\Pi_x$. Since the samples of $P_1,P_2,\ldots,P_{n_p}$ given a value of $X$ are not independent, we can not further factorize $P(D_{\Pi_x} \mid M)$ into $\prod_i P(D_{P_i} \mid M)$. Similarly, once we have samples of $X$ and $\boldsymbol{S_i}$, we can sample $C_i$. Since the sampling processes of child variables are independent from each other, we have the product $\prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$.\\
+The concept behind the factorization also the motivation behind forward sampling in a Bayesian network.
+The parents of $X$ are independent of the children given $X$.
+The parents are not necessarily individually independent, and thus the parental term $P(D_{\Pi_x} \mid M)$ cannot be factored further.
+The children of $X$ are similarly independent given $X$ and its spouses $\boldsymbol{S_i}$, leading to their factored product $\prod_{i = 1}^{n_c} P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$.
+Each component in the decomposition be evaluated based on a discretization policy $M = [n_1,n_2,\ldots,n_k]$ and dataset $D$.
 
-For the following part, we evaluate $P(D_{\Pi_x} \mid M)$  and $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$ based on discretization policy $M = [n_1,n_2,\ldots,n_k]$ and dataset $D$.
-\subsubsection{Evaluate $P(D_{\Pi_x} \mid M)$}
-Assume that $J_P = \prod_{i=1}^{n_p} | P_i |$. Then we have:
+\subsubsection{Evaluation of $P(D_{\Pi_x} \mid M)$}
+Assume that $J_P = \prod_{i=1}^{n_p} | P_i |$. Then:
 \begin{equation}
 P(D_{\Pi_X} \mid M) = \prod_{i=1}^k  {{1}\over{{n_i + J_P - 1}\choose{J_P -1}}}
 {{1}\over{ {{{n}_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}  }},
 \end{equation}
 where $n^{(p)}_{i,j}$ is the number of instances in $i$th discretized interval with $j$th value of $\Pi_X$. Note that $n_i = \sum_{j=1}^{| \Pi_x |} n^{(p)}_{i,j}$. The two factors on RHS comes from the second prior: all distributions of values of $\Pi_X$ in a given interval are equiprobable. According to the forth prior, the distribution in each interval is independent, so we multiply all the two factors together.
-\subsubsection{Evaluate $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$}
-Assume for each pair of $(C_j, \boldsymbol{S_j})$, we have $|C_j | = J_j$ and $| \boldsymbol{S_j} | = L_j = \prod_{v \in \boldsymbol{S_j}} | v |$. Therefore,
+
+\subsubsection{Evaluation of $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$}
+Assume for each pair of $(C_j, \boldsymbol{S_j})$, one has $|C_j | = J_j$ and $|\boldsymbol{S_j}| = L_j = \prod_{v \in \boldsymbol{S_j}} | v |$. Therefore,
 \begin{equation}
 P(D_{C_j}  \mid M, D_{S_j}) =
 \prod_{i=1}^{k} \prod_{l=1}^{L_j} {{1}\over{{n_{i,l} + J_j - 1}\choose{J_j-1}}}
