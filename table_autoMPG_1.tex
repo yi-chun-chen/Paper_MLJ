@@ -1,11 +1,14 @@
-\begin{tabular}{|c|c|c|c|c|c|c|}
-\hline
-                                                              & \multicolumn{2}{c|}{The Proposed Method}                                                                                                  & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}The Proposed Method\\ With the Approx.\end{tabular}}                                       & \multicolumn{2}{c|}{\begin{tabular}[c]{@{}c@{}}The MDL\\ Discretization\end{tabular}}                           \\ \hline
-\begin{tabular}[c]{@{}c@{}}Continuous\\ Variable\end{tabular} & \begin{tabular}[c]{@{}c@{}}No. of\\ Intvls\end{tabular} & \begin{tabular}[c]{@{}c@{}}Disc.\\ edges\end{tabular}                           & \begin{tabular}[c]{@{}c@{}}No. of\\ Intvls\end{tabular} & \begin{tabular}[c]{@{}c@{}}Disc.\\ edges\end{tabular}                           & \begin{tabular}[c]{@{}c@{}}No. of\\ Intvls\end{tabular} & \begin{tabular}[c]{@{}c@{}}Disc.\\ edges\end{tabular} \\ \hline
-$A$                                                             & 6                                                       & \begin{tabular}[c]{@{}c@{}}15.25,17.65,\\ 20.9,25.65,\\ 28.9\end{tabular}       & 6                                                       & \begin{tabular}[c]{@{}c@{}}15.25,17.65,\\ 20.9,25.65,\\ 28.9\end{tabular}       & 1                                                       & No                                                    \\ \hline
-$C$                                                             & 7                                                       & \begin{tabular}[c]{@{}c@{}}70.5,93.5,\\ 109.0,159.5,\\ 259.0,284.5\end{tabular} & 7                                                       & \begin{tabular}[c]{@{}c@{}}70.5,93.5,\\ 109.0,159.5,\\ 259.0,284.5\end{tabular} & 1                                                       & No                                                    \\ \hline
-$D$                                                             & 4                                                       & \begin{tabular}[c]{@{}c@{}}71.5,99.0,\\ 127.0\end{tabular}                      & 4                                                       & \begin{tabular}[c]{@{}c@{}}71.5,99.0,\\ 127.0\end{tabular}                      & 1                                                       & No                                                    \\ \hline
-$E$                                                             & 5                                                       & \begin{tabular}[c]{@{}c@{}}2115.0,2480.5,\\ 2959.5,3657.5\end{tabular}          & 5                                                       & \begin{tabular}[c]{@{}c@{}}2115.0,2480.5,\\ 2959.5,3657.5\end{tabular}          & 1                                                       & No                                                    \\ \hline
-$F$                                                             & 5                                                       & \begin{tabular}[c]{@{}c@{}}12.35,13.75,\\ 16.05,22.85\end{tabular}              & 5                                                       & \begin{tabular}[c]{@{}c@{}}12.35,13.75,\\ 16.05,22.85\end{tabular}              & 1                                                       & No                                                    \\ \hline
-\begin{tabular}[c]{@{}c@{}}log-\\ likelihood\end{tabular}     & \multicolumn{2}{c|}{-10210.2746}                                                                                                          & \multicolumn{2}{c|}{-10210.2746}                                                                                                          & \multicolumn{2}{c|}{-11917.8049}                                                                                \\ \hline
+\scriptsize
+\begin{tabular}{cccc}
+    \toprule
+    Var. & Bayesian & Bayesian with Approximation & MDL \\
+    \midrule
+    $A$ & \numlist[list-final-separator = {, }]{15.25; 17.65; 20.90; 25.65; 28.90} & \numlist[list-final-separator = {, }]{15.25; 17.65; 20.90; 25.65; 28.90} & - \\
+    $C$ & \numlist[list-final-separator = {, }]{70.5; 93.5; 109.0; 159.5; 259.0; 284.5} & \numlist[list-final-separator = {, }]{70.5;93.5;109.0;159.5;259.0;284.5} & - \\
+    $D$ & \numlist[list-final-separator = {, }]{71.5;99.0;127.0} & \numlist[list-final-separator = {, }]{71.5;99.0; 127.0} & - \\
+    $E$ & \numlist[list-final-separator = {, }]{2115;2481;2960;3658} & \numlist[list-final-separator = {, }]{2115;2481;2960;3658} & - \\
+    $F$ & \numlist[list-final-separator = {, }]{12.35;13.75;16.05;22.85} & \numlist[list-final-separator = {, }]{12.35;13.75;16.05;22.85} & - \\
+    \addlinespace[0.5em]
+    Logl & \num{-10210} & \num{-10210} & \num{-11918} \\
+    \bottomrule
 \end{tabular}

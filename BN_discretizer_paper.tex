@@ -57,6 +57,8 @@ grestore
 \usepackage{tikz}
 \usepackage{lscape}
 \usepackage{caption}
+\usepackage{siunitx}
+\usepackage{booktabs}
 % \usepackage[capitalize]{cleveref}
 \usetikzlibrary{bayesnet}
 \setcitestyle{aysep={ }} %Author-Year Separator
@@ -85,6 +87,8 @@ grestore
 \newcommand{\anglebrackets}[1]{\langle #1 \rangle}
 \newcommand{\ceil}[1]{\lceil #1 \rceil}
 \newcommand{\floor}[1]{\lfloor #1 \rfloor}
+
+\newcommand{\discset}{\mathcal{M}}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
@@ -465,8 +469,7 @@ For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
 
 \subsection{Approximation}
 
-Algorithm \ref{alg:disc_one} has an exponential $\bigo\paren{\paren{v'_\text{max}}^{n_p} \cdot N^2}$ runtime.
-This exponential runtime is severely limiting for networks with a large number of discretization edges.
+Algorithm \ref{alg:disc_one} has an exponential $\bigo\paren{\paren{v'_\text{max}}^{n_p} \cdot N^2}$ runtime which severely limits discretization in networks with a large number of discretization intervals or parent variables.
 This section introduces an approximation to the objective function that significantly reduces the runtime and still preserves the quality of discretization.
 The approximation replaces the dominator of the last factor in Equation \ref{eq:likelihood_one} with
 
@@ -507,13 +510,13 @@ For example, in the left graph of Figure \ref{fig:example_networks}, the corresp
 \end{equation}
 \end{small}
 
-In Equation \ref{eq:example_approx}, each child carries two terms, as shown in the first set of square brackets, but the two parent variables only carry a total of three terms, as shown in the second set of square brackets.
+In Equation~\ref{eq:example_approx}, each child carries two terms, as shown in the first set of square brackets, but the two parent variables only carry a total of three terms, as shown in the second set of square brackets.
 In this case the child variables have greater effect than the parent variables even though the number of child and parent variables are the same.
-However, if $C_2$ has an additional parent $S_2$, as shown in the right graph of Figure \ref{fig:example_networks}, the importances of $C_2$ will be reduced, because the information from $C_2$ is now affected by $S_2$.
+However, if $C_2$ has an additional parent $S_2$, as shown in the right graph of Figure~\ref{fig:example_networks}, the importances of $C_2$ will be reduced, because the information from $C_2$ is now affected by $S_2$.
 This argument shows that the proposed method, both before and after approximation, indeed incorporates graph structure when discretizing continuous variables.
 
 \begin{figure}[ht]
-  \label{fig:example_networks}
+  \centering
   \begin{tabular}{cc}
     \input{graph2_left}
     \end{tabular}
@@ -522,6 +525,7 @@ This argument shows that the proposed method, both before and after approximatio
     \input{graph2_right}
   \end{tabular}
   \caption{Two example networks}
+  \label{fig:example_networks}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -537,7 +541,7 @@ The iterative approach thus requires a prediscretization policy from which to in
 This work uses prediscretization with equal-width intervals, defined by
 
 \begin{equation}
-M_X = \curly{X_\text{min}, X_\text{min} + \delta, X_\text{min} + 2\delta, \ldots, \delta, X_\text{max}}\text{,}
+M_X = \curly{X_\text{min}, X_\text{min} + \delta, X_\text{min} + 2\delta, \ldots, X_\text{max}}\text{,}
 \end{equation}
 
 \noindent
@@ -558,36 +562,36 @@ The pseudocode for the multi-variable discretization procedure is shown in Algor
 It requires four inputs: $D''$, the joint samples from all network variables; $G$, the network structure; $C$, the set of all continuous variables in a reverse topological order; and $u_{cycle}$, the upper bound of times of cycles.
 
 \begin{algorithm}
-\label{alg:disc_two}
-\caption{Discretization of multiple continuous variables \todo{Fix label reference number}}
-\begin{algorithmic}[5]
-\Function{Discretize}{$D''$, $G$, $C$, $u_{cycle}$}
-\State
-\State $M[i] \leftarrow$ the discretization policy for the $i$th variable
-\State $n \leftarrow$ the number of variables in the Bayesian network
-\State $D^*_i \leftarrow M[i] (D_i)$, list of samples $D_i$ discretized according to $M[i]$
-\State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
-\State $k \leftarrow median\{ |v|, v\notin C\}$
-\State
-\For {$i = 1$ to $n$}
-\If {$i \in C$}
-\State $M[i] \leftarrow$  equal-width discretization with $k$ intervals
-\State $D^*_i \leftarrow  M[i] (D''_i)$
-\EndIf
-\EndFor
-\State
-\State $cycle \leftarrow 0$
-\While {$M$ is not converged  \textbf{and} $cycle \leq u_{cycle}$}
-\State {$cycle  \leftarrow cycle  + 1$}
-\For {$j = 1$ to $|C|$}
-\State $D^*_{\backslash C(j)} \leftarrow D^*$ without $D^*_{C(j)}$.
-\State {$M[C(j)] \leftarrow $ DISCRETIZE($D_{C(j)}$,$D^*_{ \backslash C(j)}$,graph)}
-\State {$D^*_{C(j)}  \leftarrow$ $M[C(j)](D''_{C(j)})$}
-\EndFor
-\EndWhile
-\State \Return $M$
-\EndFunction
-\end{algorithmic}
+  \label{alg:disc_two}
+  \caption{Discretization of multiple continuous variables \todo{Fix label reference number}}
+  \begin{algorithmic}[5]
+  \Function{Discretize}{$D''$, $G$, $C$, $u_{cycle}$}
+    \State
+    \State $M[i] \leftarrow$ the discretization policy for the $i$th variable
+    \State $n \leftarrow$ the number of variables in the Bayesian network
+    \State $D^*_i \leftarrow M[i] (D_i)$, list of samples $D_i$ discretized according to $M[i]$
+    \State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
+    \State $k \leftarrow median\{ |v|, v\notin C\}$
+    \State
+    \For {$i = 1$ to $n$}
+      \If {$i \in C$}
+        \State $M[i] \leftarrow$  equal-width discretization with $k$ intervals
+        \State $D^*_i \leftarrow  M[i] (D''_i)$
+      \EndIf
+    \EndFor
+    \State
+    \State $cycle \leftarrow 0$
+    \While {$M$ is not converged  \textbf{and} $cycle \leq u_{cycle}$}
+      \State {$cycle  \leftarrow cycle  + 1$}
+      \For {$j = 1$ to $|C|$}
+        \State $D^*_{\backslash C(j)} \leftarrow D^*$ without $D^*_{C(j)}$.
+        \State {$M[C(j)] \leftarrow $ DISCRETIZE($D_{C(j)}$,$D^*_{ \backslash C(j)}$,graph)}
+        \State {$D^*_{C(j)}  \leftarrow$ $M[C(j)](D''_{C(j)})$}
+      \EndFor
+    \EndWhile
+    \State \Return $M$
+  \EndFunction
+  \end{algorithmic}
 \end{algorithm}
 
 \subsection{Combining Discretization with Structure Learning}
@@ -650,42 +654,86 @@ This work runs Algorithm \ref{alg:structure_learn} multiple times, each with a d
 \section{Experiments}
 \label{sec:experiments}
 
-The section describes experiments designed to test the soundness of the proposed method. The experiments were run on four datasets from the Irvine repository \citep{Lichman:2013}. For each dataset, the experiment consists of two parts. In the first part, the Bayesian network structure is known in advance, which is obtained by equal-width prediscretization and the K2 algorithm. In the second part, the Bayesian netowrk structure is not provided in advance, and it is learned along with the discretization process.
+This section describes experiments conducted to evaluate the proposed methods.
+All experiments were run on datasets from the publically available Irvine machine learning repository \citep{Lichman:2013}.
+Variables are labelled alphabetically in the order given on the dataset information webpage.
+Subscripts inducate the number of discretized intervals.
+Shaded nodes are originally discrete and unshaded nodes are originally continuous.
 
-For the case that network structure is given, a comparison between the proposed method and the MDL principle discretization is made. 10-fold cross validation of log-likelihood on data set $D_{\text{all}}$ is calculated as follows: firstly, learn discretization policies of each continuous variables from train data $D_{\text{train}}$. Secondly, obtain conditional probability tables $\phi_{x^* \mid \Pi^*_x}$ from the discretized train data $D^*_{\text{train}}$. Thirdly, For a test data instance $(x_1,x_2, \ldots, x_n)$ from $D_{\text{test}}$, the likelihood is
+For each dataset, the experiment consists of two parts.
+In the first part, the Bayesian network structure is known in advance, which is obtained by equal-width prediscretization and the K2 algorithm.
+In the second part, the Bayesian netowrk structure is not provided in advance, and it is learned along with the discretization process.
+\tim{We may not want to state this up front so we can modify what we show for each dataset.}
+
+The discretizations are compared using the mean cross validated log-likelihood of the data set $D$ given the resulting graph structure $G$ and discretization policy set $\discset$.
+The log-likelihood contains two components,
+
 \begin{equation}
-P(x_1, \ldots, x_n) = \prod_{i=1}^{n} \phi_{x^*_i \mid \Pi^*_{x_i}} \cdot \left( {1\over{M'_{X_i}[j_i+1] - M'_{X_i}[j_i]}} \right)^{\boldsymbol{1}_{ \left\lbrace X_i \text{ is continuous}  \right\rbrace }}
+\ln p(D\mid G, \discset) = \ln P(D^*\mid G) + \ln p(D\mid \discset, D^*)\text{,}
 \end{equation}
-, where $M'_{X_i}$ is the augmented discretization policy on continuous variable $X_i$ such that $M'_{X_i}[1] = min(D_{\text{all},X})$, $M'_{X_i}[j] = M_{X_i}[j-1]$ for $j=2,...,k_i$, and $M'_{X_i}[k_i+1] = max(D_{\text{all},X})$, $k$ is the number of intervals of continuous variable $X_i$ after discretization. Furthermore, $M'_{X_i}[j_i] \leq x_i < M'_{X_i}[j_i +1]$. This can be interpreted as follows: once a discrete-valued Bayesian network is learned from train data, test data are sampled from the learned network. If data is continuous, then it is uniformly sampled from the corresponding discretization interval.
 
+\noindent
+where $D$ is the original dataset and $D^*$ is the dataset discretized according to $\discset$.
+The log-likelihood of the discretized dataset is the Bayesian score evaluated with a uniform prior~\citep{neapolitan2004learning}:
 
-\subsection{Dataset 1: Auto MPG} 
-\label{subsec:autompg}
+\begin{equation}
+  \ln P(D^*\mid G) = \sum_{i=1}^n \sum_{j=1}^{q_i} \ln\paren{
+    \frac{
+      \Gamma\paren{\alpha_{ij0}}
+    }{
+      \Gamma\paren{\alpha_{ij0} + m_{ij0}}
+    }
+  } + \sum_{k=1}^{r_i} \ln\paren{
+    \frac{
+      \Gamma\paren{\alpha_{ijk} + m_{ijk}}
+    }{
+      \Gamma\paren{\alpha_{ijk}}
+    }
+  }\text{.}
+\end{equation}
 
-In this subsection, two experiments are conducted on the Auto MPG dataset from the Irvine repository \citep{Lichman:2013}. This dataset has 392 instances (delete the 6 instance with missing data) and eight variables. Three variables are discrete: $B$, $G$, and $H$ (in the following experiment, variables are named and ordered according to the dataset information webpage). They have 5, 13, and 3 cardinality numbers, respectively. In the first experiment, the network structure is given. In the second experiment, the network structure is not provided.
+\tim{We need to make sure everything is defined.}
 
-\subsubsection{Experiment 1 on Auto MPG dataset}
-\label{subsubsec:autompg_exp1}
-The proposed discretization method and the MDL discretization method are tested on the Bayesian network structure in Fig. \ref{Auto_graph_1}, which is obtained by running K2 algorithm 1000 times on prediscretized data, each time with a random restart. The prediscretization is done by equal-width discretization on continuous variables by 5 intervals (median of cardinalities of discrete variables). Shaded nodes in Fig. \ref{Auto_graph_1} means that they are discrete-valued variables.
+The log-likelihood of the original dataset given the discrete dataset is
+
+\begin{equation}
+  \ln p(D\mid \discset, D^*) = \sum_{i=1}^n \sum_{j=1}^{q_i} \sum_{k=1}^{r_i} m_{ijk} \ln\paren{
+    \frac{
+      1
+    }{
+      \discset^{(ij)}_{k+1} - \discset^{(ij)}_{k}
+    }
+  }\text{.}
+\end{equation}
+
+\subsection{Auto MPG Dataset}
+
+In this subsection, two experiments are conducted on the Auto MPG dataset from the Irvine repository \citep{Lichman:2013}.
+The dataset has \num{392} instances after deleting the six instances with missing data, and eight variables.
+Three variables are discrete: $B$, $G$, and $H$ with cardinality 5, 13, and 3 respectively.
+Two expiriments are conducted, one with a given network structure and one in which the structure is learned.
+
+\subsubsection{Structure is Given}
+
+The proposed discretization method and the MDL discretization method are tested on Auto MPG data given the network network in Fig. \ref{Auto_graph_1}.
+The structure was obtained by prediscretizing each continuous variable into five uniform-width intervals, where five is the median cardinality of the discrete variables, and then taking the most frequent structure from a thousand runs of K2.
 
 \begin{figure}[ht]
-\centering
-    \begin{tabular}{cc}
-      \input{graph_autocar_1}
-    \end{tabular}
-  \caption{The Bayesian network obatined by K2 algorithm and prediscretization on Auto MPG dataset}
+  \centering
+  \begin{tabular}{cc}
+    \input{graph_autocar_1}
+  \end{tabular}
+  \caption{The Bayesian network obtained with K2 on the prediscretized Auto MPG dataset}
   \label{Auto_graph_1}
 \end{figure}
 
-Table \ref{Auto_MPG_disc_table_1} shows the numbers of intervals after discretization, the positions of discretization edges, and log-likelihood of 10-fold cross validation. For the Bayesian network in Fig. \ref{Auto_graph_1}, the approximation only reduces runtime of proposed method and has no influence on discretization result. MDL principle discretization works not well, since it discretizes all variables with only one interval. For a Bayesian network on thie Auto MPG data set that MDL principle discretization has non-trivial result, please reference to Appendix. 
+Table \ref{Auto_MPG_disc_table_1} shows the numbers of intervals after discretization, the positions of discretization edges, and log-likelihood of 10-fold cross validation. For the Bayesian network in Fig. \ref{Auto_graph_1}, the approximation only reduces runtime of proposed method and has no influence on discretization result. MDL principle discretization works not well, since it discretizes all variables with only one interval. For a Bayesian network on thie Auto MPG data set that MDL principle discretization has non-trivial result, please reference to Appendix.
 
-\begin{table}
-\centering
-\scalebox{1.0}{
-\input{table_autoMPG_1.tex}
-}
-\caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{Auto_graph_1}}
-\label{Auto_MPG_disc_table_1}
+\begin{table}[h]
+  \centering
+  \input{table_autoMPG_1.tex}
+  \caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{Auto_graph_1}. The discretization policy for the heuristic matches that for the optimal Bayesian approach. \todo{Need to explain why MDL fails}}
+  \label{Auto_MPG_disc_table_1}
 \end{table}
 
 Figure \ref{auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges and the resulting marginalized probability match the raw data very well.
@@ -698,8 +746,7 @@ Figure \ref{auto_exp1_distr_1_3} compares the discretization result on continuou
   \label{auto_exp1_distr_1_3}
 \end{figure}
 
-\subsubsection{Experiment 2 on Auto MPG dataset}
-\label{subsubsec:autompg_exp2}
+\subsubsection{Structure is Learned}
 
 If the network structure is not known in advance, it should be learned along with the discretization process. Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2} show a learned discrete-valued Bayesian network and the corresponding discretization edges of each continuous variable. This result is obtained by running Algorithm \ref{Learn_DBN} fifty times and choosing the one with the highest K2 score.
 \newline
@@ -731,7 +778,7 @@ Figure \ref{auto_exp2_distr_1_3} compares the result of Figure \ref{Auto_graph_2
 \end{figure}
 
 
-\subsection{Dataset 2: Wine} 
+\subsection{Dataset 2: Wine}
 \label{subsec:wine}
 
 In this subsection, two experiments are conducted on the Wine dataset from the Irvine repository \citep{Lichman:2013}. This dataset has 178 instances and 14 variables. Only variable $A$ is discrete-valued with cardinality number 3. Again, in the first experiment, the network structure is given. In the second experiment, the network structure is not provided.

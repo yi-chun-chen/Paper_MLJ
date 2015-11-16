@@ -20,14 +20,14 @@
       rounded corners, semithick, >=stealth
       ]
 
-      \node[obs]                 (c2) {$B$};
-      \node[latent, below=0.75 of c2]   (c3){$C$};
-      \node[latent, below=0.75 of c3]   (c5){$E$};
-      \node[latent, below left = 0.75 and 0.75 of c3] (c4){$D$};
-      \node[latent, below left=0.75 and 0.75 of c4] (c6){$F$};
-      \node[latent, below left = 0.75 and 0.5 of c5] (c1){$A$};
-      \node[obs, below right = 0.75 and 1.0 of c5] (c7) {$G$};
-      \node[obs, right = 0.75 of c2] (c8){$H$};
+      \node[obs]                 (c2) {$B_{\todo{(2)}}$};
+      \node[latent, below=0.5 of c2]   (c3){$C$};
+      \node[latent, below=0.5 of c3]   (c5){$E$};
+      \node[latent, below left = 0.75 of c3] (c4){$D$};
+      \node[latent, below left = 0.75 of c4] (c6){$F$};
+      \node[latent, below left = 0.75 of c5] (c1){$A$};
+      \node[obs, below right = 0.75 of c5] (c7) {$G_{\todo{(2)}}$};
+      \node[obs, right = 0.5 of c2] (c8){$H_{\todo{(2)}}$};
 
 
   % Connect the nodes
@@ -46,7 +46,7 @@
 \end{tikzpicture}
 %\endpgfgraphicnamed
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: tex-pdf
 %%% TeX-master: "example"
-%%% End: 
+%%% End:
