@@ -47,13 +47,16 @@ grestore
 %
 \usepackage{amsmath}
 \usepackage{bm}
-\usepackage{graphicx} % Allows including images
+\usepackage{graphicx}
 \usepackage{epstopdf}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
 \usepackage[round]{natbib}
-\usepackage{amsfonts} % for mathbb
+\usepackage{multirow}
+\usepackage{pgfplots}
 \usepackage{tikz}
+\usepackage{lscape}
+\usepackage{caption}
 % \usepackage[capitalize]{cleveref}
 \usetikzlibrary{bayesnet}
 \setcitestyle{aysep={ }} %Author-Year Separator
@@ -257,7 +260,7 @@ K2 is typically run multiple times with random variable orderings and the networ
 
 \subsection{Discretization Policies}
 
-A discretization policy $M_C = \anglebrackets{t_1 < t_2 < \ldots < t_{k-1}}$ for a continuous variable $C$ is a mapping from $\mathbb{R}$ to $\brock{1,2,3,\ldots,k}$ such that
+A discretization policy $M_C = \anglebrackets{t_1 < t_2 < \ldots < t_{k-1}}$ for a continuous variable $C$ is a mapping from !!! mathbb{R} !!! to $\brock{1,2,3,\ldots,k}$ such that
 \begin{equation}
   M_C (x)=\begin{cases}
     1, & \text{if $x<t_1$}.\\
@@ -647,8 +650,157 @@ This work runs Algorithm \ref{alg:structure_learn} multiple times, each with a d
 \section{Experiments}
 \label{sec:experiments}
 
+The section describes experiments designed to test the soundness of the proposed method. The experiments were run on four datasets from the Irvine repository \citep{Lichman:2013}. For each dataset, the experiment consists of two parts. In the first part, the Bayesian network structure is known in advance, which is obtained by equal-width prediscretization and the K2 algorithm. In the second part, the Bayesian netowrk structure is not provided in advance, and it is learned along with the discretization process.
+
+For the case that network structure is given, a comparison between the proposed method and the MDL principle discretization is made. 10-fold cross validation of log-likelihood on data set $D_{\text{all}}$ is calculated as follows: firstly, learn discretization policies of each continuous variables from train data $D_{\text{train}}$. Secondly, obtain conditional probability tables $\phi_{x^* \mid \Pi^*_x}$ from the discretized train data $D^*_{\text{train}}$. Thirdly, For a test data instance $(x_1,x_2, \ldots, x_n)$ from $D_{\text{test}}$, the likelihood is
+\begin{equation}
+P(x_1, \ldots, x_n) = \prod_{i=1}^{n} \phi_{x^*_i \mid \Pi^*_{x_i}} \cdot \left( {1\over{M'_{X_i}[j_i+1] - M'_{X_i}[j_i]}} \right)^{\boldsymbol{1}_{ \left\lbrace X_i \text{ is continuous}  \right\rbrace }}
+\end{equation}
+, where $M'_{X_i}$ is the augmented discretization policy on continuous variable $X_i$ such that $M'_{X_i}[1] = min(D_{\text{all},X})$, $M'_{X_i}[j] = M_{X_i}[j-1]$ for $j=2,...,k_i$, and $M'_{X_i}[k_i+1] = max(D_{\text{all},X})$, $k$ is the number of intervals of continuous variable $X_i$ after discretization. Furthermore, $M'_{X_i}[j_i] \leq x_i < M'_{X_i}[j_i +1]$. This can be interpreted as follows: once a discrete-valued Bayesian network is learned from train data, test data are sampled from the learned network. If data is continuous, then it is uniformly sampled from the corresponding discretization interval.
 
 
+\subsection{Dataset 1: Auto MPG} 
+\label{subsec:autompg}
+
+In this subsection, two experiments are conducted on the Auto MPG dataset from the Irvine repository \citep{Lichman:2013}. This dataset has 392 instances (delete the 6 instance with missing data) and eight variables. Three variables are discrete: $B$, $G$, and $H$ (in the following experiment, variables are named and ordered according to the dataset information webpage). They have 5, 13, and 3 cardinality numbers, respectively. In the first experiment, the network structure is given. In the second experiment, the network structure is not provided.
+
+\subsubsection{Experiment 1 on Auto MPG dataset}
+\label{subsubsec:autompg_exp1}
+The proposed discretization method and the MDL discretization method are tested on the Bayesian network structure in Fig. \ref{Auto_graph_1}, which is obtained by running K2 algorithm 1000 times on prediscretized data, each time with a random restart. The prediscretization is done by equal-width discretization on continuous variables by 5 intervals (median of cardinalities of discrete variables). Shaded nodes in Fig. \ref{Auto_graph_1} means that they are discrete-valued variables.
+
+\begin{figure}[ht]
+\centering
+    \begin{tabular}{cc}
+      \input{graph_autocar_1}
+    \end{tabular}
+  \caption{The Bayesian network obatined by K2 algorithm and prediscretization on Auto MPG dataset}
+  \label{Auto_graph_1}
+\end{figure}
+
+Table \ref{Auto_MPG_disc_table_1} shows the numbers of intervals after discretization, the positions of discretization edges, and log-likelihood of 10-fold cross validation. For the Bayesian network in Fig. \ref{Auto_graph_1}, the approximation only reduces runtime of proposed method and has no influence on discretization result. MDL principle discretization works not well, since it discretizes all variables with only one interval. For a Bayesian network on thie Auto MPG data set that MDL principle discretization has non-trivial result, please reference to Appendix. 
+
+\begin{table}
+\centering
+\scalebox{1.0}{
+\input{table_autoMPG_1.tex}
+}
+\caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{Auto_graph_1}}
+\label{Auto_MPG_disc_table_1}
+\end{table}
+
+Figure \ref{auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges and the resulting marginalized probability match the raw data very well.
+
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_auto_exp1_distr_1_3}
+    \end{tabular}
+  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$}
+  \label{auto_exp1_distr_1_3}
+\end{figure}
+
+\subsubsection{Experiment 2 on Auto MPG dataset}
+\label{subsubsec:autompg_exp2}
+
+If the network structure is not known in advance, it should be learned along with the discretization process. Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2} show a learned discrete-valued Bayesian network and the corresponding discretization edges of each continuous variable. This result is obtained by running Algorithm \ref{Learn_DBN} fifty times and choosing the one with the highest K2 score.
+\newline
+
+ {\centering
+\begin{minipage}{0.50\textwidth}
+  \centering
+  \scalebox{0.7}{
+  \input{graph_autocar_2}}
+  \captionof{figure}{The learned discrete-\newline valued Bayesian network}
+  \label{Auto_graph_2}
+\end{minipage}
+\begin{minipage}{0.50\textwidth}
+  \raggedleft
+  \input{table_autoMPG_2.tex}
+  \captionof{table}{The discretization edges of variables in Fig \ref{Auto_graph_2}}
+  \label{Auto_MPG_disc_table_2}
+\end{minipage}
+}
+
+Figure \ref{auto_exp2_distr_1_3} compares the result of Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2} with the raw data on variables $A$ and $C$. Again, the black dots are raw data points. Although the numbers of discretization edges of $A$ and $C$ shown in Table \ref{Auto_MPG_disc_table_2} are less than Table \ref{Auto_MPG_disc_table_1}, they still have a good capture of raw data distribution.
+
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_auto_exp2_distr_1_3}
+    \end{tabular}
+  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ according to Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2}}
+  \label{auto_exp2_distr_1_3}
+\end{figure}
+
+
+\subsection{Dataset 2: Wine} 
+\label{subsec:wine}
+
+In this subsection, two experiments are conducted on the Wine dataset from the Irvine repository \citep{Lichman:2013}. This dataset has 178 instances and 14 variables. Only variable $A$ is discrete-valued with cardinality number 3. Again, in the first experiment, the network structure is given. In the second experiment, the network structure is not provided.
+
+\subsubsection{Experiment 1 on Wine dataset}
+\label{subsubsec:wine_exp2}
+
+Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 1000 times. Table \ref{Wine_disc_table_1} shows a comparison between the proposed method and the MDL principle discretization method. The proposed method is still better than MDL principle discretization in terms of likelihood, although the latter returns non-trivial result in this experiment. Furthermore, the proposed method with the approximation has more intervals after discretization, thus it has a slightly better result. However, as shown in next dataset, the approximation might cut continuous variables into too many intervals. Therefore, the proposed method without the approximation should be still considered a better approach.
+
+
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_wine_1}
+    \end{tabular}
+  \caption{K2 structure learning with prediscretization on Wine dataset}
+  \label{Wine_graph_1}
+\end{figure}
+
+\begin{table}
+\centering
+\scalebox{1.0}{
+\input{table_wine_1.tex}
+}
+\caption{Discretization result of Wine dataset based on the graph Fig. \ref{Wine_graph_1}}
+\label{Wine_disc_table_1}
+\end{table}
+
+
+
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_wine_2}
+    \end{tabular}
+  \caption{K2 structure learning with the proposed discretization method on Wine dataset}
+  \label{Wine_graph_2}
+\end{figure}
+
+
+\subsection{Data 3: Housing}
+\label{subsec:housing}
+
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_housing_1}
+    \end{tabular}
+  \caption{K2 structure learning with prediscretization on Housing dataset}
+  \label{Housing_graph_1}
+\end{figure}
+
+
+
+\begin{table}
+\centering
+\scalebox{1.0}{
+\input{table_housing_1.tex}
+}
+\caption{Discretization result of Housing dataset based on the graph Fig. \ref{Housing_graph_1}}
+\label{Housing_disc_table_1}
+\end{table}
+
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_housing_2}
+    \end{tabular}
+  \caption{K2 structure learning with the proposed discretization method on Housing dataset}
+  \label{Housing_graph_2}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\begin{acknowledgements}
 %If you'd like to thank anyone, place your comments here
 %and remove the percent signs.

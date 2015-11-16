@@ -1,0 +1,52 @@
+% model_pca.tex
+%
+% Copyright (C) 2012 Jaakko Luttinen
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU General Public License.
+%
+% See the files LICENSE_LPPL and LICENSE_GPL for more details.
+
+% PCA model
+
+%\beginpgfgraphicnamed{model-pca}
+\begin{tikzpicture}[
+      nodes={
+        draw=black!20, thick, fill=white, font=\normalsize,
+        minimum width=2.5em, minimum height=2em
+      },
+      rounded corners, semithick, >=stealth
+      ]
+
+      \node[obs]                 (c2) {$B$};
+      \node[latent, below=0.75 of c2]   (c3){$C$};
+      \node[latent, below=0.75 of c3]   (c5){$E$};
+      \node[latent, below left = 0.75 and 0.75 of c3] (c4){$D$};
+      \node[latent, below left=0.75 and 0.75 of c4] (c6){$F$};
+      \node[latent, below left = 0.75 and 0.5 of c5] (c1){$A$};
+      \node[obs, below right = 0.75 and 1.0 of c5] (c7) {$G$};
+      \node[obs, right = 0.75 of c2] (c8){$H$};
+
+
+  % Connect the nodes
+  \edge {c2}{c3};
+  \edge {c3}{c4,c5};
+  \draw[->,>=stealth', shorten >= 1pt] (c3) to[bend left](c7);
+  \edge {c4}{c6};
+  \edge {c5}{c1,c7};
+  \edge {c1}{c7};
+  %\edge {p1,p2} {y} ; %
+  %\edge {y} {c2} ;
+  %\edge {y}{c1};
+
+
+
+\end{tikzpicture}
+%\endpgfgraphicnamed
+
+%%% Local Variables: 
+%%% mode: tex-pdf
+%%% TeX-master: "example"
+%%% End: 

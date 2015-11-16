@@ -1,0 +1,64 @@
+% model_pca.tex
+%
+% Copyright (C) 2012 Jaakko Luttinen
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU General Public License.
+%
+% See the files LICENSE_LPPL and LICENSE_GPL for more details.
+
+% PCA model
+
+%\beginpgfgraphicnamed{model-pca}
+\begin{tikzpicture}[
+      nodes={
+        draw=black!20, thick, fill=white, font=\normalsize,
+        minimum width=2.5em, minimum height=2em
+      },
+      rounded corners, semithick, >=stealth
+      ]
+
+      \node[latent]                 (c8) {$H$};
+      \node[obs, below left=0.75 and 0.0 of c8]   (c1){$A$};
+      \node[latent, below left=0.75 and 4.0 of c8]   (c7){$G$};
+      \node[latent, below right=0.75 and 0.4 of c1] (c13){$M$};
+      \node[latent, below right=0.75 and 3.5 of c1] (c14){$N$};
+      \node[latent, below left=0.75 and 2.0 of c1] (c12){$L$};
+      \node[latent, below left=0.75 and 3.5 of c1] (c11){$K$};
+      \node[latent, below left=0.75 and 5.5 of c1] (c4){$D$};
+      \node[latent, below left=0.0 and 6.0 of c8] (c9){$I$};
+      \node[latent, below left=0.75 and 0.5 of c12] (c5){$E$};
+      \node[latent, below left=0.75 and 0.0 of c14] (c6){$F$};
+      \node[latent, below right=0.0 and 1.5 of c8] (c10){$J$};
+      \node[latent, below right=0.0 and 1.0 of c5] (c2){$B$};   
+		\node[latent, below right=0.0 and 2.0 of c5] (c3){$C$};         
+      
+      %\node[latent, below right = 0.75 and 0.25 of c2] (c5){$5$};
+      %\node[latent, below right = 0.75 and 2.0 of c1] (c6) {$6$};
+      %\node[latent,below right = 0.75 and 0.5 of c4] (c7){$7$};
+
+
+  % Connect the nodes
+ \edge {c8}{c1,c7,c9,c10,c13};
+ \edge {c1}{c4,c11,c12,c2,c3,c14,c13,c9,c10};
+ \edge {c1,c4}{c5};
+ \edge {c4}{c9};
+ \edge {c1,c14}{c6};
+ \edge {c6}{c10};
+  %\edge {c4}{c7};
+  %\draw[->,>=stealth', shorten >= 1pt] (c1) to[bend right](c7);
+  %\edge {p1,p2} {y} ; %
+  %\edge {y} {c2} ;
+  %\edge {y}{c1};
+
+
+
+\end{tikzpicture}
+%\endpgfgraphicnamed
+
+%%% Local Variables: 
+%%% mode: tex-pdf
+%%% TeX-master: "example"
+%%% End: 

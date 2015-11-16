@@ -1,0 +1,77 @@
+% model_pca.tex
+%
+% Copyright (C) 2012 Jaakko Luttinen
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU General Public License.
+%
+% See the files LICENSE_LPPL and LICENSE_GPL for more details.
+
+% PCA model
+
+%\beginpgfgraphicnamed{model-pca}
+\begin{tikzpicture}[
+      nodes={
+        draw=black!20, thick, fill=white, font=\normalsize,
+        minimum width=2.5em, minimum height=2em
+      },
+      rounded corners, semithick, >=stealth
+      ]
+
+	  \node[latent]          (c2) {$2$};
+	  \node[latent, right = 2.0 of c2]  (c4){$4$};
+	  \node[latent, below right = 1.0 and 1.0 of c2]  (c12){$12$};
+	  \node[latent, below right = 1.0 and 1.0 of c12]  (c14){$14$};
+	  \node[latent, below right = 1.0 and 1.0 of c14]  (c6){$6$};
+	  \node[latent, below= 2.0 of c2]  (c7){$7$};
+	  \node[latent, below = 2.0 of c12]  (c1){$1$};
+	  \node[latent, below = 2.0 of c14]  (c13){$13$};
+	  \node[latent, below left = 2.0 and 0.75 of c2] (c3){$3$};
+	  \node[latent, below = 0.75 of c3]  (c10){$10$};
+	  \node[latent, below left = 1.0 and 1.0 of c3] (c5){$5$};
+	  \node[latent, left = 1.0 of c5] (c11){$11$};
+	  \node[latent, left = 1.0 of c11] (c8){$8$};
+	  \node[latent, left = 3.5 of c3] (c9){$9$};
+
+
+  % Connect the nodes
+
+  \edge {c2}{c9,c8,c3,c7};
+  \draw[->,>=stealth', shorten >= 1pt] (c2) to[bend left](c14);
+  \draw[->,>=stealth', shorten >= 1pt] (c2) to[bend left](c6);
+  \edge {c12}{c3,c1,c14}
+  \draw[->,>=stealth', shorten >= 1pt] (c12) to[bend left](c6);
+  \edge {c14}{c13,c6}
+  \draw[->,>=stealth', shorten >= 1pt] (c7) to[bend right](c13);
+  \edge {c3} {c8,c11,c5,c10}
+  \edge {c11,c10}{c9}
+  %\edge {c2}{c9,c3,c7}
+  %\draw[->,>=stealth', shorten >= 1pt] (c2) to[bend right](c10);
+  %\draw[->,>=stealth', shorten >= 1pt] (c4) to[bend left](c5);  
+  %\edge {c3}{c9,c10,c11};
+  %\edge{c9}{c10,c11};
+  %\draw[->,>=stealth', shorten >= 1pt] (c9) to[bend left](c5);
+  %\draw[->,>=stealth', shorten >= 1pt] (c9) to[bend right](c2);
+  %\edge {c10}{c11,c12};
+  %\edge {c7}{c13};
+  %\edge {c13}{c14};
+  %\edge {c14,c1}{c6};
+  %\edge {c1}{c6,c11,c8,c5};
+  %\edge {c2}{c1};
+  %\draw[->,>=stealth', shorten >= 1pt] (c12) to[bend right](c1);
+  %\draw[->,>=stealth', shorten >= 1pt] (c1) to[bend right](c7);
+  %\edge {p1,p2} {y} ; %
+  %\edge {y} {c2} ;
+  %\edge {y}{c1};
+
+
+
+\end{tikzpicture}
+%\endpgfgraphicnamed
+
+%%% Local Variables: 
+%%% mode: tex-pdf
+%%% TeX-master: "example"
+%%% End: 
