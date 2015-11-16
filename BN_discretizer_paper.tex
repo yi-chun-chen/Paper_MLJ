@@ -317,7 +317,7 @@ The Bayesian network graph structure causes the likelihood term $P(D \mid M)$ to
 P\paren{D \mid M} \propto P\paren{D_{\Pi_x} \mid M} \cdot \prod_{i = 1}^{n_c} P\paren{D_{C_i} \mid M, D_{\boldsymbol{S_i}}}\text{.}
 \end{equation}
 
-For example, in Figure 1., the corresponding $P(D \mid M)$ is factorized as
+For example, in Figure 1., the corresponding $P(D \mid M)$ is factorized according to
 \begin{equation}
 P\paren{D_{ P_1,P_2,P_3 } \mid M} \cdot P\paren{ D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}} \cdot P\paren{D_{C_2} \mid M,D_{ S_2  }}\text{.}
 \end{equation}
@@ -337,73 +337,110 @@ The children of $X$ are similarly independent given $X$ and its spouses $\boldsy
 Each component in the decomposition be evaluated based on a discretization policy $M = [n_1,n_2,\ldots,n_k]$ and dataset $D$.
 
 \subsubsection{Evaluation of $P(D_{\Pi_x} \mid M)$}
-Assume that $J_P = \prod_{i=1}^{n_p} | P_i |$. Then:
+Let $J_P = \prod_{i=1}^{n_p} \| P_i \|$. It follows that
+
 \begin{equation}
+\label{eq:likelihood_one}
 P(D_{\Pi_X} \mid M) = \prod_{i=1}^k  {{1}\over{{n_i + J_P - 1}\choose{J_P -1}}}
-{{1}\over{ {{{n}_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}  }},
+{{1}\over{ {{{n}_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}  }}\text{,}
 \end{equation}
-where $n^{(p)}_{i,j}$ is the number of instances in $i$th discretized interval with $j$th value of $\Pi_X$. Note that $n_i = \sum_{j=1}^{| \Pi_x |} n^{(p)}_{i,j}$. The two factors on RHS comes from the second prior: all distributions of values of $\Pi_X$ in a given interval are equiprobable. According to the forth prior, the distribution in each interval is independent, so we multiply all the two factors together.
+
+\noindent
+where $n^{(p)}_{i,j}$ is the number of instances in the $i$th discretized interval with the $j$th value of $\Pi_X$.
+Note that $n_i = \sum_{j=1}^{\| \Pi_x \|} n^{(p)}_{i,j}$.
+The two factors on the right hand side comes from the second prior: all distributions of values of $\Pi_X$ in a given interval are equiprobable. According to the fourth prior, the distribution in each interval is independent, so the two factors are multiplied together.
 
 \subsubsection{Evaluation of $P(D_{C_i} \mid M, D_{\boldsymbol{S_i}})$}
-Assume for each pair of $(C_j, \boldsymbol{S_j})$, one has $|C_j | = J_j$ and $|\boldsymbol{S_j}| = L_j = \prod_{v \in \boldsymbol{S_j}} | v |$. Therefore,
+For each pair $(C_j, \boldsymbol{S_j})$, let $\|C_j \| = J_j$ and $\| \boldsymbol{S_j} \| = L_j = \prod_{v \in \boldsymbol{S_j}} \| v \|$. It follows that
+
 \begin{equation}
+\label{eq:likelihood_two}
 P(D_{C_j}  \mid M, D_{S_j}) =
 \prod_{i=1}^{k} \prod_{l=1}^{L_j} {{1}\over{{n_{i,l} + J_j - 1}\choose{J_j-1}}}
-{{1}\over{ {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}}  }},
+{{1}\over{ {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}}  }}\text{,}
 \end{equation}
-where $n^{(j)}_{i,m,l}$ is the number of instances in $i$th interval with $m$th value of $C_j$ and $l$th value of $\boldsymbol{S_j}$, $n_{i,l} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,l}$, and $n_i = \sum_{l=1}^{L_j} n_{i,l}$. The two factors on RHS comes from the third prior: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable. According to the forth prior, these distributions are independent from each other, therefore we multiply all factors. If $S_j = \emptyset$, then Equation 13. is equivalent to
+
+\noindent
+where $n^{(j)}_{i,m,l}$ is the number of instances in $i$th interval with $m$th value of $C_j$ and $l$th value of $\boldsymbol{S_j}$, $n_{i,l} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,l}$, and $n_i = \sum_{l=1}^{L_j} n_{i,l}$.
+The two factors on the right hand side come from the third prior: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable. According to the forth prior, these distributions are independent from each other, and one thus takes their product. If $S_j = \emptyset$, then Equation \ref{eq:likelihood_two} is equivalent to
+
 \begin{equation}
+\label{eq:likelihood_three}
 P(D_{C_j}  \mid M) =
 \prod_{i=1}^{k}  {{1}\over{{n_{i} + J_j - 1}\choose{J_j-1}}}
-{{1}\over{ {{n_{i}}!}\over{ {n^{(j)}_{i,1,\emptyset} !} {n^{(j)}_{i,2,\emptyset} !} \cdots {n^{(j)}_{i,J_j,\emptyset} !}}  }},
+{{1}\over{ {{n_{i}}!}\over{ {n^{(j)}_{i,1,\emptyset} !} {n^{(j)}_{i,2,\emptyset} !} \cdots {n^{(j)}_{i,J_j,\emptyset} !}}  }}\text{,}
 \end{equation}
-where $n^{(j)}_{i,m,\emptyset}$ is the number of instances in $i$th interval with $m$th value of $C_j$, and $\sum_{m=1}^{J_j} n^{(j)}_{i,m,\emptyset} = n_i$. \\
 
-With Equation 8,9,11,12, and 13, now we are able to write down the objective function. Instead of maximizing $P(M) \cdot P(D|M)$, we minimize its log-inverse for convenience. The objective function is
+\noindent
+where $n^{(j)}_{i,m,\emptyset}$ is the number of instances in the $i$th interval with the $m$th value of $C_j$, and $\sum_{m=1}^{J_j} n^{(j)}_{i,m,\emptyset} = n_i$.
+
+The objective function can be formulated given equations \ref{eq:p_M}, \ref{eq:p_D_given_M},\ref{eq:likelihood_one}, and \ref{eq:likelihood_three}.
+The log-inverse of $P(M) \cdot P(D|M)$ is minimized for computational convenience:
+
 \begin{equation}
+\label{eq:opt_prob}
 \begin{aligned}
 & \sum_{i=1}^{k-1} - \log(1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}) +  \sum_{i=1}^{k} L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}} +\\
 &  \sum_{j=1}^{n_c} \sum_{i=1}^{k}  \sum_{l=1}^{L_j} \left[  \log{{n_{i,l} + J_j - 1}\choose{J_j-1}} + \log \left( { {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}} } \right) \right] + \\
-& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_p} !}} } \right) \right].
+& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_p} !}} } \right) \right]\text{.}
 \end{aligned}
 \end{equation}
+
 All parameters and variables in the objective function are explained in previous subsections.
+
 \subsection{Algorithm}
-\label{algo}
-Once the objective function is established, the next problem is how to find a discretization model that minimizes the objective function. Note that the objective function is cumulative on intervals. Therefore, if a partition of continuous variable $X$ into $k$ intervals with lengths $n_1,n_2,\ldots,n_k$ is an optimal discretization policy, then $\{ n_2, n_3,\ldots,n_k \}$ is optimal for the subproblem, i.e., the last $N - n_1$ instances of the dataset which has been sorted in ascending order of $D_X$. With this property, we can adapt dynamical programming to solve this optimization problem.
 
-If there is no repeated value in $D_X$, all middle points of two consecutive values can a discretization edge. If there exists repeated values in $D_X$, only the middle points of two consecutive and different values can be a discretization edge. Assume there are $M$ unique values in $D_X$, then ${D'_X} = \{ x'_1,x'_2,\ldots,x'_M \}$ is the set of unique values of $D_X$ in ascending order. Since $D_X$ is also sorted, let $b = \{ b_0,b_1,b_2,\ldots,b_M \}$ be an increasing sequence of integers such that $b_0 = 0$ and $x_{b_{i-1} + 1} = x_{b_{i-1} + 2} = \ldots = x_{{b_i}} = x'_i$. By this definition, the allowable discretization positions are $d_i = ( x_{b_{i}} + x_{{b_i}+1})/2$ for all $i = 1,2,\ldots,M-1$.
+This section describes the procedure used to minimize the objective function.
+Note that the objective function is cumulative over intervals, thus, if a partition of $X$ into $k$ intervals with lengths $n_1,n_2,\ldots,n_k$ is an optimal discretization policy, then any subinterval is optimal for the corresponding subproblem.
+It follows that dynamic programming can be used to solve the optimization problem exactly.
 
-Before doing the dynamical programming, in order to save runtime, we first calculate the following function $h(u,v)$ for a interval $I_q$ starting from $x_{u}$ to $x_{v}$ with all $u$,$v$ satisfying $u \leq v$:
+Every midpoint between two nonequal consecutive values in $D_X$ is a candidate discretization edge.
+Let ${D'_X} = \brock{x'_1,x'_2,\ldots,x'_M}$ be the set of unique values of $D_X$ sorted in ascending order, where $M$ is the number unique values in $D_X$.
+Recall that $D_X$ is also sorted.
+Let $b = \brock{b_0,b_1,b_2,\ldots,b_M}$ be an increasing sequence of integers marking the repeated value intervals in $D_X$ such that $b_0 = 0$ and $x_{b_{i-1} + 1} = x_{b_{i-1} + 2} = \ldots = x_{b_i} = x'_i$.
+By this definition, the allowable discretization positions are $d_i = \paren{x_{b_{i}} + x_{{b_i}+1}}/2$ for all $i = 1,2,\ldots,M-1$.
+
+Precomutation reduces runtime.
+Compute $h(u,v)$ for each interval $I_q$ starting from $x_{u}$ to $x_{v}$ for all $(u,v)$ satisfying $u \leq v$:
+
+\begin{small}
 \begin{equation}
 \begin{aligned}
 h(u,v) &=  \log {{n_{q} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_q}!}\over{ {n^{(p)}_{q,1} !} {n^{(p)}_{q,2} !} \cdots {n^{(p)}_{q,J_p} !}} } \right) \\
 & + \sum_{j=1}^{n_c} \sum_{l=1}^{L_j} \left[  \log{{n_{q,l} + J_j - 1}\choose{J_j-1}} + \log \left( { {{n_{q,l}}!}\over{ {n^{(j)}_{q,1,l} !} {n^{(j)}_{q,2,l} !} \cdots {n^{(j)}_{q,J_j,l} !}} } \right) \right]
 \end{aligned}
 \end{equation}
+\end{small}
 
-The evaluation of function $h(u,v)$ for all $u \leq v$ is summerized in Algorithm 4 in Appendix. The calculation can be done in $\bigo\paren{n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2}$, where $n_c$ and $n_p$ are the numbers of child and parent variables, respectively, and $v'_\text{max}$ is the largest cardinality of variables that directly connects to $X$. Notice that due to repeated values in $D_X$, for some pairs of $u$ and $v$, the value of $h(u,v)$ might depend on the sorting method of $D_X$ and $D$. However, this does not influence the optimization result, since these pairs of $u$ and $v$ will not form valid intervals.
+The evaluation of $h(u,v)$ for all $u \leq v$ is summarized in Algorithm \ref{alg:h} in the appendix.
+The calculation has a $O(n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2)$ runtime, where $n_c$ and $n_p$ are the numbers of child and parent variables respectively, and $v'_\text{max}$ is the largest cardinality of variables that directly connect to $X$.
 
-Now we are able to solve the optimization problem with the objective function in Equation 14. The dynamical programming procedure is shown in Algorithm 1. We have three inputs: $D_X$, the data of continuous variable $X$ in the ascending order, $D$, the data of other variables and sorted according to $D_X$, and $G$, the network structure. The runtime of Algorithm 1 is also $\bigo\paren{n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2}$, since the dynamical programming procedure does not increase the time complexity beyond the calculation of $h(u,v)$. There are other methods that lead to suboptimal results but runs faster than dynamical programming method. Please refer to \citep{Boulle_2006}.
+Now we are able to solve the optimization problem over Equation \ref{eq:opt_prob}.
+The dynamic programming procedure is shown in Algorithm \ref{alg:disc_one}.
+It takes two inputs: $D$, the joint samples over all variables sorted in ascending order according to $D_X$, and $G$, the network structure.
+The runtime of Algorithm \ref{alg:disc_one} is also $O(n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2)$, because the runtime of the dynamic programming procedure is less than the runtime for computing $h(u,v)$.
+Algorithm \ref{alg:disc_one} is guaranteed to be optimal.
+For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
 
 \begin{algorithm}
-\caption{ Discretization of one continuous variable}\label{euclid}
+\caption{Discretization of one continuous variable in a Bayesian network}
+\label{alg:disc_one}
 \begin{algorithmic}[5]
-\Function{Discretize}{$D_X$, $D$, $G$}
+\Function{Discretize}{$D$, $G$}
 \State
 \State $N \leftarrow$ the number of instances
-\State $N' \leftarrow$ the number of non-repeated values of $D_X$
-\State $H \leftarrow$ an $N \times N$ matrix such that $H[u,v] = h(u,v)$ as Algorithm 4 in Appendix
-\State $b \leftarrow$ the increasing sequence of $M$ integers defined in the previous discussion
-\State $L \leftarrow$ the largest cardinality over all discrete variables in the Markov blanket
-\State $S[u] \leftarrow$ the optimal objective value of a subproblem with instances from $1$ to $u$
-\State $M[u] \leftarrow$ the optimal discretization of a subproblem with instances from $1$ to $u$
-\State $W[u]  \leftarrow - \log(1 - {\exp(- L \cdot{ {{x_{b(u)+1} - x_{b(u)}}\over{x_N - x_1}})}})$ for $u = 1,2, \ldots,N'-1$ and $L(N') \leftarrow 0$
+\State $N' \leftarrow$ the number of unique values in $D_X$
+\State $H \leftarrow$ an $N \times N$ matrix such that $H[u,v] = h(u,v)$ per Algorithm \ref{alg:h} in the appendix
+\State $b \leftarrow$ the increasing sequence of $M$ integers as previously defined
+\State $L \leftarrow$ the largest cardinality over all discrete variables in the Markov blanket of $X$
+\State $S[u] \leftarrow$ the optimal objective value of subproblems with instances from $1$ to $u$
+\State $M[u] \leftarrow$ the optimal discretization for subproblems with instances from $1$ to $u$
+\State $W[u]  \leftarrow - \log\brock{1 - {\exp\paren{- L \cdot{ {{x_{b(u)+1} - x_{b(u)}}\over{x_N - x_1}}}}}}$ for $u = 1,2, \ldots,N'-1$ and $L(N') \leftarrow 0$
 \State
 \For {$v = 1$ to $N'$}
 \If {$v = 1$}
-\State $S[v] = g \left(1,b[v] \right) + L[v]$
-\State $M[v] = \{ ({x_{b[v]} + x_{b[v]+1}}) / 2\}$
+\State $S[v] \leftarrow g \left(1,b[v] \right) + L[v]$
+\State $M[v] \leftarrow \{ ({x_{b[v]} + x_{b[v]+1}}) / 2\}$
 \Else
 \State $s \leftarrow \infty$ and $boundary \leftarrow \infty$
 \For {$u = 1$ to $v$}
@@ -424,43 +461,63 @@ Now we are able to solve the optimization problem with the objective function in
 
 
 \subsection{Approximation}
-\label{approx}
-Notice that Algorithm1 leads to the non-polynomial runtime $\bigo\paren{{v'_\text{max}}^{n_p} \cdot N^2}$ in the discretization process. Therefore, we have an empirical approximation to the objective function that can reduce runtime and still preserve the quality of discretization. The approximation is as follows: for the dominator of the last factor in Equation 11, we have
+
+Algorithm \ref{alg:disc_one} has an exponential $\bigo\paren{\paren{v'_\text{max}}^{n_p} \cdot N^2}$ runtime.
+This exponential runtime is severely limiting for networks with a large number of discretization edges.
+This section introduces an approximation to the objective function that significantly reduces the runtime and still preserves the quality of discretization.
+The approximation replaces the dominator of the last factor in Equation \ref{eq:likelihood_one} with
+
 \begin{equation}
-{{{{n}_i}!}\over{ {{n^{(p)}}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}} \approx \prod_{r=1}^{n_p} { {{{n}_i}!}\over{ {n^{(p_r)}_{i,1} !} {n^{(p_r)}_{i,2} !} \cdots {n^{(p_r)}_{i,J_{p_r}} !}}},
+{\frac{{n_i}!}{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}} \approx \prod_{r=1}^{n_p} { {{{n}_i}!}\over{ {n^{(p_r)}_{i,1} !} {n^{(p_r)}_{i,2} !} \cdots {n^{(p_r)}_{i,J_{p_r}} !}}}\text{,}
 \end{equation}
-where $J_{p_r} = | P_r|$ and ${n^{(p_r)}_{i,j} !}$ is the number of instances in $i$th interval with $j$th value of $P_r$. Applying this approximation, the approximated objective function is
+
+\noindent
+where $J_{p_r} = \| P_r\|$ and ${n^{(p_r)}_{i,j} !}$ is the number of instances in the $i$th interval with the $j$th value of $P_r$.
+The approximated objective function is
+
+\begin{small}
 \begin{equation}
 \begin{aligned}
+\label{eq:opt_prob_approx}
 & \sum_{i=1}^{k-1} - \log(1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}) +  \sum_{i=1}^{k} L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}} +\\
 &  \sum_{j=1}^{n_c} \sum_{i=1}^{k}  \sum_{l=1}^{L_j} \left[  \log{{n_{i,l} + J_j - 1}\choose{J_j-1}} + \log \left( { {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}} } \right) \right] + \\
-& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \sum_{q=1}^{n_p} \log \left( { {{{n}_i}!}\over{ {n^{(p_q)}_{i,1} !} {n^{(p_q)}_{i,2} !} \cdots {n^{(p_q)}_{i,J_{p_q}} !}}} \right) \right].
+& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \sum_{q=1}^{n_p} \log \left( { {{{n}_i}!}\over{ {n^{(p_q)}_{i,1} !} {n^{(p_q)}_{i,2} !} \cdots {n^{(p_q)}_{i,J_{p_q}} !}}} \right) \right]\text{.}
 \end{aligned}
 \end{equation}
+\end{small}
 
+The approximation reduces the runtime of Algorithm \ref{alg:disc_one} to a polynomial, $\bigo\paren{ {v'_\text{max}} \cdot (n_c + n_p) \cdot N^2}$.
+It will be shown in Section \ref{sec:experiments} that the approximation is more sensitive to the distribution over other variables and is biased towards slightly higher interval counts.
+\tim{We need to have a more specific thing to say along the lines of When does it fail?}
 
-As we will see in Section \ref{sec:experiments}, the approximated algorithm is more sensitive to the distribution of other variables' values and usually leads to slightly more discretization edges. With the approximation, we can reduce runtime of Algorithm 1 from $\bigo\paren{n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2}$ to $\bigo\paren{v'_\text{max} (n_c + n_p) \cdot N^2}$. The rigorous proof of the approximation have not been proposed.
+With the approximated objective function, Equation \ref{eq:opt_prob_approx}, provides intuition into how child and parent variables contribute to the objective function.
+For example, in the left graph of Figure \ref{fig:example_networks}, the corresponding square brackets in the approximated objective function are
 
-With the approximated objective function, Equation 17, we now have a more clear way to see that how child variables and parent variables contribute to the objective function differently. For example, in the left graph of Figure 2, the corresponding sqaure brackets in Equation 17 are
+\begin{small}
 \begin{equation}
 \begin{aligned}
+\label{eq:example_approx}
  \sum_{i=1}^k & \left\lbrace   \left[ \log{{n_{i} + J_{C_1} - 1}\choose{J_{C_1}-1}} + \log \left(  {{{n_i}!} \over { {n^{(1)}_{i,1,\emptyset} !} \cdots {n^{(1)}_{i,J_{C_1},\emptyset} !}} }  \right)  +  \right. \right.\\
 & \left.  \log{{n_{i} + J_{C_2} - 1}\choose{J_{C_2}-1}} + \log \left(  {{{n_i}!} \over { {n^{(2)}_{i,1,\emptyset} !} \cdots {n^{(2)}_{i,J_{C_1},\emptyset} !}} }  \right)  \right] + \\
-&  \left. \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} +  \log \left( { {{{n}_i}!}\over{ {n^{(p_1)}_{i,1} !}\cdots {n^{(p_1)}_{i,J_{p_1}} !}}} \right) +{ {{{n}_i}!}\over{ {n^{(p_2}_{i,1} !}\cdots {n^{(p_2)}_{i,J_{p_2}} !}}}  \right] \right\rbrace\\ .
+&  \left. \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} +  \log \left( { {{{n}_i}!}\over{ {n^{(p_1)}_{i,1} !}\cdots {n^{(p_1)}_{i,J_{p_1}} !}}} \right) +{ {{{n}_i}!}\over{ {n^{(p_2}_{i,1} !}\cdots {n^{(p_2)}_{i,J_{p_2}} !}}}  \right] \right\rbrace \text{.}
 \end{aligned}
 \end{equation}
+\end{small}
 
-
-In Equation18, each child variable carries two terms, as shown in the first square bracket, and two parent variables only carry three terms, as shown in the second square bracket. Therefore, in this case, child variables are more determinative than parent variables even though the numbers of child variables and parent variables are equal. However, if $C_2$ has the other parent variable $S_2$, as shown in the right graph of Figure 2, the importances of $C_2$ will be debiliated, since the information from $C_2$ is now adulterated by $S_2$. These argument shows that our proposed method, either before or after approximation, indeed involves graph structures to discretize continuous variables.
+In Equation \ref{eq:example_approx}, each child carries two terms, as shown in the first set of square brackets, but the two parent variables only carry a total of three terms, as shown in the second set of square brackets.
+In this case the child variables have greater effect than the parent variables even though the number of child and parent variables are the same.
+However, if $C_2$ has an additional parent $S_2$, as shown in the right graph of Figure \ref{fig:example_networks}, the importances of $C_2$ will be reduced, because the information from $C_2$ is now affected by $S_2$.
+This argument shows that the proposed method, both before and after approximation, indeed incorporates graph structure when discretizing continuous variables.
 
 \begin{figure}[ht]
-    \begin{tabular}{cc}
-      \input{graph2_left}
-      \end{tabular}
-     \hspace{5em}
-      \begin{tabular}{cc}
-      \input{graph2_right}
+  \label{fig:example_networks}
+  \begin{tabular}{cc}
+    \input{graph2_left}
     \end{tabular}
+   \hspace{5em}
+    \begin{tabular}{cc}
+    \input{graph2_right}
+  \end{tabular}
   \caption{Two example networks}
 \end{figure}
 
@@ -471,22 +528,41 @@ In Equation18, each child variable carries two terms, as shown in the first squa
 
 \subsection{Discretization of Multiple Continuous Variables}
 
-If there are multiple continuous variables in a Bayesian network, we iterate the one-variable discretization method discussed above for all continuous variables. While discretizing a continuous variable, other continuous variables must be discretized, either by a prediscretization that was done before the first iteration or by the discretization result of the latest iteration. The prediscretization can be done by equal-width discretization, which is defined as follows:
-\begin{equation}
-M_X =  \{ min_X, min_X + \delta, min_X + 2\delta, \ldots, \delta, max_X \},
-\end{equation}
-where $min_X$ and $max_X$ are minimal and maximal values of $D_X$, respectively, $\delta =  (max_X - min_X)/k$, and $k$ is the desired number of intervals after equal-width discretization. $k$ is same for all continuous variables and is set to be median value of all discrete variables' cardinalities. After prediscretization, we iterate the one-variable discretization on each continuous variable in the following order: from the continuous variable with highest topological order (leaves) to the continuous variable with lowest topological order (root). We call one such series of discretizations as a cycle. The advange of the order is that, for the first cycle of iteration, we can use less number of unsupervised discretization result. For example, in the right graph of Figure 2, assume $S_2$ is the only discrete variable. If we begin the iteration with $P_1$, then the discretization of $P_1$ will involve the prediscretization results of both $P_2$ and $X$. However, if we begin the iteration with $C_1$, then the discretization of $C_1$ will only involve the prediscretization result of $X$.
+The single-variable discretization method can be extended to Bayesian networks with multiple continuous variables by iteratively discretizing variables individually.
+The discretization process for a single variable requires that all other variables be discrete.
+The iterative approach thus requires a prediscretization policy from which to initialize the process.
+This work uses prediscretization with equal-width intervals, defined by
 
-When the number of intervals after discretization and the positions of discretization edges converge, we stop the iterations and output the discretization policy on each continuous variable. Since the convergence is not guaranteed, we also set up a maximal number of cycles to prevent infinite iterations. In our test on real-world data, the iteration results usually converge within few cycles. Even if it does not converge, 10 cycles usually produce good enough discretization result. The pseudocode of multi-variable discretization is shown in Algorithm 2, where we require four inputs: $D''$, the mixed data of all variables that we plan to learn from, $G$, the network structure, $C$, the set of all continuous variables in a reverse topological order, and $u_{cycle}$, the upper bound of times of cycles.
+\begin{equation}
+M_X = \curly{X_\text{min}, X_\text{min} + \delta, X_\text{min} + 2\delta, \ldots, \delta, X_\text{max}}\text{,}
+\end{equation}
+
+\noindent
+where $X_\text{min}$ and $X_\text{max}$ are the extrema values of $D_X$, $\delta = (X_\text{max} - X_\text{min})/k$, and $k$ is the desired number of intervals.
+This work sets $k$ to the median value of the cardinalities of initially discrete variables in the network.
+After prediscretization, the one-variable discretization methis is iteratively applied over each continuous variable in reverse topoligical order, from the leaves to the root.
+Let one such series of discretizations be a cycle.
+Reverse topological order has the advantage of using less prediscretized instantiations during the first cycle.
+For example, in the right-hand graph of Figure \ref{fig:example_networks}, assume $S_2$ is the only discrete variable.
+The discretization of $P_1$ involves both $P_2$ and $X$, whereas the discretization of $C_1$ only involves $X$.
+
+The algorithm is terminated when the number of discretization intervals and their associated edges converge for all variables.
+A maximum cycle count is enforced to prevent infinite iterations when convergence does not occur.
+The algorithm typically converges within a few cycles when tested on real-world data.
+In cases where it does not converge, ten cycles usually produce decent discretization results.
+
+The pseudocode for the multi-variable discretization procedure is shown in Algorithm \ref{alg:disc_two}.
+It requires four inputs: $D''$, the joint samples from all network variables; $G$, the network structure; $C$, the set of all continuous variables in a reverse topological order; and $u_{cycle}$, the upper bound of times of cycles.
 
 \begin{algorithm}
-\caption{ Discretization of multiple continuous variables}
+\label{alg:disc_two}
+\caption{Discretization of multiple continuous variables \todo{Fix label reference number}}
 \begin{algorithmic}[5]
 \Function{Discretize}{$D''$, $G$, $C$, $u_{cycle}$}
 \State
-\State $M[i] \leftarrow$ the discretization policy of $i$th variable
-\State $n \leftarrow$ the number of variables in Bayesian network
-\State $D^*_i \leftarrow M[i] (D_i)$, the discretized $D_i$ by $M[i]$
+\State $M[i] \leftarrow$ the discretization policy for the $i$th variable
+\State $n \leftarrow$ the number of variables in the Bayesian network
+\State $D^*_i \leftarrow M[i] (D_i)$, list of samples $D_i$ discretized according to $M[i]$
 \State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
 \State $k \leftarrow median\{ |v|, v\notin C\}$
 \State
@@ -503,7 +579,7 @@ When the number of intervals after discretization and the positions of discretiz
 \For {$j = 1$ to $|C|$}
 \State $D^*_{\backslash C(j)} \leftarrow D^*$ without $D^*_{C(j)}$.
 \State {$M[C(j)] \leftarrow $ DISCRETIZE($D_{C(j)}$,$D^*_{ \backslash C(j)}$,graph)}
-\State {$D^*_{C(j)}  \leftarrow$ $M[C(j)](D''_{C(j)}) $}
+\State {$D^*_{C(j)}  \leftarrow$ $M[C(j)](D''_{C(j)})$}
 \EndFor
 \EndWhile
 \State \Return $M$
@@ -511,48 +587,59 @@ When the number of intervals after discretization and the positions of discretiz
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Discretization of Continuous Variables While Structure Learning}
+\subsection{Combining Discretization with Structure Learning}
 
-In many situations the network structure is not known in advance, then we need to learn it from data. We use an alternative approach to combine our proposed discretization method with the K2 structure learning algorithm \citep{K2}. That is to say, we start with some prediscretizations on continuous variables and run the K2 algorithm given the discretized data. Each time an edge is added by the K2 algorithm, we rediscretize the continuous variables based on the current network. Then the new discretization policies update the discretized data of all continuous variables, and we continue the next K2 step with the updated discretized data. This cycle is repeated until no edge is added by the K2 algorithm. The detail of the procedure is shown in Algorithm 3. Here we have five inputs: $D'$, the mixed data we plan to learn from, $C$, the set of all continuous variables, $order$, the variable order which is required by the $K2$, $u_{parent}$, the upper bound of number of parents which is also required by the $K2$, and $u_{cycle}$, the upper bound of times of cycles. Notice that in the usual structure learning from discrete data, one usually run the K2 algorithm many times with different orders, and choose the structure with the highest K2 score. We do the same thing: run Algorithm 3 many times, each time with a different order, and pick the discretized Bayesian network with the highest K2 score.
+In many situations the network structure is not known in advance and must be learned from data.
+Traditional Bayesian structure learning algorithms require discretized data, whereas the proposed discretization algorithm requires a network structure.
+This section combines the proposed discretization method with the K2 structure learning algorithm \citep{K2} in an interative fassion to simultaneously perform Bayesian structure learning and discretization of continuous variables.
+
+The proposed algorithm alternates between K2 structure learning and discretization.
+K2 is run on the discretized dataset corresponding to prediscretizations for all continuous variables.
+The affected continuous variables are rediscretized every time an edge is added by K2.
+The resulting discretization policies are used to update the discretized dataset, and the next step of the K2 algorithm is executed.
+This cycle is repeated until the K2 algorithm reaches a local maximum.
+
+This procedure is given in Algorithm \ref{alg:structure_learn}.
+It takes five inputs: $D'$, the joint samples from all network variables; $C$, the set of all continuous variables; $order$, the permutation of variable for $K2$; $u_{parent}$, the upper bound on the number of parents per node for $K2$; and $u_{cycle}$, the upper bound on the cycle count.
+It is common practice to run K2 multiple times with different permutations of the variables and to then choose the structure with the highest score.
+This work runs Algorithm \ref{alg:structure_learn} multiple times, each with a different order, and picks the discretized Bayesian network with the highest score.
+
 \begin{algorithm}
-\caption{ Learning a discrete-valued Bayesian network}
-\begin{algorithmic}[5]
-\Function{Learn\_DBN}{$D''$, $C$, $order$, $u_{parent}$, $C$, $u_{cycle}$}
-\State
-
-\State $n \leftarrow$ the number of variables in Bayesian network
-\State $k \leftarrow median\{ |v|, v\notin C\}$
-\State $M[i] \leftarrow$ the discretization policy of $i$th variable
-\State $D^*_i \leftarrow M[i] (D_i)$, the discretized $D_i$ by $M[i]$
-\State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
-\State $G \leftarrow$ the initial graph (no edges between nodes)
-\State
-\For {$i = 1$ to $n$}
-\If {$i \in C$}
-\State $M[i] \leftarrow$  equal-width discretization with $k$ intervals
-\State $D^*_i \leftarrow  M[i] (D''_i)$
-\EndIf
-\EndFor
-\State
-\For {$i =1$ to $n$}
-\State $P_{old} \leftarrow f(X^*_i,\Pi_{X^*_i})$: Equation 5
-\State OKToProceed $\leftarrow$ \textbf{true}
-\While OKToProceed \textbf{and} $|\Pi_{X^*_i}| < u_{parent}$
-\State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pi_X$
-\State $P_{new} \leftarrow f(X^*_i,\Pi_{X^*_i} \cup Y)$
-\If {$P_{new} > P_{old}$}
-\State $P_{old} \leftarrow P_{new}$
-\State $\Pi_{X_i} \leftarrow \Pi_{X_i} \cup Y $
-\State $M \leftarrow$ {DISCRETIZE}({$D''$, $G$, $C$, $u_{cycle}$}): Algorithm 2
-\State $D* = M(D'')$
-\Else
-\State OKToProceed $\leftarrow$ \textbf{false}
-\EndIf
-\EndWhile
-\EndFor
-\State \Return $G$, $M$
-\EndFunction
-\end{algorithmic}
+  \label{alg:structure_learn}
+  \caption{ Learning a discrete-valued Bayesian network}
+  \begin{algorithmic}[5]
+  \Function{Learn\_DBN}{$D''$, $C$, $order$, $u_{parent}$, $C$, $u_{cycle}$}
+    \State $n \leftarrow$ the number of variables in the Bayesian network
+    \State $k \leftarrow median\{ \|v\|, v\notin C\}$
+    \State $M[i] \leftarrow$ the discretization policy for the $i$th variable
+    \State $D^*_i \leftarrow M[i] (D_i)$, list of samples $D_i$ discretized according to $M[i]$
+    \State $D^* \leftarrow $ the discretized data for all variables, where $D^*_i \leftarrow D''_i$ if $i \notin C$
+    \State $G \leftarrow$ the initial edgeless graph structure
+    \For {$i = 1$ to $n$}
+      \If {$i \in C$}
+        \State $M[i] \leftarrow$  equal-width discretization with $k$ intervals
+        \State $D^*_i \leftarrow  M[i] (D''_i)$
+      \EndIf
+    \EndFor
+    \For {$i =1$ to $n$}
+      \State $P_{old} \leftarrow f(X^*_i,\Pi_{X^*_i})$: Equation \ref{eq:f_x_p}
+      \State OKToProceed $\leftarrow$ \textbf{true}
+      \While {OKToProceed \textbf{and} $\|\Pi_{X^*_i}\| < u_{parent}$}
+        \State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pi_X$
+        \State $P_{new} \leftarrow f(X^*_i,\Pi_{X^*_i} \cup Y)$
+        \If {$P_{new} > P_{old}$}
+          \State $P_{old} \leftarrow P_{new}$
+          \State $\Pi_{X_i} \leftarrow \Pi_{X_i} \cup Y $
+          \State $M \leftarrow$ {DISCRETIZE}({$D''$, $G$, $C$, $u_{cycle}$}): Algorithm \ref{alg:disc_two}
+          \State $D* = M(D'')$
+        \Else
+          \State OKToProceed $\leftarrow$ \textbf{false}
+        \EndIf
+      \EndWhile
+    \EndFor
+    \State \Return $G$, $M$
+  \EndFunction
+  \end{algorithmic}
 \end{algorithm}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -583,23 +670,23 @@ In many situations the network structure is not known in advance, then we need t
 \section*{Appendices}
 
 \begin{algorithm}
-\caption{ Calculation of function $h(u,v)$ for all $u \leq v$}\label{euclid}
-\begin{algorithmic}[1]
-\State Initialize $H$ as an $N \times N$ matrix that all elements are 0.
-\State $count_p$ is an $N \times N \times |\Pi_X|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pi_X$. This matrix can be calculated in $\bigo\paren{|\Pi_X| \cdot N^2}$
-\For {$u = 1$ to $N$}
-\For {$v = u$ to $N$}
-\State $H(u,v) \leftarrow H(u,v) + \log((v-u + J_p)!) - \log((J_p -1)!)$
-\For {$w = 1$ to $|\Pi_X|$}
-\State $H(u,v) \leftarrow H(u,v) - \log( count_p(u,v,w)!)$
-\EndFor
-\EndFor
-\EndFor
-
-\For {$j = 1$ to $n_c$}
-\State XXX
-\EndFor
-\end{algorithmic}
+  \caption{ Calculation of $h(u,v)$ for all $u \leq v$}
+  \label{alg:h}
+  \begin{algorithmic}[1]
+  \State Initialize $H$ as an $N \times N$ matrix such that all elements are 0.
+  \State $count_p$ is an $N \times N \times \|\Pi_X\|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pi_X$. This matrix can be calculated in $O(\|\Pi_X\| \cdot N^2)$
+  \For {$u = 1$ to $N$}
+    \For {$v = u$ to $N$}
+      \State $H(u,v) \leftarrow H(u,v) + \log((v-u + J_p)!) - \log((J_p -1)!)$
+      \For {$w = 1$ to $\|\Pi_X\|$}
+        \State $H(u,v) \leftarrow H(u,v) - \log( count_p(u,v,w)!)$
+      \EndFor
+    \EndFor
+  \EndFor
+  \For {$j = 1$ to $n_c$}
+    \State \todo{XXX}
+  \EndFor
+  \end{algorithmic}
 \end{algorithm}
 
 \end{document}
