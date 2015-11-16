@@ -46,6 +46,7 @@ grestore
 \smartqed  % flush right qed marks, e.g. at end of proof
 %
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{bm}
 \usepackage{graphicx}
 \usepackage{epstopdf}
@@ -264,7 +265,7 @@ K2 is typically run multiple times with random variable orderings and the networ
 
 \subsection{Discretization Policies}
 
-A discretization policy $M_C = \anglebrackets{t_1 < t_2 < \ldots < t_{k-1}}$ for a continuous variable $C$ is a mapping from !!! mathbb{R} !!! to $\brock{1,2,3,\ldots,k}$ such that
+A discretization policy $M_C = \anglebrackets{t_1 < t_2 < \ldots < t_{k-1}}$ for a continuous variable $C$ is a mapping from $\mathbb{R}$ to $\brock{1,2,3,\ldots,k}$ such that
 \begin{equation}
   M_C (x)=\begin{cases}
     1, & \text{if $x<t_1$}.\\
