@@ -97,7 +97,6 @@ grestore
 
 \newcommand{\todo}[1]{\textcolor{magenta}{#1}}
 \newcommand{\tim}[1]{\textit{\textcolor{blue}{#1}}}
-\newcommand{\mykel}[1]{\textit{\textcolor{cyan}{#1}}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -149,14 +148,13 @@ subject classification numbers as needed.
 
 \section{Introduction}
 \label{intro}
-Bayesian networks \citep{Pearl_1988, PGM_2009} are an increasingly popular method for modeling uncertainty and causality in science and engineering. They provide an efficient factorization of the joint probability distribution over a set of random variables. Bayesian networks first emerged from artificial intelligence research and have been applied to a wide variety of problems, ranging from decision-making systems \citep{DMU_2015}\mykel{better to use a primary source} to medical diagnoses \citep{Lustgarten_2011}. In most cases, we assume that all random variables in Bayesian networks are discrete, since many Bayesian network learning algorithms are unable to deal with continuous variables efficiently. However, many applications
-require the use of continuous variables, such as position and velocity in dynamic systems \mykel{cite Kochenderfer JGCD article on encounter modeling}.
+Bayesian networks \citep{Pearl_1988, PGM_2009} are an increasingly popular method for modeling uncertainty and causality in science and engineering. They provide an efficient factorization of the joint probability distribution over a set of random variables. Bayesian networks first emerged from artificial intelligence research and have been applied to a wide variety of problems, ranging from decision-making systems \citep{DMU_2015} to medical diagnoses \citep{Lustgarten_2011}. In most cases, we assume that all random variables in Bayesian networks are discrete, since many Bayesian network learning algorithms are unable to deal with continuous variables efficiently. However, many applications
+require the use of continuous variables, such as position and velocity in dynamic systems.
 
 There are two common approaches to extending Bayesian networks to continuous variables.
 The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning algorithms based on their parameters.
 One successful example is belief propagation in Gaussian graphical models \citep{Weiss_2011}.
 For other parametric distributions \citep{Ihler_2009} and non-linear functions~\todo{[cite]}, these redesigned algorithms are computationally expensive and do not perform well.
-\mykel{$\bigstar$ We need to discuss this; talk about algorithms for inference and structure learning, expectation propagation, Gibbs, BVGS}
 
 The second approach is discretization.
 Automated discretization methods have been studied in machine learning and statistics for many years \citep{Dougherty_1995, Kerber_1992, Holte_1993, Fayyad_1993}, primarily for classification problems.
@@ -179,12 +177,12 @@ The former is the predominant discretization method for continuous variables in 
 The latter is a discretization method for one continuous variable against a discrete target class, which our proposed method generalizes to Bayesian networks.
 The asymptotical equivalence between MDL and MODL was examined in \citep{VL_2000}.
 
-\subsection{MDL Discretization}
-The MDL principle was first proposed by \cite{MDL_1978} and states that the best model for a dataset is one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
+\subsection{MDL Principle Discretization}
+The MDL principle was first proposed by \cite{MDL_1978}, and states that the best model for a dataset is one which minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
 MDL methods trade off goodness-of-fit against model complexity to reduce generalization error.
-In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and the optimal positions of their discretization boundaries.
+In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and optimal the positions of their discretization boundaries.
 Their approach selects a discretization policy that minimizes the sum of the description lengths of the discretized Bayesian network and the information necessary for recovering the continuous values from the discretized data.
-For a Bayesian network with a single continuous variable $X$, the objective function is
+In the single continuous variable case, the objective function is
 
 % \begin{small}
 \begin{equation}
@@ -196,20 +194,16 @@ For a Bayesian network with a single continuous variable $X$, the objective func
 \end{equation}
 % \end{small}
 
-\mykel{$\bigstar\Pi_{X_i}$ is not defined until later}
-\tim{$\Pi_{X_i}$ may be confusing with our use of $\prod_{i=1}^n$ later on.}
-
 \noindent
 % $I(\boldsymbol{A},\boldsymbol{B}) =  \sum_{\boldsymbol{a},\boldsymbol{b}} \hat{P}_D (\boldsymbol{a},\boldsymbol{b}) \log {{\hat{P}_D (\boldsymbol{a},\boldsymbol{b})}\over{\hat{P}_D (\boldsymbol{a}),\hat{P}_D (\boldsymbol{b})}}$
-where $I(A,B)$ is the mutual information between the discrete variables $A$ and $B$, ${H(p) = -p \log(p) - (1-p) \log(1-p)}$ \tim{does $H(p)$ have a name? Entropy?}, $|A|$ is the cardinality of a discrete variable $A$, and $X^*_i$ is the discretized version of the $i$th sample of $X$.
-\tim{What are $N$, and $N_i$?}
+where $I(\boldsymbol{A},\boldsymbol{B})$ is the mutual information between the discrete variables $\boldsymbol{A}$ and $\boldsymbol{B}$, ${H(p) = -p \log(p) - (1-p) \log(1-p)}$, $|\boldsymbol{X}|$ is the cardinality of discrete variable $\boldsymbol{X}$, and $X^*_i$ is the discretized version of the $i$th sample of continuous variable $X$.
 The optimal discretization policy can be found with dynamical programming.
 For Bayesian networks with multiple continuous variables, the algorithm is applied to one variable at a time iteratively over all continuous variables.
 While iterating, only one variable is treated as continuous and other continuous variables are discretized based on an initial discretization policy or the discretization result from a previous iteration.
 
 The network structure is not always known in advance. Bayesian network structure learning can be extended to distributions including continuous variables by alternating between traditional discrete structure learning and optimal discretization. Starting with some preliminary discretization policy, one applys a structure learning algorithm to identify the locally optimal graph structure. The discretization policy is refined based on the learned network. The cycle is continued until convergence.
 
-% The discretization technique proposed by \citet{Friedman_1996} is the most well-known of these methods. It is based on the minimum description length principle (MDL): the optimal discretization policy minimizes the description length of the Bayesian network and discretization policy. The MDL algorithm has an $\bigo\paren{N^3 + \paren{n_c {v_\text{max}}^{(n_c^p)_\text{max}} + {v_\text{max}}^{n_p}} \cdot N^2}$ runtime on Bayesian networks with a single continuous variable and multiple discrete variables, where $N$ is the number of data samples from the joint distribution, $n_p$ and $n_c$ are the numbers of parent and children variables for the continuous variable, $v_\text{max}$ is the largest cardinality over all variables in the Markov blanket, and  ${(n_c^p)_\text{max}}$ is the largest number of parent variables of the continuous variable's children. The MDL method iterates over all continuous variables until convergence in the case of multiple continuous variables, converging in a few cycles according to our tests of real-world data. Unfortunately, MDL tends to produce discrete variables with low cardinality~\todo{[cite]}\mykel{don't like low-cardinality. Maybe 'intervals' or something instead}.
+% The discretization technique proposed by \citet{Friedman_1996} is the most well-known of these methods. It is based on the minimum description length principle (MDL): the optimal discretization policy minimizes the description length of the Bayesian network and discretization policy. The MDL algorithm has a $\bigo\paren{N^3 + \paren{n_c {v_\text{max}}^{(n_c^p)_\text{max}} + {v_\text{max}}^{n_p}} \cdot N^2}$ runtime on Bayesian networks with a single continuous variable and multiple discrete variables, where $N$ is the number of data samples from the joint distribution, $n_p$ and $n_c$ are the numbers of parent and children variables for the continuous variable, $v_\text{max}$ is the largest cardinality over all variables in the Markov blanket, and  ${(n_c^p)_\text{max}}$ is the largest number of parent variables of the continuous variable's children. The MDL method iterates over all continuous variables until convergence in the case of multiple continuous variables, converging in a few cycles according to our tests of real-world data. Unfortunately, MDL tends to produce discrete variables with low cardinality~\todo{[cite]}.
 
 \subsection{MODL Discretization}
 MODL discretization \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable. Bayesian methods maximize the probability of the model given the data, $P(\textit{Model} \mid \textit{Data})$. An application of Bayes' rule and constant $P(\textit{Data})$ shows that this is equivalent to maximizing:
@@ -223,7 +217,7 @@ The data likelihood usually increases with the number of discretization interval
 The prior decreases as the number of discretization intervals increases to favor simpler models and prevent overfitting.
 Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ requires a trade-off when determining the number of discretization intervals.
 
-The MODL method uses dynamic programming to find the optimal discretization policy, and has an $\bigo\paren{N^3 + |\text{Class}| \cdot N^2}$ runtime, where $N$ is the of number of data instances.
+The MODL method uses dynamic programming to find the optimal discretization policy, and has a $\bigo\paren{N^3 + |\text{Class}| \cdot N^2}$ runtime, where $N$ is the of number of data instances.
 \cite{Lustgarten_2011} suggest several formulations for the prior term $P(\text{Model})$.
 Under a uniform prior probability over discretizations the runtime can be reduced to $\bigo\paren{|\text{Class}| \cdot N^2}$ without sacrificing optimality.
 
@@ -235,28 +229,22 @@ This section provides a brief overview of Bayesian networks, including the facto
 
 \subsection{Bayesian Networks and Structure Learning}
 
-\mykel{This all needs to be explained better. Too many variables are being defined at once.}
-A Bayesian network $B$ is defined by a pair $(G,\Theta)$, where $G = (X,E)$ is a directed acyclic graph whose nodes correspond to a set of random variables $X = \brock{X_1, X_2, \ldots, X_n}$, and whose edges $E$ represent probabilistic dependencies among nodes.
-The graph structure $G$ encodes the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pi_{X_i}$ in $G$.
-The conditional relations are parameterized by the elements of $\Theta$, which take the form $\theta_{x_i \mid \Pi_{x_i}} = P(x_i \mid \Pi_{x_i})$ for each possible value $x_i$ of $X_i$, and $\Pi_{x_i}$ of $\Pi_{X_i}$. The joint distribution over $X$ factors according to the Markov property:
-
+A Bayesian network $B$ is defined by a pair $(G,\Theta)$, where $G = (X,E)$ is a directed acyclic graph whose nodes correspond to a set of random variables $X = \brock{X_1, X_2, \cdots, X_n}$, and whose edges $E$ represent probabilistic dependencies among nodes. The graph structure $G$ encodes the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pi_{X_i}$ in $G$. The conditional relations are parameterized by the elements of $\Theta$, which take the form $\theta_{x_i \mid \Pi_{x_i}} = P(x_i \mid \Pi_{x_i})$ for each possible value $x_i$ of $X_i$, and $\Pi_{x_i}$ of $\Pi_{X_i}$. The joint distribution over $X$ factors according to the Markov property:
 \begin{equation}
-P_B (X_1 , \ldots, X_n) = \prod_{i=1}^{n} P_B (X_i \mid \Pi_{X_i}) = \prod_{i=1}^{n} \theta_{x_i \mid \Pi_{x_i}}\text{.}
+P_B (X_1 , \cdots, X_n) = \prod_{i=1}^{n} P_B (X_i \mid \Pi_{X_i}) = \prod_{i=1}^{n} \theta_{x_i \mid \Pi_{x_i}}\text{.}
 \end{equation}
 
 Forward sampling is used to draw samples from the joint distribution represented by a Bayesian network.
 Variables are sampled in topological order such that parental instantiations are always known~\citep[see][chap.~22]{algo_2009}.
-\mykel{I think this ref is just for the topological sort; for sampling, cite DMU or PGM}
 Furthermore, the parent $\rightarrow$ child sampling order can be reversed if the marginal probability of the child variable is known.
 By Bayes' rule,
 
 \begin{equation}
-P(X_i \mid \Pi_{X_i}) \cdot \prod_{j = 1}^{ Pa( X_i)} P( \brock{\Pi_{X_i} }_j) = P(X_i) \cdot P(\Pi_{X_i} \mid X_i),
+P(X_i \mid \Pi_{X_i}) \cdot \prod_{j = 1}^{ Pa( X_i)} P( \{ \Pi_{X_i} \}_j) = P(X_i) \cdot P(\Pi_{X_i} \mid X_i),
 \end{equation}
 
 \noindent
 where $Pa(X_i)$ is the number of parents of $X_i$ and $\brock{\Pi_{X_i}}_j$ is the $j$th parent of $X_i$.
-\mykel{this may be messed up. Maybe use DMU notation?}
 % One can first sample $X_i$ by $P(X_i)$, then sample all the parent variables simultaneously by $P(\Pi_{X_i} \mid X_i)$. That is to say, $X_i$ becomes the starting point of sampling.
 
 It is often necessary to infer the structure of a Bayesian network from data.
@@ -278,7 +266,6 @@ K2 is typically run multiple times with random variable orderings and the networ
 
 \subsection{Discretization Policies}
 
-\tim{We need to adopt the same notation everywhere; $C$ should be a child, not a continuous variable}.
 A discretization policy $M_C = \anglebrackets{t_1 < t_2 < \ldots < t_{k-1}}$ for a continuous variable $C$ is a mapping from $\mathbb{R}$ to $\brock{1,2,3,\ldots,k}$ such that
 \begin{equation}
   M_C (x)=\begin{cases}
@@ -290,13 +277,12 @@ A discretization policy $M_C = \anglebrackets{t_1 < t_2 < \ldots < t_{k-1}}$ for
 
 \noindent
 The policy discretizes the continuous variable $C$ into $k$ intervals.
-The discretization edges $t_{1:k-1}$ are restricted to the midpoints between two sorted instances of $C$.
+The discretization edges $t_\cdot$ are restricted to the midpoints between two sorted instances of $C$.
 An integer representation of $M_C$ can be obtained by sorting the samples of $C$ in an increasing order, $\curly{c_1,c_2,\ldots,c_N}$, and if $t_i = (c_{s_{i}} + c_{s_{i}+1})/2$ for $i=1,2,\ldots,k$, then $M_C = \anglebrackets{t_1,t_2, \ldots, t_{k-1}} \equiv \brock{n_1,n_2,..n_k}$, where $n_1 = s_1$ and $n_i = s_{i} - s_{i-1}$.
-\mykel{Where did $s_i$ come from?}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Single Variable Discretization}
+\section{Discretization of a Single Continuous Variable}
 \label{sec:single_var}
 
 This section covers discretization of a single continuous variable $X$ in a Bayesian network where all other variables are discrete.
@@ -308,7 +294,6 @@ Let $D$ be a dataset of $N$ samples from which the discretization will be learne
 Let $D_{\boldsymbol{Y}}$ will refer to the data instances associated with variables $\boldsymbol{Y}$, thus $D_X = \{ x_1,x_2,x_3,\ldots,x_N \}$.
 In order to facilitate understanding, we temporarily assume all values in $D_X$ are unique, that is, $x_1 < x_2 < \ldots < x_N$.
 It follows that a discretization policy $M$ on $X$ can be written as $M_X = \brock{n_1,n_2,\ldots,n_k}$, where $k$, $n_1$, $n_2$, $\ldots,n_k$ are positive integers satisfying $N = \sum_{i=1}^k n_i$.
-\mykel{$\bigstar$ This conflicts with Section 3.2, right?}
 An optimal discretization policy maximizes $P(M)\cdot P(D\mid M)$ for some prior $P(M)$ and likelihood $P(D\mid M)$.
 
 %Furthermore, since there might have repeated values for $D_x$, we assume there are $N'$ unique values of $D_x$ and $N' \leq N$. Note that the allowable discretization edges happens between two consective values of non-repeated value of $D_x$. For example, if $D_X = \{ 1.0,1.0,2.0\}$, then the only possible discretization edge is on $1.5$.
@@ -316,21 +301,20 @@ An optimal discretization policy maximizes $P(M)\cdot P(D\mid M)$ for some prior
 
 \subsection{Priors and Objective Function}
 
-The following four principles for the optimal discretization policy, motivated by MODL, enable the formulation of $P(M)$ and $P(D \mid M)$:
+The following four principles for the optimal discretization policy, modivated by MODL, enable the formulation of $P(M)$ and $P(D \mid M)$:
 \begin{enumerate}
 \item A discretization edge located at $(x_i + x_{i+1})/2$ has probability
 \begin{equation}
 1 - {\exp(- L \cdot {{x_{i+1} - x_i}\over{x_N - x_1}})},
 \end{equation}
-where $L$ is the largest cardinality number of discrete variables in $X$'s Markov blanket. \tim{Where does this come from? Is there an intuitive explanation?}\mykel{$\bigstar$}
+where $L$ is the largest cardinality number of discrete variables in $X$'s Markov blanket. \tim{Where does this come from? Is there an intuitive explanation?}
 \item For a given interval of $M$, every distribution of $\Pi_X$ is equiprobable.
-\item For each pair of $(C_i,\boldsymbol{S_i})$ and a given interval of $M$, every distribution of $C_i$ with a value of $\boldsymbol{S_i}$ is equiprobable.\mykel{$\bigstar$}
-\item The distributions of each $C_i$ and $\Pi_X$ in each interval of $M$ with each value of $\boldsymbol{S_i}$ are independent from each other.\mykel{$\bigstar$}
+\item For each pair of $(C_i,\boldsymbol{S_i})$ and a given interval of $M$, every distribution of $C_i$ with a value of $\boldsymbol{S_i}$ is equiprobable.
+\item The distributions of each $C_i$ and $\Pi_X$ in each interval of $M$ with each value of $\boldsymbol{S_i}$ are independent from each other.
 \end{enumerate}
 
 From the first principle one obtains
 \begin{equation}
-\label{eq:p_M}
 P(M) = \prod_{i=1}^k \curly{ \brock{1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}} \cdot \exp\paren{L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}}}},
 \end{equation}
 
@@ -339,7 +323,6 @@ where $s_i = \sum_{j=1}^k n_j$ and $s_k = N$, $s_0 = 0$.
 The Bayesian network graph structure causes the likelihood term $P(D \mid M)$ to factorizes according to $X$'s Markov blanket:
 
 \begin{equation}
-\label{eq:p_D_given_M}
 P\paren{D \mid M} \propto P\paren{D_{\Pi_x} \mid M} \cdot \prod_{i = 1}^{n_c} P\paren{D_{C_i} \mid M, D_{\boldsymbol{S_i}}}\text{.}
 \end{equation}
 
@@ -388,7 +371,7 @@ P(D_{C_j}  \mid M, D_{S_j}) =
 
 \noindent
 where $n^{(j)}_{i,m,l}$ is the number of instances in $i$th interval with $m$th value of $C_j$ and $l$th value of $\boldsymbol{S_j}$, $n_{i,l} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,l}$, and $n_i = \sum_{l=1}^{L_j} n_{i,l}$.
-The two factors on the right hand side come from the third prior: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable. According to the forth prior, these distributions are independent from each other, and one thus takes their product. If $S_j = \emptyset$, then Equation~\ref{eq:likelihood_two} is equivalent to
+The two factors on the right hand side come from the third prior: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable. According to the forth prior, these distributions are independent from each other, and one thus takes their product. If $S_j = \emptyset$, then Equation \ref{eq:likelihood_two} is equivalent to
 
 \begin{equation}
 \label{eq:likelihood_three}
@@ -400,7 +383,7 @@ P(D_{C_j}  \mid M) =
 \noindent
 where $n^{(j)}_{i,m,\emptyset}$ is the number of instances in the $i$th interval with the $m$th value of $C_j$, and $\sum_{m=1}^{J_j} n^{(j)}_{i,m,\emptyset} = n_i$.
 
-The objective function can be formulated given equations \ref{eq:p_M}, \ref{eq:p_D_given_M}, \ref{eq:likelihood_one}, and \ref{eq:likelihood_three}.
+The objective function can be formulated given equations \ref{eq:p_M}, \ref{eq:p_D_given_M},\ref{eq:likelihood_one}, and \ref{eq:likelihood_three}.
 The log-inverse of $P(M) \cdot P(D|M)$ is minimized for computational convenience:
 
 \begin{equation}
@@ -441,8 +424,8 @@ h(u,v) &=  \log {{n_{q} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_q}!}\over{
 The evaluation of $h(u,v)$ for all $u \leq v$ is summarized in Algorithm \ref{alg:h} in the appendix.
 The calculation has a $O(n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2)$ runtime, where $n_c$ and $n_p$ are the numbers of child and parent variables respectively, and $v'_\text{max}$ is the largest cardinality of variables that directly connect to $X$.
 
-Now we are able to solve the optimization problem over Equation~\ref{eq:opt_prob}.
-The dynamic programming procedure is shown in Algorithm~\ref{alg:disc_one}.
+Now we are able to solve the optimization problem over Equation \ref{eq:opt_prob}.
+The dynamic programming procedure is shown in Algorithm \ref{alg:disc_one}.
 It takes two inputs: $D$, the joint samples over all variables sorted in ascending order according to $D_X$, and $G$, the network structure.
 The runtime of Algorithm \ref{alg:disc_one} is also $O(n_c  {v'_\text{max}} \cdot N^2 + {v'_\text{max}}^{n_p} \cdot N^2)$, because the runtime of the dynamic programming procedure is less than the runtime for computing $h(u,v)$.
 Algorithm \ref{alg:disc_one} is guaranteed to be optimal.
@@ -490,7 +473,7 @@ For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
 
 Algorithm \ref{alg:disc_one} has an exponential $\bigo\paren{\paren{v'_\text{max}}^{n_p} \cdot N^2}$ runtime which severely limits discretization in networks with a large number of discretization intervals or parent variables.
 This section introduces an approximation to the objective function that significantly reduces the runtime and still preserves the quality of discretization.
-The approximation replaces the dominator of the last factor in Equation~\ref{eq:likelihood_one} with
+The approximation replaces the dominator of the last factor in Equation \ref{eq:likelihood_one} with
 
 \begin{equation}
 {\frac{{n_i}!}{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_P} !}}} \approx \prod_{r=1}^{n_p} { {{{n}_i}!}\over{ {n^{(p_r)}_{i,1} !} {n^{(p_r)}_{i,2} !} \cdots {n^{(p_r)}_{i,J_{p_r}} !}}}\text{,}
@@ -511,12 +494,12 @@ The approximated objective function is
 \end{equation}
 \end{small}
 
-The approximation reduces the runtime of Algorithm~\ref{alg:disc_one} to a polynomial, $\bigo\paren{ {v'_\text{max}} \cdot (n_c + n_p) \cdot N^2}$.
-It will be shown in Section~\ref{sec:experiments} that the approximation is more sensitive to the distribution over other variables and is biased towards slightly higher interval counts.
+The approximation reduces the runtime of Algorithm \ref{alg:disc_one} to a polynomial, $\bigo\paren{ {v'_\text{max}} \cdot (n_c + n_p) \cdot N^2}$.
+It will be shown in Section \ref{sec:experiments} that the approximation is more sensitive to the distribution over other variables and is biased towards slightly higher interval counts.
 \tim{We need to have a more specific thing to say along the lines of When does it fail?}
 
-With the approximated objective function, Equation~\ref{eq:opt_prob_approx}, provides intuition into how child and parent variables contribute to the objective function.
-For example, in the left graph of Figure~\ref{fig:example_networks}, the corresponding square brackets in the approximated objective function are
+With the approximated objective function, Equation \ref{eq:opt_prob_approx}, provides intuition into how child and parent variables contribute to the objective function.
+For example, in the left graph of Figure \ref{fig:example_networks}, the corresponding square brackets in the approximated objective function are
 
 \begin{small}
 \begin{equation}
@@ -648,7 +631,7 @@ This work runs Algorithm \ref{alg:structure_learn} multiple times, each with a d
       \EndIf
     \EndFor
     \For {$i =1$ to $n$}
-      \State $P_{old} \leftarrow f(X^*_i,\Pi_{X^*_i})$: Equation~\ref{eq:f_x_p}
+      \State $P_{old} \leftarrow f(X^*_i,\Pi_{X^*_i})$: Equation \ref{eq:f_x_p}
       \State OKToProceed $\leftarrow$ \textbf{true}
       \While {OKToProceed \textbf{and} $\|\Pi_{X^*_i}\| < u_{parent}$}
         \State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pi_X$
@@ -732,10 +715,9 @@ The dataset has \num{392} instances after deleting the six instances with missin
 Three variables are discrete: $B$, $G$, and $H$ with cardinality 5, 13, and 3 respectively.
 Two expiriments are conducted, one with a given network structure and one in which the structure is learned.
 
-\subsubsection{Structure is Given}
+\subsubsection{Experiment 1 on the Auto MPG dataset}
 
-The proposed discretization method and the MDL discretization method are tested on Auto MPG data given the network network in Fig. \ref{Auto_graph_1}.
-The structure was obtained by prediscretizing each continuous variable into five uniform-width intervals, where five is the median cardinality of the discrete variables, and then taking the most frequent structure from a thousand runs of K2.
+The proposed discretization method and the MDL discretization method are tested on Auto MPG data given the network network in Fig. \ref{fig:auto_graph_1}. This structure was obtained by prediscretizing each continuous variable into five uniform-width intervals, where five is the median cardinality of the discrete variables, and then taking the most frequent structure from a thousand runs of K2.
 
 \begin{figure}[ht]
   \centering
@@ -743,57 +725,66 @@ The structure was obtained by prediscretizing each continuous variable into five
     \input{graph_autocar_1}
   \end{tabular}
   \caption{The Bayesian network obtained with K2 on the prediscretized Auto MPG dataset}
-  \label{Auto_graph_1}
+  \label{fig:auto_graph_1}
 \end{figure}
 
-Table \ref{Auto_MPG_disc_table_1} shows the numbers of intervals after discretization, the positions of discretization edges, and log-likelihood of 10-fold cross validation. For the Bayesian network in Fig. \ref{Auto_graph_1}, the approximation only reduces runtime of proposed method and has no influence on discretization result. MDL principle discretization works not well, since it discretizes all variables with only one interval. For a Bayesian network on thie Auto MPG data set that MDL principle discretization has non-trivial result, please reference to Appendix.
+Table \ref{table:auto_disc_table_1} shows the numbers of intervals after discretization, the positions of discretization edges, and log-likelihood of 10-fold cross validation. For the Bayesian network in Fig. \ref{fig:auto_graph_1}, the approximation only reduces runtime of proposed method and has no influence on discretization result. MDL principle discretization works not well, since it discretizes all variables with only one interval. For a Bayesian network on the Auto MPG data set that MDL principle discretization has non-trivial result, please reference to Appendix.
 
 \begin{table}[h]
   \centering
   \input{table_autoMPG_1.tex}
-  \caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{Auto_graph_1}. The discretization policy for the heuristic matches that for the optimal Bayesian approach. \todo{Need to explain why MDL fails}}
-  \label{Auto_MPG_disc_table_1}
+  \caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{fig:auto_graph_1}. The discretization policy for the heuristic matches that for the optimal Bayesian approach. \todo{Need to explain why MDL fails}}
+  \label{table:auto_disc_table_1}
 \end{table}
 
-Figure \ref{auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges and the resulting marginalized probability match the raw data very well.
+Figure \ref{fig:auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges and the resulting marginalized probability match the raw data well.
 
 \begin{figure}[ht]
     \begin{tabular}{cc}
       \input{graph_auto_exp1_distr_1_3}
     \end{tabular}
   \caption{Comparison of the raw data and discretization result on variable $A$ and $C$}
-  \label{auto_exp1_distr_1_3}
+  \label{fig:auto_exp1_distr_1_3}
 \end{figure}
 
-\subsubsection{Structure is Learned}
+\subsubsection{Experiment 2 on the Auto MPG dataset}
 
-If the network structure is not known in advance, it should be learned along with the discretization process. Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2} show a learned discrete-valued Bayesian network and the corresponding discretization edges of each continuous variable. This result is obtained by running Algorithm \ref{Learn_DBN} fifty times and choosing the one with the highest K2 score.
-\newline
+If the network structure is not known in advance, it should be learned along with the discretization process. Figure \ref{fig:auto_graph_2} show a learned discrete-valued Bayesian network and the corresponding discretization edges of each continuous variable. This result is obtained by running Algorithm \ref{alg:structure_learn} fifty times and choosing the one with the highest K2 score. The numbers next to the variables are cardinality numbers.
 
- {\centering
-\begin{minipage}{0.50\textwidth}
-  \centering
-  \scalebox{0.7}{
-  \input{graph_autocar_2}}
-  \captionof{figure}{The learned discrete-\newline valued Bayesian network}
-  \label{Auto_graph_2}
-\end{minipage}
-\begin{minipage}{0.50\textwidth}
-  \raggedleft
-  \input{table_autoMPG_2.tex}
-  \captionof{table}{The discretization edges of variables in Fig \ref{Auto_graph_2}}
-  \label{Auto_MPG_disc_table_2}
-\end{minipage}
-}
 
-Figure \ref{auto_exp2_distr_1_3} compares the result of Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2} with the raw data on variables $A$ and $C$. Again, the black dots are raw data points. Although the numbers of discretization edges of $A$ and $C$ shown in Table \ref{Auto_MPG_disc_table_2} are less than Table \ref{Auto_MPG_disc_table_1}, they still have a good capture of raw data distribution.
+\begin{figure}[ht]
+\centering
+    \begin{tabular}{cc}
+      \input{graph_autocar_2}
+    \end{tabular}
+  \caption{The learned discrete-valued Bayesian network from the Auto MPG dataset}
+  \label{fig:auto_graph_2}
+\end{figure}
+
+ %{\centering
+%\begin{minipage}{0.50\textwidth}
+%  \centering
+%  \scalebox{0.7}{
+%  \input{graph_autocar_2}}
+%  \captionof{figure}{The learned discrete-\newline valued Bayesian network}
+%  \label{fig:auto_graph_2}
+%\end{minipage}
+%\begin{minipage}{0.50\textwidth}
+%  \raggedleft
+%  \input{table_autoMPG_2.tex}
+%  \captionof{table}{The discretization edges of variables in Fig \ref{Auto_graph_2}}
+%  \label{Auto_MPG_disc_table_2}
+%\end{minipage}
+%}
+
+Figure \ref{auto_exp2_distr_1_3} compares the edges of the learned network in Figure \ref{fig:auto_graph_2} with the raw data on variables $A$ and $C$. Again, the black dots are raw data points. Although the numbers of discretization edges of $A$ and $C$ shown in Figure \ref{fig:auto_graph_2} are less than Table \ref{table:auto_disc_table_1}, they still have a good capture of raw data distribution.
 
 \begin{figure}[ht]
     \begin{tabular}{cc}
       \input{graph_auto_exp2_distr_1_3}
     \end{tabular}
-  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ according to Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2}}
-  \label{auto_exp2_distr_1_3}
+  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ of the learned network in Figure \ref{fig:auto_graph_2}}.
+  \label{fig:auto_exp2_distr_1_3}
 \end{figure}
 
 
@@ -802,18 +793,19 @@ Figure \ref{auto_exp2_distr_1_3} compares the result of Figure \ref{Auto_graph_2
 
 In this subsection, two experiments are conducted on the Wine dataset from the Irvine repository \citep{Lichman:2013}. This dataset has 178 instances and 14 variables. Only variable $A$ is discrete-valued with cardinality number 3. Again, in the first experiment, the network structure is given. In the second experiment, the network structure is not provided.
 
-\subsubsection{Experiment 1 on Wine dataset}
-\label{subsubsec:wine_exp2}
+\subsubsection{Experiment 1 on the Wine dataset}
+\label{subsubsec:wine_exp1}
 
-Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 1000 times. Table \ref{Wine_disc_table_1} shows a comparison between the proposed method and the MDL principle discretization method. The proposed method is still better than MDL principle discretization in terms of likelihood, although the latter returns non-trivial result in this experiment. Furthermore, the proposed method with the approximation has more intervals after discretization, thus it has a slightly better result. However, as shown in next dataset, the approximation might cut continuous variables into too many intervals. Therefore, the proposed method without the approximation should be still considered a better approach.
+The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 1000 times. Table \ref{table:wine_disc_table_1} shows a comparison between the proposed method and the MDL principle discretization method. The proposed method is still better than MDL principle discretization in terms of likelihood, although the latter returns non-trivial result in this experiment. Note that the proposed method with the approximation has more intervals after discretization, thus it has a slightly better result. However, as shown in next dataset, the approximation might cut continuous variables into too many intervals. Therefore, the proposed method without the approximation should be still considered a better approach.
 
 
 \begin{figure}[ht]
+\centering
     \begin{tabular}{cc}
       \input{graph_wine_1}
     \end{tabular}
   \caption{K2 structure learning with prediscretization on Wine dataset}
-  \label{Wine_graph_1}
+  \label{fig:wine_graph_1}
 \end{figure}
 
 \begin{table}
@@ -822,7 +814,7 @@ Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuou
 \input{table_wine_1.tex}
 }
 \caption{Discretization result of Wine dataset based on the graph Fig. \ref{Wine_graph_1}}
-\label{Wine_disc_table_1}
+\label{table:wine_disc_table_1}
 \end{table}
 
 \begin{figure}[ht]
@@ -833,12 +825,20 @@ Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuou
   \label{wine_exp1_distr}
 \end{figure}
 
+\subsubsection{Experiment 2 on the Wine dataset}
+\label{subsubsec:wine_exp2}
+
+Figure \ref{Wine_graph_2} is the learned discrete-valued Bayesian network, which is obtained by running Algorithm \ref{alg:structure_learn} 50 times. The integer numbers next to variables are cardinality numbers of variables. By comparing Figure \ref{Wine_graph_2} with \ref{Wine_graph_1}, it shows that the the Bayesian network obtained by \ref{alg:structure_learn} has more edges than the network obtained by prediscretization and the K2 algorithm. Furthermore, the cardinalitis of discretized variables in Figure \ref{Wine_graph_2} are smaller than the result in \ref{Wine_disc_table_1}.
+
+Figure \ref{wine_exp2_distr_5_11} shows the discretization result on variable $E$ and $K$. The discretization edge on variable $E$ is same as the edge found by the MDL principle and the proposed method in Figure \ref{wine_exp1_distr}. This indicates that some discretization edges are robust against the network structure.
 
 \begin{figure}[ht]
     \begin{tabular}{cc}
-      \input{graph_wine_2}
+    \centering
+    \scalebox{0.7}{
+      \input{graph_wine_2}}
     \end{tabular}
-  \caption{K2 structure learning with the proposed discretization method on Wine dataset}
+  \caption{The learned discrete-valued Bayesian network from the Wine dataset}
   \label{Wine_graph_2}
 \end{figure}
 
@@ -846,8 +846,8 @@ Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuou
     \begin{tabular}{cc}
       \input{graph_wine_exp2_distr_5_11}
     \end{tabular}
-  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ according to Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2}}
-  \label{wine_exp2_distr_5_11}
+  \caption{Comparison of the raw data and discretization result on variable $E$ and $K$ according to Figure \ref{Auto_graph_2}}
+  \label{Wine_graph_2}
 \end{figure}
 
 \subsection{Data 3: Housing}
@@ -862,7 +862,6 @@ Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuou
 \end{figure}
 
 
-
 \begin{table}
 \centering
 \scalebox{1.0}{
@@ -871,6 +870,9 @@ Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuou
 \caption{Discretization result of Housing dataset based on the graph Fig. \ref{Housing_graph_1}}
 \label{Housing_disc_table_1}
 \end{table}
+
+
+
 
 \begin{figure}[ht]
     \begin{tabular}{cc}
