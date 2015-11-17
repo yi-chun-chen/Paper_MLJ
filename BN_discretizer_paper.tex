@@ -801,52 +801,46 @@ The log-likelihood of the original dataset given the discrete dataset is
 \subsection{Auto MPG Dataset}
 \label{subsec:auto}
 
-In this subsection, two experiments are conducted on the Auto MPG dataset from the Irvine repository \citep{Lichman_2013}. The dataset has \num{392} instances after deleting the six instances with missing data, and eight variables. Three variables are discrete: $B$, $G$, and $H$ with cardinality 5, 13, and 3 respectively. Two expiriments are conducted, one with a given network structure and one in which the structure is learned.
+In this subsection, two experiments are conducted on the Auto MPG dataset from the Irvine repository \citep{Lichman_2013}. The dataset has \num{392} instances after deleting the six instances with missing data, and eight variables. Three variables are discrete: $B$, $G$, and $H$ with cardinality \num{5}, \num{13}, and \num{3} respectively. Two expiriments are conducted, one with a given network structure and one in which the structure is learned.
 
 \subsubsection{Discretization with fixed Structure}
 \label{subsubsec:auto_exp1}
 
-The proposed discretization method and the MDL discretization method are tested on Auto MPG data given the network network in Fig. \ref{fig:auto_graph_1}. This structure was obtained by prediscretizing each continuous variable into five uniform-width intervals, where five is the median cardinality of the discrete variables, and then taking the most frequent structure from a thousand runs of K2.
+The optimal Bayesian approach and the MDL discretization method are tested on Auto MPG data given the network network in Fig. \ref{fig:auto_graph_1}. This structure was obtained by prediscretizing each continuous variable into five uniform-width intervals, where five is the median cardinality of the discrete variables, and then taking the most frequent structure from a thousand runs of K2. \yichun{most frequent?}
 
 \begin{figure}[ht]
   \centering
-  \begin{tabular}{cc}
     \input{graph_autocar_1}
-  \end{tabular}
   \caption{The Bayesian network obtained with K2 on the prediscretized Auto MPG dataset}
   \label{fig:auto_graph_1}
 \end{figure}
 
-Table \ref{table:auto_disc_table_1} shows the numbers of intervals after discretization, the positions of discretization edges, and log-likelihood of 10-fold cross validation. For the Bayesian network in Fig. \ref{fig:auto_graph_1}, the approximation only reduces runtime of proposed method and has no influence on discretization result. MDL principle discretization works not well, since it discretizes all variables with only one interval. For a Bayesian network on the Auto MPG data set that MDL principle discretization has non-trivial result, please reference to Appendix.
+Table \ref{table:auto_disc_table_1} shows the numbers of intervals after discretization, the positions of discretization edges, and log-likelihood of 10-fold cross validation. For the Bayesian network in Fig. \ref{fig:auto_graph_1}, the approximation \ref{eq:opt_prob_approx} only reduces runtime and has no influence on discretization result. MDL principle discretization works not well, since it discretizes all variables with only one interval. The reason that the MDL method discretizes variables into too few number of intervals is discussed in Section \ref{subsec:discuss_exp}.
 
 \begin{table}[h]
   \centering
   \input{table_autoMPG_1.tex}
-  \caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{fig:auto_graph_1}. The discretization policy for the heuristic matches that for the optimal Bayesian approach. \todo{Need to explain why MDL fails}}
+  \caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{fig:auto_graph_1}. The discretization policy for the heuristic matches that for the optimal Bayesian approach. The MDL method is less sensitive to distribution of values of other variables, thus it fails to return discretization edges.
   \label{table:auto_disc_table_1}
 \end{table}
 
-Figure \ref{fig:auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{fig:auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges and the resulting marginalized probability match the raw data well.
+Figure \ref{fig:auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{fig:auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges obtained by the optimal Bayesian approach and the resulting marginalized probability match the raw data well.
 
 \begin{figure}[ht]
-    \begin{tabular}{cc}
       \input{graph_auto_exp1_distr_1_3}
-    \end{tabular}
-  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$}
+  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ by the optimal Bayesian approach. The marginal probabilities of discretized areas match the distribution of the taw data very well.}
   \label{fig:auto_exp1_distr_1_3}
 \end{figure}
 
 \subsubsection{Discretization while Learning Structure}
 \label{subsubsec:auto_exp2}
 
-If the network structure is not known in advance, it should be learned along with the discretization process. Figure \ref{fig:auto_graph_2} show a learned discrete-valued Bayesian network and the corresponding discretization edges of each continuous variable. This result is obtained by running Algorithm \ref{alg:structure_learn} fifty times and choosing the one with the highest K2 score. The numbers next to the variables are cardinality numbers.
+If the network structure is not known in advance, it should be learned along with the discretization process. Figure \ref{fig:auto_graph_2} show a learned discrete-valued Bayesian network and the corresponding numbers of intervals after discretization. This result is obtained by running Algorithm \ref{alg:structure_learn} fifty times and choosing the one with the highest K2 score.
 
 
 \begin{figure}[ht]
 \centering
-    \begin{tabular}{cc}
       \input{graph_autocar_2}
-    \end{tabular}
   \caption{The learned discrete-valued Bayesian network from the Auto MPG dataset}
   \label{fig:auto_graph_2}
 \end{figure}
@@ -870,9 +864,7 @@ If the network structure is not known in advance, it should be learned along wit
 Figure \ref{fig:auto_exp2_distr_1_3} compares the edges of the learned network in Figure \ref{fig:auto_graph_2} with the raw data on variables $A$ and $C$. Again, the black dots are raw data points. Although the numbers of discretization edges of $A$ and $C$ shown in Figure \ref{fig:auto_graph_2} are less than Table \ref{table:auto_disc_table_1}, they still have a good capture of raw data distribution.
 
 \begin{figure}[ht]
-    \begin{tabular}{cc}
       \input{graph_auto_exp2_distr_1_3}
-    \end{tabular}
   \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ of the learned network in Figure \ref{fig:auto_graph_2}}.
   \label{fig:auto_exp2_distr_1_3}
 \end{figure}
@@ -894,9 +886,7 @@ In addition, as shown in next dataset, the approximation might cut continuous va
 
 \begin{figure}[ht]
   \centering
-    \begin{tabular}{cc}
       \input{graph_wine_1}
-    \end{tabular}
   \caption{\tim{Structure from prediscretized K2 structure learning to compare the methods}}
   \label{fig:wine_graph_1}
 \end{figure}
@@ -917,9 +907,7 @@ Figure \ref{fig:wine_exp1_distr} compares the discretization results by the prop
 
 \begin{figure}[ht]
   \centering
-  \begin{tabular}{cc}
     \input{graph_wine_exp1_distr}
-  \end{tabular}
   \caption{Comparison of the discretization results on variable $A$ and $C$ obtained by the proposed method and the MDL method}
   \label{fig:wine_exp1_distr}
 \end{figure}
@@ -1039,6 +1027,9 @@ Although the number of intervals after discretization on $H$ is not big, it capt
   \caption{The discretization result on variable $H$ and $G$ of the network in Figure~\ref{fig:housing_graph_2}}
   \label{fig:housing_exp2_distr_8_5}
 \end{figure}
+
+\subsection{Experiment Discussions}
+\label{subsec:discuss_exp}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\begin{acknowledgements}
