@@ -55,6 +55,7 @@ grestore
 \usepackage[round]{natbib}
 \usepackage{multirow}
 \usepackage{pgfplots}
+\usepgfplotslibrary{groupplots}
 \usepackage{tikz}
 \usepackage{lscape}
 \usepackage{caption}
@@ -824,6 +825,13 @@ Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuou
 \label{Wine_disc_table_1}
 \end{table}
 
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_wine_exp1_distr}
+    \end{tabular}
+  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ according to Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2}}
+  \label{wine_exp1_distr}
+\end{figure}
 
 
 \begin{figure}[ht]
@@ -834,6 +842,13 @@ Figure \ref{Wine_graph_1} is obtained by equal-width discretizing each continuou
   \label{Wine_graph_2}
 \end{figure}
 
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_wine_exp2_distr_5_11}
+    \end{tabular}
+  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ according to Figure \ref{Auto_graph_2} and Table \ref{Auto_MPG_disc_table_2}}
+  \label{wine_exp2_distr_5_11}
+\end{figure}
 
 \subsection{Data 3: Housing}
 \label{subsec:housing}
