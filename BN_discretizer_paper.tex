@@ -830,7 +830,7 @@ Figure \ref{fig:wine_exp1_distr} compares the discretization results by the prop
 \subsubsection{Experiment 2 on the Wine dataset}
 \label{subsubsec:wine_exp2}
 
-Figure \ref{fig:wine_graph_2} is the learned discrete-valued Bayesian network from the Wine dataset, and it is obtained by running Algorithm \ref{alg:structure_learn} 50 times. The integer numbers next to variables are cardinality numbers of variables. By comparing Figure \ref{fig:wine_graph_2} with \ref{fig:wine_graph_1}, it shows that the the Bayesian network obtained by \ref{alg:structure_learn} has more edges than the network obtained by prediscretization and the K2 algorithm. Furthermore, the cardinalitis of discretized variables in Figure \ref{fig:wine_graph_2} are smaller than the result in \ref{fig:wine_disc_table_1}.
+Figure \ref{fig:wine_graph_2} is the learned discrete-valued Bayesian network from the Wine dataset, and it is obtained by running Algorithm \ref{alg:structure_learn} 50 times. The integer numbers next to variables are cardinality numbers of variables. By comparing Figure \ref{fig:wine_graph_2} with \ref{fig:wine_graph_1}, it shows that the the Bayesian network obtained by \ref{alg:structure_learn} has more edges than the network obtained by prediscretization and the K2 algorithm. Furthermore, the cardinalitis of discretized variables in Figure \ref{fig:wine_graph_2} are smaller than the result in \ref{table:wine_disc_table_1}.
 
 Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$ and $K$. The discretization edge on variable $E$ is same as the edge found by the MDL principle and the proposed method in Figure \ref{wine_exp1_distr}. This indicates that some discretization edges are robust against the network structure.
 
@@ -848,7 +848,7 @@ Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$
     \begin{tabular}{cc}
       \input{graph_wine_exp2_distr_5_11}
     \end{tabular}
-  \caption{Comparison of the raw data and discretization result on variable $E$ and $K$ according to Figure \ref{Auto_graph_2}}
+  \caption{The discretization result on variable $E$ and $K$ of the learned network in Figure \ref{fig:wine_graph_2}}
   \label{fig:wine_exp2_distr}
 \end{figure}
 
