@@ -20,20 +20,20 @@
       rounded corners, semithick, >=stealth
       ]
 
-	  \node[latent]          (c5) {$5$};
-	  \node[latent, right = 2.0 of c5]  (c4){$4$};
-	  \node[latent, below left = 1.0 and 1.0 of c5]  (c2){$2$};
-	  \node[latent, below = 3.0 of c5]  (c9){$9$};
-	  \node[latent, below = 1.0 of c9]  (c10){$10$};
-	  \node[latent, below = 1.0 of c10] (c12){$12$};
-	  \node[latent, below right = 1.0 and 1.0 of c10]  (c11){$11$};
-	  \node[latent, below right = 2.0 and 1.0 of c5] (c3){$3$};
-	  \node[latent, below right = 1.0 and 2.0 of c5] (c8){$8$};
-	  \node[latent, below left = 1.5 and 1.5 of c2] (c7){$7$};
-	  \node[latent, below = 1.0 of c7] (c13){$13$};
-	  \node[latent, below = 1.0 of c13] (c14){$14$};
-	  \node[latent, right = 1.5 of c14] (c1){$1$};
-	  \node[latent, below right = 0.75 and 0.75 of c14] (c6){$6$};
+	  \node[latent]          (c5) {$E$};
+	  \node[obs, right = 3.0 of c5]  (c4){$D_{{(2)}}$};
+	  \node[latent, below left = 1.0 and 1.0 of c5]  (c2){$B$};
+	  \node[obs, below = 2.0 of c5]  (c9){$I_{{(9)}}$};
+	  \node[latent, below = 1.0 of c9]  (c10){$J$};
+	  \node[latent, below = 1.0 of c10] (c12){$L$};
+	  \node[latent, below right = 1.0 and 2.0 of c10]  (c11){$K$};
+	  \node[latent, below right = 2.0 and 2.0 of c5] (c3){$C$};
+	  \node[latent, below right = 1.0 and 3.0 of c5] (c8){$H$};
+	  \node[latent, left = 1.5 of c2] (c7){$G$};
+	  \node[latent, below = 1.0 of c7] (c13){$M$};
+	  \node[latent, below = 1.0 of c13] (c14){$N$};
+	  \node[latent, right = 1.5 of c14] (c1){$A$};
+	  \node[latent, below right = 0.75 and 0.5 of c14] (c6){$F$};
 
 
   % Connect the nodes

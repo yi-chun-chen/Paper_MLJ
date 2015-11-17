@@ -55,6 +55,7 @@ grestore
 \usepackage[round]{natbib}
 \usepackage{multirow}
 \usepackage{pgfplots}
+\usepackage{pgfplotstable}
 \usepgfplotslibrary{groupplots}
 \usepackage{tikz}
 \usepackage{lscape}
@@ -77,7 +78,12 @@ grestore
 % Insert the name of "your journal" with
 % \journalname{myjournal}
 %
-
+\pgfplotsset{
+    jitter/.style={
+        x filter/.code={\pgfmathparse{\pgfmathresult+rnd*#1}}
+    },
+    jitter/.default=0.1
+}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % CUSTOM COMMANDS
 
@@ -564,8 +570,8 @@ The pseudocode for the multi-variable discretization procedure is shown in Algor
 It requires four inputs: $D''$, the joint samples from all network variables; $G$, the network structure; $C$, the set of all continuous variables in a reverse topological order; and $u_{cycle}$, the upper bound of times of cycles.
 
 \begin{algorithm}
-  \label{alg:disc_two}
   \caption{Discretization of multiple continuous variables \todo{Fix label reference number}}
+  \label{alg:disc_two}
   \begin{algorithmic}[5]
   \Function{Discretize}{$D''$, $G$, $C$, $u_{cycle}$}
     \State
@@ -614,8 +620,8 @@ It is common practice to run K2 multiple times with different permutations of th
 This work runs Algorithm \ref{alg:structure_learn} multiple times, each with a different order, and picks the discretized Bayesian network with the highest score.
 
 \begin{algorithm}
-  \label{alg:structure_learn}
   \caption{ Learning a discrete-valued Bayesian network}
+  \label{alg:structure_learn}
   \begin{algorithmic}[5]
   \Function{Learn\_DBN}{$D''$, $C$, $order$, $u_{parent}$, $C$, $u_{cycle}$}
     \State $n \leftarrow$ the number of variables in the Bayesian network
@@ -709,13 +715,12 @@ The log-likelihood of the original dataset given the discrete dataset is
 \end{equation}
 
 \subsection{Auto MPG Dataset}
+\label{subsec:auto}
 
-In this subsection, two experiments are conducted on the Auto MPG dataset from the Irvine repository \citep{Lichman:2013}.
-The dataset has \num{392} instances after deleting the six instances with missing data, and eight variables.
-Three variables are discrete: $B$, $G$, and $H$ with cardinality 5, 13, and 3 respectively.
-Two expiriments are conducted, one with a given network structure and one in which the structure is learned.
+In this subsection, two experiments are conducted on the Auto MPG dataset from the Irvine repository \citep{Lichman_2013}. The dataset has \num{392} instances after deleting the six instances with missing data, and eight variables. Three variables are discrete: $B$, $G$, and $H$ with cardinality 5, 13, and 3 respectively. Two expiriments are conducted, one with a given network structure and one in which the structure is learned.
 
 \subsubsection{Experiment 1 on the Auto MPG dataset}
+\label{subsubsec:auto_exp1}
 
 The proposed discretization method and the MDL discretization method are tested on Auto MPG data given the network network in Fig. \ref{fig:auto_graph_1}. This structure was obtained by prediscretizing each continuous variable into five uniform-width intervals, where five is the median cardinality of the discrete variables, and then taking the most frequent structure from a thousand runs of K2.
 
@@ -737,7 +742,7 @@ Table \ref{table:auto_disc_table_1} shows the numbers of intervals after discret
   \label{table:auto_disc_table_1}
 \end{table}
 
-Figure \ref{fig:auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges and the resulting marginalized probability match the raw data well.
+Figure \ref{fig:auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{fig:auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges and the resulting marginalized probability match the raw data well.
 
 \begin{figure}[ht]
     \begin{tabular}{cc}
@@ -748,6 +753,7 @@ Figure \ref{fig:auto_exp1_distr_1_3} compares the discretization result on conti
 \end{figure}
 
 \subsubsection{Experiment 2 on the Auto MPG dataset}
+\label{subsubsec:auto_exp2}
 
 If the network structure is not known in advance, it should be learned along with the discretization process. Figure \ref{fig:auto_graph_2} show a learned discrete-valued Bayesian network and the corresponding discretization edges of each continuous variable. This result is obtained by running Algorithm \ref{alg:structure_learn} fifty times and choosing the one with the highest K2 score. The numbers next to the variables are cardinality numbers.
 
@@ -777,7 +783,7 @@ If the network structure is not known in advance, it should be learned along wit
 %\end{minipage}
 %}
 
-Figure \ref{auto_exp2_distr_1_3} compares the edges of the learned network in Figure \ref{fig:auto_graph_2} with the raw data on variables $A$ and $C$. Again, the black dots are raw data points. Although the numbers of discretization edges of $A$ and $C$ shown in Figure \ref{fig:auto_graph_2} are less than Table \ref{table:auto_disc_table_1}, they still have a good capture of raw data distribution.
+Figure \ref{fig:auto_exp2_distr_1_3} compares the edges of the learned network in Figure \ref{fig:auto_graph_2} with the raw data on variables $A$ and $C$. Again, the black dots are raw data points. Although the numbers of discretization edges of $A$ and $C$ shown in Figure \ref{fig:auto_graph_2} are less than Table \ref{table:auto_disc_table_1}, they still have a good capture of raw data distribution.
 
 \begin{figure}[ht]
     \begin{tabular}{cc}
@@ -791,12 +797,12 @@ Figure \ref{auto_exp2_distr_1_3} compares the edges of the learned network in Fi
 \subsection{Dataset 2: Wine}
 \label{subsec:wine}
 
-In this subsection, two experiments are conducted on the Wine dataset from the Irvine repository \citep{Lichman:2013}. This dataset has 178 instances and 14 variables. Only variable $A$ is discrete-valued with cardinality number 3. Again, in the first experiment, the network structure is given. In the second experiment, the network structure is not provided.
+In this subsection, another two experiments are conducted on the Wine dataset from the Irvine repository \citep{Lichman_2013}. This dataset has 178 instances and 14 variables. Only variable $A$ is discrete-valued with cardinality number 3. Again, in the first experiment, the network structure is given. In the second experiment, the network structure is not provided.
 
 \subsubsection{Experiment 1 on the Wine dataset}
 \label{subsubsec:wine_exp1}
 
-The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 1000 times. Table \ref{table:wine_disc_table_1} shows a comparison between the proposed method and the MDL principle discretization method. The proposed method is still better than MDL principle discretization in terms of likelihood, although the latter returns non-trivial result in this experiment. Note that the proposed method with the approximation has more intervals after discretization, thus it has a slightly better result. However, as shown in next dataset, the approximation might cut continuous variables into too many intervals. Therefore, the proposed method without the approximation should be still considered a better approach.
+The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 1000 times. Table \ref{table:wine_disc_table_1} shows a comparison between the proposed method and the MDL principle discretization method. The proposed method is still better than MDL principle discretization in terms of likelihood, although the latter returns non-trivial result in this experiment. Note that the proposed method with the approximation has more intervals after discretization, and it has a slightly better result in terms of likelihood. However, the improvement is marginally small, which indicates that the proposed method without the approximation captures good enough discretization result even if the numbers of intervals after discretization are smaller. In addition, as shown in next dataset, the approximation might cut continuous variables into too many intervals. Therefore, the proposed method without the approximation should be still considered a better approach.
 
 
 \begin{figure}[ht]
@@ -804,7 +810,7 @@ The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width
     \begin{tabular}{cc}
       \input{graph_wine_1}
     \end{tabular}
-  \caption{K2 structure learning with prediscretization on Wine dataset}
+  \caption{K2 structure learning with prediscretization on the Wine dataset}
   \label{fig:wine_graph_1}
 \end{figure}
 
@@ -813,7 +819,7 @@ The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width
 \scalebox{1.0}{
 \input{table_wine_1.tex}
 }
-\caption{Discretization result of Wine dataset based on the graph Fig. \ref{Wine_graph_1}}
+\caption{Discretization result of Wine dataset based on the graph Fig. \ref{fig:wine_graph_1}}
 \label{table:wine_disc_table_1}
 \end{table}
 
@@ -832,7 +838,7 @@ Figure \ref{fig:wine_exp1_distr} compares the discretization results by the prop
 
 Figure \ref{fig:wine_graph_2} is the learned discrete-valued Bayesian network from the Wine dataset, and it is obtained by running Algorithm \ref{alg:structure_learn} 50 times. The integer numbers next to variables are cardinality numbers of variables. By comparing Figure \ref{fig:wine_graph_2} with \ref{fig:wine_graph_1}, it shows that the the Bayesian network obtained by \ref{alg:structure_learn} has more edges than the network obtained by prediscretization and the K2 algorithm. Furthermore, the cardinalitis of discretized variables in Figure \ref{fig:wine_graph_2} are smaller than the result in \ref{table:wine_disc_table_1}.
 
-Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$ and $K$. The discretization edge on variable $E$ is same as the edge found by the MDL principle and the proposed method in Figure \ref{wine_exp1_distr}. This indicates that some discretization edges are robust against the network structure.
+Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$ and $K$. The discretization edge on variable $E$ is same as the edge found by the MDL principle and the proposed method in Figure \ref{fig:wine_exp1_distr}. This indicates that some discretization edges are robust against the network structure.
 
 \begin{figure}[ht]
     \begin{tabular}{cc}
@@ -855,12 +861,19 @@ Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$
 \subsection{Data 3: Housing}
 \label{subsec:housing}
 
+In this subsection, another two experiments are conducted on the Housing dataset from the Irvine repository \citep{Lichman_2013}. This dataset has 506 instances and 14 variables. Only variables $D$ and $I$ are discrete-valued with cardinality numbers 2 and 9, respectively. Again, in the first experiment, the network structure is given. In the second experiment, the network structure is not provided.
+
+\subsubsection{Experiment 1 on the Housing dataset}
+\label{subsubsec:housing_exp1}
+
+The Bayesian network structure in Figure \ref{fig:housing_graph_1} is obtained by prediscretizing each continuous variable into five uniform-width intervals, then running the K2 algorithm one thousands time and choosing the network with the highest K2 score. Table \ref{table:housing_disc_table_1} shows the numbers of intervals after discretization on each continuous variables. MDL method does not discretize most variables. The proposed method with the approximation discretizes variables into too many intervals. For example, it discretized $J$ into 58 intervals. The proposed method without the approximation has a good control of number of intervals.
 \begin{figure}[ht]
+\centering
     \begin{tabular}{cc}
       \input{graph_housing_1}
     \end{tabular}
   \caption{K2 structure learning with prediscretization on Housing dataset}
-  \label{Housing_graph_1}
+  \label{fig:housing_graph_1}
 \end{figure}
 
 
@@ -869,19 +882,57 @@ Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$
 \scalebox{1.0}{
 \input{table_housing_1.tex}
 }
-\caption{Discretization result of Housing dataset based on the graph Fig. \ref{Housing_graph_1}}
-\label{Housing_disc_table_1}
+\caption{Discretization result of Housing dataset based on the graph Fig. \ref{fig:housing_graph_1}}
+\label{table:housing_disc_table_1}
 \end{table}
 
+Figure \ref{fig:housing_exp1_distr_3_5} and Figure \ref{fig:housing_exp1_distr_8_5} show the discretization result by the propose method on the network in Figure \ref{fig:housing_graph_1}. In Figure \ref{fig:housing_exp1_distr_3_5}, the scatter points, which stands for the raw data, has been jittered, since there are many repeated values in the raw data on the variable pair $C$ and $E$. These repeating values cause the high number of intervals after discretization for both $C$ and $E$, because in some sense, each repeated-value point form a single discretized area. On the other hand, there is no such over-repeated values of the raw data on variable $H$. Thus, the numbers of intervals after discretization for variable $E$ remains normal, as what we have seen in previous datasets. 
 
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_housing_exp1_distr_3_5}
+    \end{tabular}
+  \caption{The discretization result on variable $C$ and $E$ of the network in Figure \ref{fig:housing_graph_1}}
+  \label{fig:housing_exp1_distr_3_5}
+\end{figure}
 
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_housing_exp1_distr_8_5}
+    \end{tabular}
+  \caption{The discretization result on variable $H$ and $E$ of the network in Figure \ref{fig:housing_graph_1}}
+  \label{fig:housing_exp1_distr_8_5}
+\end{figure}
+
+\subsubsection{Experiment 2 on the Housing dataset}
+\label{subsubsec:housing_exp2}
+
+Figure \ref{fig:housing_graph_2} is the learned discrete-valued Bayesian network from the Housing dataset by running Algorithm \ref{alg:structure_learn} 50 times. In both Figure \ref{fig:housing_graph_1} and Figure \ref{fig:housing_graph_2}, the variable $D$ is not connected to any other variable. Continuous variables $C$, $E$, $J$ and $K$, which are all in a Markov blanket, have high cardinality numbers after discretization. This is reasonable, since when discretizing one variable, the expected cardinality is close to highest cardinality number in the Markov blanket. This will lead to a group of variables that are close to each other and all have high cardinalities.
 
 \begin{figure}[ht]
     \begin{tabular}{cc}
       \input{graph_housing_2}
     \end{tabular}
-  \caption{K2 structure learning with the proposed discretization method on Housing dataset}
-  \label{Housing_graph_2}
+  \caption{The learned discrete-valued Bayesian network from the Housing dataset}
+  \label{fig:housing_graph_2}
+\end{figure}
+
+Figure \ref{fig:housing_exp2_distr_3_5} and Figure \ref{fig:housing_exp2_distr_8_5} show the discretization result on variables of the network in Figure \ref{fig:housing_graph_2}. Again, variable $C$ and $E$ have many discretization edges due to the repeated values. Although the number of intervals after discretization on $H$ is not big, it captures the distribution of the raw data along with the discretization edges on $E$.
+
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_housing_exp2_distr_3_5}
+    \end{tabular}
+  \caption{The discretization result on variable $C$ and $E$ of the network in Figure \ref{fig:housing_graph_2}}
+  \label{fig:housing_exp2_distr_3_5}
+\end{figure}
+
+\begin{figure}[ht]
+    \begin{tabular}{cc}
+      \input{graph_housing_exp2_distr_8_5}
+    \end{tabular}
+  \caption{The discretization result on variable $H$ and $G$ of the network in Figure \ref{fig:housing_graph_2}}
+  \label{fig:housing_exp2_distr_8_5}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
