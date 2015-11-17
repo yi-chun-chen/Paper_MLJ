@@ -22,6 +22,7 @@
 
 	  \node[latent]          (c3) {$C_{{(2)}}$};
 	  \node[latent, right = 2.0 of c3]  (c4){$D_{{(3)}}$};
+    % \node[latent] at (2,2) (c4){$D_{{(3)}}$};
 	  \node[latent, below right = 1.0 and 1.0 of c3]  (c10){$J_{{(5)}}$};
 	  \node[latent, below = 1.0 of c3]  (c9){$I_{{(1)}}$};
 	  \node[latent, below = 1.0 of c9]  (c14){$N_{{(3)}}$};
@@ -42,7 +43,7 @@
   \draw[->,>=stealth', shorten >= 1pt] (c3) to[bend right](c2);
   \edge {c4}{c10,c7}
   \draw[->,>=stealth', shorten >= 1pt] (c4) to[bend right](c9);
-  \draw[->,>=stealth', shorten >= 1pt] (c4) to[bend left](c5);  
+  \draw[->,>=stealth', shorten >= 1pt] (c4) to[bend left](c5);
   \edge {c10}{c9,c7,c13};
   \edge{c9}{c14,c6};
   \draw[->,>=stealth', shorten >= 1pt] (c9) to[bend left](c5);
@@ -64,7 +65,7 @@
 \end{tikzpicture}
 %\endpgfgraphicnamed
 
-%%% Local Variables: 
+%%% Local Variables:
 %%% mode: tex-pdf
 %%% TeX-master: "example"
-%%% End: 
+%%% End:
