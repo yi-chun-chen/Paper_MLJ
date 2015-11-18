@@ -810,8 +810,8 @@ The optimal Bayesian approach and the MDL discretization method are tested on Au
 
 \begin{figure}[ht]
   \centering
-    \input{graph_autocar_1}
-  \caption{The Bayesian network obtained with K2 on the prediscretized Auto MPG dataset}
+   \input{graph_autocar_1}
+   \caption{The Bayesian network obtained with K2 on the prediscretized Auto MPG dataset}
   \label{fig:auto_graph_1}
 \end{figure}
 
@@ -819,8 +819,8 @@ Table \ref{table:auto_disc_table_1} shows the numbers of intervals after discret
 
 \begin{table}[h]
   \centering
+  \caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{fig:auto_graph_1}. The discretization policy for the heuristic matches that for the optimal Bayesian approach. The MDL method is less sensitive to distribution of values of other variables, thus it fails to return discretization edges.}
   \input{table_autoMPG_1.tex}
-  \caption{Discretization result of Auto MPG dataset based on the graph in Fig. \ref{fig:auto_graph_1}. The discretization policy for the heuristic matches that for the optimal Bayesian approach. The MDL method is less sensitive to distribution of values of other variables, thus it fails to return discretization edges.
   \label{table:auto_disc_table_1}
 \end{table}
 
@@ -847,17 +847,17 @@ If the network structure is not known in advance, it should be learned along wit
 
  %{\centering
 %\begin{minipage}{0.50\textwidth}
-%  \centering
-%  \scalebox{0.7}{
-%  \input{graph_autocar_2}}
-%  \captionof{figure}{The learned discrete-\newline valued Bayesian network}
-%  \label{fig:auto_graph_2}
+  %\centering
+  %\scalebox{0.7}{
+  %\input{graph_autocar_2}}
+  %\captionof{figure}{The learned discrete-\newline valued Bayesian network}
+  %\label{fig:auto_graph_2}
 %\end{minipage}
 %\begin{minipage}{0.50\textwidth}
-%  \raggedleft
-%  \input{table_autoMPG_2.tex}
-%  \captionof{table}{The discretization edges of variables in Fig \ref{Auto_graph_2}}
-%  \label{Auto_MPG_disc_table_2}
+  %\raggedleft
+  %\input{table_autoMPG_2.tex}
+  %\captionof{table}{The discretization edges of variables in Fig \ref{Auto_graph_2}}
+ % \label{Auto_MPG_disc_table_2}
 %\end{minipage}
 %}
 
@@ -880,8 +880,9 @@ In this subsection, another two experiments are conducted on the Wine dataset fr
 
 The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 a thousand times. Table \ref{table:wine_disc_table_1} shows a comparison between the optimal Bayesian approach and the MDL principle discretization method.
 The discretization result obtained by the optimal Bayesian approach is better than the MDL discretization method in terms of likelihood, although the latter returns non-trivial result in this experiment. Note that the 
-heuristic method discretizes variable $G$, $H$ and $J$ into one more interval than the optimal Bayesian approach, and has less number of intervals on variable $M$. Although the heuristic method has more intervals after discretization on all variables, it does not lead to a higher likelihood result. This can be interpreted as that the extra discretization edges on $G$, $H$ and $J$ are less necessary and the losing discretization edge on $M$ is important.
-In addition, as shown in next dataset, the heuristic method might cut continuous variables into too many intervals. Therefore, the optimal Bayesian approach should be considered a better method if the running time is not a concern.
+heuristic method discretizes variable $G$, $H$ and $J$ into one more interval than the optimal Bayesian approach, and has less number of intervals on variable $M$. Although the heuristic method has more intervals after discretization on all variables, it does not lead to a higher likelihood result. This can be interpreted as that the extra discretization edges on $G$, $H$ and $J$ are less necessary and the losing discretization edge on $M$ is important. On the other hand, if running time is a concern, then the heuristic method can be considered a better approach in this case, since its discretization result is nearly as good as the result of the optimal Bayesian approach.
+
+Notice that there are some discretization edges shown in all three discretization methods, such as \num{1.42} and \num{2.35} on variable $C$ and \num{0.785} on variable $L$. This indicates that MDL indeed can find some important discretization edges, but it is not sensitive enough to find other edges.
 
 \begin{figure}[ht]
   \centering
@@ -895,7 +896,7 @@ In addition, as shown in next dataset, the heuristic method might cut continuous
   \scalebox{1.0}{
   \input{table_wine_1.tex}
   }
-  \caption{Discretization result of Wine dataset based on the graph Fig. \ref{fig:wine_graph_1}
+  \caption{Discretization result of Wine dataset based on the graph Fig. \ref{fig:wine_graph_1}. The optimal Bayesian approach has the best discretization result in terms of likelihood. The heuristic method obtains a result nearly as good as the Bayesian approach. The MDL method discretizes more than half of continuous variables but still does not discretize enough intervals. Some discretization edges are obtained by all three methods.
   \todo{MDL has bins, heuristic is slightly worse in logl but still good. MDL keeps all of its CPDs small, no neighboring vars both have more than 1 interval.}
   \tim{Should we scale the logl? What is the best way to do that?}
   }
@@ -904,12 +905,12 @@ In addition, as shown in next dataset, the heuristic method might cut continuous
 
 Figure \ref{fig:wine_exp1_distr} compares the discretization results by the proposed method and the MDL method. It shows the discretization edges on variable $E$ and $K$, and the probability of resulting discretized area. The proposed method has more discretization edges than the MDL method. Furthermore, the discretization edges on $E$ and $K$ obtained by the MDL method are either included in or close to the edges by obtained proposed method. This indicates that the proposed method can include the discretization result obtained by the MDL method and meanwhile, capture other discretization edges without significantly increase cardinality numbers of variables.
 
-\begin{figure}[ht]
-  \centering
-    \input{graph_wine_exp1_distr}
-  \caption{Comparison of the discretization results on variable $A$ and $C$ obtained by the proposed method and the MDL method}
-  \label{fig:wine_exp1_distr}
-\end{figure}
+%\begin{figure}[ht]
+%  \centering
+%    \input{graph_wine_exp1_distr}
+%  \caption{Comparison of the discretization results on variable $A$ and $C$ obtained by the proposed method and the MDL method}
+%  \label{fig:wine_exp1_distr}
+%\end{figure}
 
 \subsubsection{Discretization while Learning Structure}
 \label{subsubsec:wine_exp2}
@@ -920,11 +921,8 @@ Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$
 
 \begin{figure}[ht]
   \centering
-  \begin{tabular}{cc}
-  \centering
   \scalebox{0.7}{
     \input{graph_wine_2}}
-  \end{tabular}
   \caption{The learned discrete-valued Bayesian network from the Wine dataset \todo{using optimal Bayesian method}}
   \label{fig:wine_graph_2}
 \end{figure}
@@ -933,7 +931,7 @@ Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$
   \centering
   \begin{tabular}{cc}
     \input{graph_wine_exp2_distr_5_11}
-  \end{tabular}
+ \end{tabular}
   \caption{The discretization result on variable $E$ and $K$ of the learned network in Figure \ref{fig:wine_graph_2}
   \todo{Note unchanged discretization edge.}
   }
@@ -951,9 +949,9 @@ In this subsection, another two experiments are conducted on the Housing dataset
 The Bayesian network structure in Figure \ref{fig:housing_graph_1} is obtained by prediscretizing each continuous variable into five uniform-width intervals, then running the K2 algorithm one thousands time and choosing the network with the highest K2 score. Table \ref{table:housing_disc_table_1} shows the numbers of intervals after discretization on each continuous variables. MDL method does not discretize most variables. The proposed method with the approximation discretizes variables into too many intervals. For example, it discretized $J$ into 58 intervals. The proposed method without the approximation has a good control of number of intervals.
 \begin{figure}[ht]
   \centering
-  % \begin{tabular}{cc}
-    \input{graph_housing_1}
-  % \end{tabular}
+  \begin{tabular}{cc}
+   \input{graph_housing_1}
+   \end{tabular}
   \caption{\todo{Structure from prediscretized K2 structure learning to compare the methods for Housing dataset}}
   \label{fig:housing_graph_1}
 \end{figure}
@@ -980,9 +978,9 @@ In Figure~\ref{fig:housing_exp1_distr_3_5}, the scatter points, which stands for
 \end{figure}
 
 \begin{figure}[ht]
-    % \begin{tabular}{cc}
-      \input{graph_housing_exp1_distr_8_5}
-    % \end{tabular}
+     %\begin{tabular}{cc}
+    \input{graph_housing_exp1_distr_8_5}
+     %\end{tabular}
   \caption{The discretization result on variable $H$ and $E$ of the network in Figure~\ref{fig:housing_graph_1}}
   \label{fig:housing_exp1_distr_8_5}
 \end{figure}
@@ -1012,9 +1010,9 @@ Again, variable $C$ and $E$ have many discretization edges due to the repeated v
 Although the number of intervals after discretization on $H$ is not big, it captures the distribution of the raw data along with the discretization edges on $E$.
 
 \begin{figure}[ht]
-    % \begin{tabular}{cc}
+     %\begin{tabular}{cc}
       \input{graph_housing_exp2_distr_3_5}
-    % \end{tabular}
+     %\end{tabular}
   \caption{The discretization result on variable $C$ and $E$ of the network in Figure~\ref{fig:housing_graph_2}}
   \label{fig:housing_exp2_distr_3_5}
 \end{figure}
