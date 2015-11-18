@@ -21,18 +21,17 @@
   \node[latent, above=of y, xshift=-1.2cm] (p1) {$P_1$};
   \node[latent, above=of y, xshift=0cm]  (p2) {$P_2$};
   \node[latent, above=of y, xshift=1.2cm]  (p3) {$P_3$};
-  \node[latent, right= 2.0cm of y]            (s11) {$(S_1)_1$};
-  \node[latent, right= 3.0cm of y]            (s12) {$(S_1)_2$};
-  \node[latent, right=-2.0cm of y]            (s2) {$S_2$};
+  \node[latent, right= 3.0cm of y]            (s1) {$\boldsymbol{S_1}$};
+  \node[latent, right=-4.0cm of y]            (s2) {$\boldsymbol{S_2}$};
 
   % Connect the nodes
   \edge {p1,p2,p3} {y} ; %
-  \edge {y,s11,s12} {c2} ;
+  \edge {y,s1}{c2} ;
   \edge {y,s2}{c1};
 
   % Plates
   \plate {} {(p1)(p2)(p3)(y)} {$Factor_1$} ;
-  \plate {yx} {(y)(s11)(s12)(c2)} {$Factor_2$};
+  \plate {yx} {(y)(s1)(c2)} {$Factor_2$};
   \plate {} {(y)(s2)(c1)(yx.north west)(yx.south west)} {$Factor_3$} ;
   %\plate {} {(w)(y)(yx.north west)(yx.south west)} {$M$} ;
 

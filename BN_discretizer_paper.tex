@@ -454,10 +454,11 @@ P\paren{D_{ P_1,P_2,P_3 } \mid M} \cdot P\paren{ D_{ C_1 } \mid M,D_{\boldsymbol
 \end{equation}
 
 \begin{figure}[ht]
+\centering
   \label{fig:example_factorization}
-  \begin{tabular}{cc}
+  %\begin{tabular}{cc}
     \input{graph1}
-  \end{tabular}
+  %\end{tabular}
   \caption{Factorization of $P(D \mid M)$}
 \end{figure}
 
@@ -558,7 +559,6 @@ For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
 \label{alg:disc_one}
 \begin{algorithmic}[5]
 \Function{Discretize}{$D$, $G$}
-\State
 \State $N \leftarrow$ the number of instances
 \State $N' \leftarrow$ the number of unique values in $D_X$
 \State $H \leftarrow$ an $N \times N$ matrix such that $H[u,v] = h(u,v)$ per Algorithm~\ref{alg:h} in the appendix
@@ -567,14 +567,13 @@ For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
 \State $S[u] \leftarrow$ the optimal objective value of subproblems with instances from $1$ to $u$
 \State $M[u] \leftarrow$ the optimal discretization for subproblems with instances from $1$ to $u$
 \State $W[u]  \leftarrow - \log\brock{1 - {\exp\paren{- L \cdot{ {{x_{b(u)+1} - x_{b(u)}}\over{x_N - x_1}}}}}}$ for $u = 1,2, \ldots,N'-1$ and $L(N') \leftarrow 0$
-\State
-\For {$v = 1$ to $N'$}
+\For {$v \leftarrow 1$ to $N'$}
 \If {$v = 1$}
 \State $S[v] \leftarrow g \left(1,b[v] \right) + L[v]$
 \State $M[v] \leftarrow \{ ({x_{b[v]} + x_{b[v]+1}}) / 2\}$
 \Else
 \State $s \leftarrow \infty$ and $boundary \leftarrow \infty$
-\For {$u = 1$ to $v$}
+\For {$u \leftarrow 1$ to $v$}
 \State $s' \leftarrow S[u] + g \left( b[u]+1,b[v] \right) +  {L \cdot {{x_{b[v]} - x_{b[u] + 1}}\over{x_N - x_1}}} + W[v]$
 \If {$s' < s$}
 \State $s \leftarrow s'$
@@ -814,6 +813,7 @@ The proposed Bayesian discretization method is compared against MDL.
 For a Bayesian network with a single continuous variable $X$, the MDL objective function is
 
 \begin{equation}
+\label{eqn:MDL}
 \begin{aligned}
 \frac{1}{2} \log(N) \left\lbrace  \lvert \Pi_{X_i} \rvert (\lvert X^*_i \rvert - 1) +
  {\sum_{j,X_i \in \Pi_{X_i}}} \lvert \Pi_{X^*_j} \rvert (\lvert X_j \rvert - 1) \right\rbrace + \log(\lvert {X^*_i} \rvert) \\
@@ -854,6 +854,7 @@ Table \ref{table:auto_disc_table_1} shows the positions of discretization edges,
 Figure \ref{fig:auto_exp1_distr_1_3} compares the discretization result on continuous variables $A$ and $C$ with the raw data of Auto MPG data set. The color of discretized area shows the probability of a sample being in the discretized area. The black dots in Figure \ref{fig:auto_exp1_distr_1_3} demonstrate the distribution of the raw data. As shown in the figure, the discretization edges obtained by the optimal Bayesian approach and the resulting marginalized probability match the raw data well.
 
 \begin{figure}[ht]
+\centering
       \input{graph_auto_exp1_distr_1_3}
   \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ by the optimal Bayesian approach. The marginal probabilities of discretized areas match the distribution of the taw data very well.}
   \label{fig:auto_exp1_distr_1_3}
@@ -876,6 +877,7 @@ If the network structure is not known in advance, it should be learned along wit
 Figure \ref{fig:auto_exp2_distr_1_3} shows the discretization edges on variable $A$ and $C$ in Figure \ref{fig:auto_graph_2} along with the raw data. Again, the black dots are raw data points. The colors of discretized areas are the corresponding maginalized probability. Although the numbers of discretization edges of $A$ and $C$ shown in Figure \ref{fig:auto_exp2_distr_1_3} are less than Figure \ref{fig:auto_exp2_distr_1_3}, they still have a good capture of raw data distribution. This indicates that although the discretization result of the optimal Bayesian approach might vary according to the network structure, it still preserves the quality of discretization.
 
 \begin{figure}[ht]
+\centering
       \input{graph_auto_exp2_distr_1_3}
   \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ in Figure \ref{fig:auto_graph_2}. Although the number of discretization edges is less than in Figure \ref{fig:auto_exp1_distr_1_3}, it still matches the raw data distribution very well.}
   \label{fig:auto_exp2_distr_1_3}
@@ -898,7 +900,8 @@ Notice that there are some discretization edges appearing in all three discretiz
 
 \begin{figure}[ht]
   \centering
-      \input{graph_wine_1}
+  \scalebox{0.8}{
+      \input{graph_wine_1}}
   \caption{Structure from prediscretized K2 structure learning to compare the methods for Wine dataset}
   \label{fig:wine_graph_1}
 \end{figure}
@@ -957,16 +960,18 @@ The Bayesian network structure in Figure \ref{fig:housing_graph_1} is obtained b
 
 \begin{figure}[ht]
   \centering
-  \begin{tabular}{cc}
-   \input{graph_housing_1}
-   \end{tabular}
+  %\begin{tabular}{cc}
+  \scalebox{0.8}{
+   \input{graph_housing_1}}
+   %\end{tabular}
   \caption{Structure from prediscretized K2 structure learning to compare the methods for Housing dataset}
   \label{fig:housing_graph_1}
 \end{figure}
 
 
 \begin{table}
-  \centering\caption{Discretization result of Housing dataset based on the graph in Figure~\ref{fig:housing_graph_1}. The first twelve rows show the numbers of intervals after discretization by the three method. The thirteenth row is the log-likelihood of the dataset based on the discretizatio results. The heuristic method is over sensitive and discretizes some variables into too many intervals. The MDL method is less sensitive and discretizes most variables by only one interval. The optimal Bayesian approach has a good control on number of intervals. \tim{Fig. vs. Figure}}
+  \centering
+  \caption{Discretization result of Housing dataset based on the graph in Figure~\ref{fig:housing_graph_1}. The first twelve rows show the numbers of intervals after discretization by the three method. The thirteenth row is the log-likelihood of the dataset based on the discretizatio results. The heuristic method is over sensitive and discretizes some variables into too many intervals. The MDL method is less sensitive and discretizes most variables by only one interval. The optimal Bayesian approach has a good control on number of intervals. \tim{Fig. vs. Figure}}
   \scalebox{1.0}{
   \input{table_housing_1.tex}
   }
@@ -978,6 +983,7 @@ Figure~\ref{fig:housing_exp1_distr_3_5} and Figure~\ref{fig:housing_exp1_distr_8
 In Figure~\ref{fig:housing_exp1_distr_3_5}, the scatter points, which stands for the raw data, has been jittered, since there are many repeated values in the raw data on the variable pair $C$ and $E$. These repeating values cause the high number of intervals for both $C$ and $E$, because in some sense, each repeated-value point form a single discretized area. On the other hand, there is no such over repeated values of the raw data on variable $H$. Thus, the numbers of intervals after discretization for variable $H$ remains normal, as what we have seen in previous datasets.
 
 \begin{figure}[ht]
+\centering
     % \begin{tabular}{cc}
       \input{graph_housing_exp1_distr_3_5}
     % \end{tabular}
@@ -986,6 +992,7 @@ In Figure~\ref{fig:housing_exp1_distr_3_5}, the scatter points, which stands for
 \end{figure}
 
 \begin{figure}[ht]
+\centering
      %\begin{tabular}{cc}
     \input{graph_housing_exp1_distr_8_5}
      %\end{tabular}
@@ -1004,7 +1011,9 @@ This will lead to a group of variables that are close to each other and all have
 
 \begin{figure}[ht]
     % \begin{tabular}{cc}
-      \input{graph_housing_2}
+    \centering
+    \scalebox{0.8}{
+      \input{graph_housing_2}}
     % \end{tabular}
   \caption{The learned discrete-valued Bayesian network from the Housing dataset. Variables $C$, $E$, $J$, $K$ have high numbers of intervals after discretization, since they are in a Markov blanket.
   \tim{Var with 1 interval?}
@@ -1017,6 +1026,7 @@ Again, variable $C$ and $E$ have many discretization edges due to the repeated v
 Although the number of intervals after discretization on $H$ is not large, it captures the distribution of the raw data along with the discretization edges on $E$.
 
 \begin{figure}[ht]
+\centering
      %\begin{tabular}{cc}
       \input{graph_housing_exp2_distr_3_5}
      %\end{tabular}
@@ -1043,16 +1053,20 @@ Although the number of intervals after discretization on $H$ is not large, it ca
   \label{fig:exp_discuss}
 \end{figure}
 
-To quantatively discuss the sensitivity of the three methods, consider the Bayesian network in Figure \ref{fig:exp_discuss}, where $X$ is continuous-valued and $P_1$ and $P_2$ is discrete-valued. Let $P = \{  P_1, P_2 \}$. Assume $D_X = \{1.0,2.0,3.0, \ldots N \}$. Therefore, the corresponding objective functions to discretize $X$ in the three methods are:
+To quantatively discuss the sensitivity of the three methods, consider the Bayesian network in Figure \ref{fig:exp_discuss}, where $X$ is continuous-valued and $P_1$ and $P_2$ is discrete-valued. Let $\Pi_X = \{  P_1, P_2 \}$. Assume $D_X = \{1.0,2.0,3.0, \ldots N \}$. Therefore, the corresponding objective functions to discretize $X$ in the three methods are:
+{\begin{small}
 \begin{equation}
 \begin{aligned}
-\text{Obj}_{\text{MDL}} & = Z_1 \cdot k + \log(N) \cdot \sum^k_{i=1} \sum^{J_P}_{j=1} I(a^*_i, (p_1,p_2)_j) \\
-\text{Obj}_{\text{Bayesian}} &= Z_2 \cdot k + \log {{n_i + J_P - 1}\choose{J_P -1}} + \sum^k_{i=1} \log \left(   {{n_i !}\over{n^{(P)}_{i,1}! n^{(P)}_{i,2}! \cdots n^{(P)}_{i,J_P}!    }} \right) \\
-\text{Obj}_{\text{Heuristic}} &= Z_2 \cdot k + \log {{n_i + J_{P_1} - 1}\choose{J_{P_1} -1}} + \log {{n_i + J_{P_2} - 1}\choose{J_{P_2} -1}} +\\
-& \sum^k_{i=1}  \left[ \log \left(   {{n_i !}\over{n^{(P_1)}_{i,1}! n^{(P_1)}_{i,2}! \cdots n^{(P_1)}_{i,J_{P_1}}    }} \right)  + \log \left(   {{n_i !}\over{n^{(P_2)}_{i,1}! n^{(P_2)}_{i,2} \cdots n^{(P_2)}_{i,J_{P_2}} }} \right) \right]
+\text{Obj}_{\text{MDL}} & = \overbrace{Z_1 \cdot k + \log(k) + \log {{N +k - 1}\choose{k -1}} }^{\text{Penalty Term}}+   \overbrace{\log(N) \cdot I(X^*, \Pi_X)}^{\text{Disc. Edge Positions Term}} \\
+\text{Obj}_{\text{Bayesian}} &= \overbrace{Z_2 \cdot k + \log {{n_i + J_P - 1}\choose{J_P -1}}}^{\text{Penalty Term}} + \overbrace{\sum^k_{i=1} \log \left(   {{n_i !}\over{n^{(P)}_{i,1}! n^{(P)}_{i,2}! \cdots n^{(P)}_{i,J_P}!    }} \right) }^{\text{Disc. Edge Positions Term}}\\
+\text{Obj}_{\text{Heuristic}} &= \overbrace{Z_2 \cdot k + \log {{n_i + J_{P_1} - 1}\choose{J_{P_1} -1}} + \log {{n_i + J_{P_2} - 1}\choose{J_{P_2} -1}} }^{\text{Penalty Term}}+\\
+& \overbrace{\sum^k_{i=1}  \left[ \log \left(   {{n_i !}\over{n^{(P_1)}_{i,1}! n^{(P_1)}_{i,2}! \cdots n^{(P_1)}_{i,J_{P_1}}    }} \right)  + \log \left(   {{n_i !}\over{n^{(P_2)}_{i,1}! n^{(P_2)}_{i,2} \cdots n^{(P_2)}_{i,J_{P_2}} }} \right) \right]}^{\text{Disc. Edge Positions Term}}
 \end{aligned}
 \end{equation}
+\end{small}}
+, where $Z_1$ and $Z_2$ are two constants, $k$ is the number of intervals after discretization, $X^*$ is the discretized version of $X$, and $I(X^*, \Pi_X)$ is the mutual information between $X^*$ and its parent variables. Note that the third term in $\text{Obj}_{\text{MDL}}$ is approximated by $H(p)$ as in Equation \ref{eqn:MDL} in the original paper \citep{Friedman_1996}. 
 
+The sensitivities toward the value distribution in $D_{\Pi_X}$ are determined by the `` Disc. Edge Positions Term" in the three objective functions. Since the penaltis of the numbers of intervals after discretization in the three objective functions take the similar form, if the `` Disc. Edge Positions Term" varies more severely due to different positions of discretization edges, then the corresponding method is more sensitive. The `` Disc. Edge Positions Term" in $\text{Obj}_{\text{MDL}}$, which is made out of the mutual information, varies less severely than the terms in $\text{Obj}_{\text{Bayesian}}$ and $\text{Obj}_{\text{Heuristic}}$, since it senses the distribution in $D_{\Pi_X}$ by empirical probability distributions, instead of the factorial terms such in $\text{Obj}_{\text{Bayesian}}$ and $\text{Obj}_{\text{Heuristic}}$. Furthermore, the `` Disc. Edge Positions Term" in $\text{Obj}_{\text{Heuristic}}$ varies more aggressively than the term in $\text{Obj}_{\text{Bayesian}}$. Therefore, the MDL method is less sensitive and the heuristic is over sensitive toward the value distributions in other variables. The effect of sensitivity can be shown as the numbers of intervals after discretization in the previous experiment.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\begin{acknowledgements}
 %If you'd like to thank anyone, place your comments here
