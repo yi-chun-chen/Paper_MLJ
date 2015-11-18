@@ -62,6 +62,7 @@
 \usepackage{caption}
 \usepackage{siunitx}
 \usepackage{booktabs}
+\usepackage{boondox-cal} % for lowercase caligraphic
 % \usepackage[capitalize]{cleveref}
 \usetikzlibrary{bayesnet}
 \setcitestyle{aysep={ }} %Author-Year Separator
@@ -106,7 +107,10 @@
 \newcommand{\tim}[1]{\textit{\textcolor{blue}{#1}}}
 \newcommand{\mykel}[1]{\textit{\textcolor{cyan}{#1}}}
 
-\DeclareMathOperator{\Pa}{pa}
+\DeclareMathOperator{\Pa}{pa} % parents of a var in a BN
+\newcommand{\cX}{\mathcal{X}} % continuous X
+\newcommand{\cx}{\mathcal{x}} % instance of x
+\newcommand{\cu}{\mathcal{u}} % unique sorted instances of x
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -127,7 +131,7 @@
 
 %\authorrunning{Short form of author list} % if too long for running head
 
-\institute{F. Author \at
+\institute{\todo{Yi-Chun Chen \at
               first address \\
               Tel.: +123-45-678910\\
               Fax: +123-45-678910\\
@@ -135,7 +139,7 @@
 %             \emph{Present address:} of F. Author  %  if needed
            \and
            S. Author \at
-              second address
+              second address}
 }
 
 \date{Received: date / Accepted: date}
@@ -158,61 +162,61 @@
 
 \section{Introduction}
 
-% \begin{table}[H]
-%   \centering
-%   \begin{tabular}{@{}ccl@{}}
-%     \toprule
-%     Current & Mykel & Description \\
-%     \midrule
-%     $G$ & $G$ & BN graph structure \\
-%     $P$ & $P$ & discrete probability \\
-%     $p$ & $p$ & probability density \\
-%     $D$ & $D$ & available data \\
-%     $|D|$ & $n$ & number of variables in the BN \\
-%     $D_{\bm{Y}}$ & & subset of data associated with $\bm{Y}$ \\
-%     $X$ & $X_{1:n}$ & variables in BN (discrete) \\
-%     $x_{1:n}$ & $x_{1:n}$ & a specific instance of vars in BN \\
-%     $x'_{1:n}$ &  & unique instances of var in BN \\
-%         & $r_i$ & number of instantiations of $i$th var \\
-%     $J_p$ & $q_i$ & number of instantiations of parents of $i$th var \\
-%         &       & $ = 1$ if no parents \\
-%     $\brock{\Pi_{X_i}}_j$ & $\pi_{ij}$ & $j$th instantiation of $i$th var \\
-%         & $\theta_{ijk}$ & probability of $i$th var $= k$ given $j$th parental inst. \\
-%     $\Theta$ & $\bm{\theta}$ & set of all (non-independent) probability parameters \\
-%     $n_{i,j}^{(k)}$ & $m_{ijk}$ & observation counts \\
-%     $n_{i,j,l}^{(k)}$ & $m_{ijk}$ & observation counts with $l$th instance of spouse\\
-%     $\alpha_{ijk}$ & $\alpha_{ijk}$ & Dirichlet prior counts \\
-%     $N_{ij}$ & $\alpha_{ij0}$ & sum over Dirichlet prior counts for $k$ \\
-%         & $m_{ij0}$ & sum over observations counts for $k$ \\
-%         & $\Gamma$ & the Gamma function \\
-%     $N$ &          & is the number of samples in dataset \\
-%     $N_i$ &          & counts for $i$th instance of a specific var \\
-%     $\Pi_X$ & $\text{pa}_{x_i}$ & parents of a variable or instance \\
-%     $n_C$ & & number of children of a variable \\
-%     $H(~)$ & & a function \\
-%     $I(~,~)$ & & mutual information \\
-%     $X_i$ & & $i$th variable in BN, may be cont or disc \\
-%     $X_i^*$ & & discrete version of cont var \\
-%     $E$ & & set of edges in BN \\
-%     $\text{Pa}\paren{X_i}$, $n_p$ & & number of parents of $X_i$ \\
-%     $f\paren{X_i, \Pi_{X_i}}$ & $f(G)$ & score function for K2 \\
-%     $M_C$ & & discretization policy for $C$ \\
-%     $C$ & & a continuous variable \\
-%     $t_i$ & & the $i$th bin edge for a specific var \\
-%     $d_i$ & & allowable discretization positions (between unique vals) \\
-%     $k$ & & number of intervals for $M_C$ \\
-%     $C_{1:N}$ & & sorted samples for $C$ \\
-%     $n_i$ & & $n_1 = s_1$ and $n_i = s_{i} - s_{i-1}$ \\
-%     $s_i$ & & $\sum_{j=1}^k n_j$ and $s_k = N$, $s_0 = 0$ \\
-%     $C_i$ & & $i$th child of a specific var \\
-%     $\boldsymbol{S_i}$ & & set of spouses associated with $i$th child of specific var \\
-%     $L$ & & largest cardinality among discrete variables in BN \\
-%     $I_q$ & & an interval from $u \rightarrow v$ \\
-%     $v'_\text{max}$ & & largest cardinality of variables that directly connect to $X$ \\
-%     $S[]$ & &  optimal objective value of subproblems with instances from $1$ to $u$ \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
+\begin{table}[H]
+  \centering
+  \begin{tabular}{@{}ccl@{}}
+    \toprule
+    Current & Mykel & Description \\
+    \midrule
+    % $G$ & $G$ & BN graph structure \\
+    % $P$ & $P$ & discrete probability \\
+    % $p$ & $p$ & probability density \\
+    % $D$ & $D$ & available data \\
+    $|D|$ & $n$ & number of variables in the BN \\
+    $D_{\bm{Y}}$ & & subset of data associated with $\bm{Y}$ \\
+    $X$ & $X_{1:n}$ & variables in BN (discrete) \\
+    $x_{1:n}$ & $x_{1:n}$ & a specific instance of vars in BN \\
+    $x'_{1:n}$ &  & unique instances of var in BN \\
+        & $r_i$ & number of instantiations of $i$th var \\
+    $J_p$ & $q_i$ & number of instantiations of parents of $i$th var \\
+        &       & $ = 1$ if no parents \\
+    $\brock{\Pi_{X_i}}_j$ & $\pi_{ij}$ & $j$th instantiation of $i$th var \\
+        & $\theta_{ijk}$ & probability of $i$th var $= k$ given $j$th parental inst. \\
+    $\Theta$ & $\bm{\theta}$ & set of all (non-independent) probability parameters \\
+    $n_{i,j}^{(k)}$ & $m_{ijk}$ & observation counts \\
+    $n_{i,j,l}^{(k)}$ & $m_{ijk}$ & observation counts with $l$th instance of spouse\\
+    $\alpha_{ijk}$ & $\alpha_{ijk}$ & Dirichlet prior counts \\
+    $N_{ij}$ & $\alpha_{ij0}$ & sum over Dirichlet prior counts for $k$ \\
+        & $m_{ij0}$ & sum over observations counts for $k$ \\
+        & $\Gamma$ & the Gamma function \\
+    $N$ &          & is the number of samples in dataset \\
+    $N_i$ &          & counts for $i$th instance of a specific var \\
+    $\Pi_X$ & $\text{pa}_{x_i}$ & parents of a variable or instance \\
+    $n_C$ & & number of children of a variable \\
+    $H(~)$ & & a function \\
+    $I(~,~)$ & & mutual information \\
+    $X_i$ & & $i$th variable in BN, may be cont or disc \\
+    $X_i^*$ & & discrete version of cont var \\
+    $E$ & & set of edges in BN \\
+    $\text{Pa}\paren{X_i}$, $n_p$ & & number of parents of $X_i$ \\
+    $f\paren{X_i, \Pi_{X_i}}$ & $f(G)$ & score function for K2 \\
+    $M_C$ & & discretization policy for $C$ \\
+    $C$ & & a continuous variable \\
+    $t_i$ & & the $i$th bin edge for a specific var \\
+    $d_i$ & & allowable discretization positions (between unique vals) \\
+    $k$ & & number of intervals for $M_C$ \\
+    $C_{1:N}$ & & sorted samples for $C$ \\
+    $n_i$ & & $n_1 = s_1$ and $n_i = s_{i} - s_{i-1}$ \\
+    $s_i$ & & $\sum_{j=1}^k n_j$ and $s_k = N$, $s_0 = 0$ \\
+    $C_i$ & & $i$th child of a specific var \\
+    $\boldsymbol{S_i}$ & & set of spouses associated with $i$th child of specific var \\
+    $L$ & & largest cardinality among discrete variables in BN \\
+    $I_q$ & & an interval from $u \rightarrow v$ \\
+    $v'_\text{max}$ & & largest cardinality of variables that directly connect to $X$ \\
+    $S[]$ & &  optimal objective value of subproblems with instances from $1$ to $u$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 Bayesian networks \citep{Pearl_1988, PGM_2009} are an increasingly popular method for modeling uncertainty and causality in science and engineering.
 They provide an efficient factorization of the joint probability distribution over a set of random variables.
@@ -262,7 +266,7 @@ The cycle is continued until convergence.
 
 MODL discretization \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable.
 Bayesian methods maximize the probability of the model given the data, $P(\textit{Model} \mid \textit{Data})$.
-An application of Bayes' rule and constant $P(\textit{Data})$ shows that this is equivalent to maximizing:
+An application of Bayes' rule and constant $P(\textit{Data})$ shows that this is equivalent to maximizing
 
 \begin{align}
 P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})\text{,}
@@ -296,7 +300,7 @@ The formal definition of a discretization policy for a continuous variable is al
 
 A Bayesian network $B$ is defined by a pair $(G,\bm{\theta})$, where $G$ is a directed acyclic graph whose $n$ nodes $X_{1:n}$ are random variables.
 The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$.
-For a Bayesian network over discrete and discretized variables, let $r_i$ represent the number of instantiations of $X_i$, and let $q_i$ represent the number of instantiations of the parents of $X_i$.
+For a Bayesian network over discrete and discretized variables, $r_i$ represents the number of instantiations of $X_i$, and $q_i$ represents the number of instantiations of the parents of $X_i$.
 If $X_i$ has no parents, then $q_i = 1$.
 The $j$th instantiation of the parents of $X_i$ is denoted $\bm{\pi}_{ij}$.
 
@@ -320,6 +324,10 @@ Furthermore, the parent $\rightarrow$ child sampling order can be reversed if th
 % \begin{equation}
 % P(X_i \mid \Pa_{X_i}) \cdot \prod_{Y \in \Pa_{X_i}} P(Y) = P(X_i) \cdot P(\Pa_{X_i} \mid X_i)\text{.}
 % \end{equation}
+
+\todo{
+Introduce P, C, and S for parents
+}
 
 \subsection{Structure Learning}
 
@@ -370,27 +378,33 @@ K2 is typically run multiple times with random variable orderings and the networ
 
 \subsection{Discretization Policies}
 
-\todo{CONTINUE HERE}
-A discretization policy $M_C = \anglebrackets{t_1 < t_2 < \ldots < t_{k-1}}$ for a continuous variable $C$ is a mapping from $\mathbb{R}$ to $\brock{1,2,3,\ldots,k}$ such that
+Let $\cX$ be a continuous variable and let $\cx$ be a specific instance of $\cX$.
+A discretization policy $\Lambda_{\cX} = \curly{e_1 < e_2 < \ldots < e_{k-1}}$ for $\cX$ is a mapping from $\mathbb{R}$ to $\curly{1,2,3,\ldots,k}$ such that
+
 \begin{equation}
-  M_C (x)=\begin{cases}
-    1, & \text{if $x<t_1$}.\\
-    i, & \text{if $t_{i-1} \leq x < t_i$}\text{.}\\
-    k, & \text{if $t_{k-1} \leq x$}
+  \Lambda_{\cX}(\cx) = \begin{cases}
+    1, & \text{if $x<e_1$}\\
+    i, & \text{if $e_{i-1} \leq x < e_i$}\\
+    k, & \text{otherwise.}
   \end{cases}
 \end{equation}
 
 \noindent
-The policy discretizes the continuous variable $C$ into $k$ intervals.
-The discretization edges $t_{1:k-1}$ are restricted to the midpoints between two sorted instances of $C$.
-An integer representation of $M_C$ can be obtained by sorting the samples of $C$ in an increasing order, $\curly{c_1,c_2,\ldots,c_N}$, and if $t_i = (c_{s_{i}} + c_{s_{i}+1})/2$ for $i=1,2,\ldots,k$, then $M_C = \anglebrackets{t_1,t_2, \ldots, t_{k-1}} \equiv \brock{n_1,n_2,..n_k}$, where $n_1 = s_1$ and $n_i = s_{i} - s_{i-1}$.
+The discretization policy discretizes $\cX$ into $k$ intervals.
+Let the samples of $\cX$ in a given dataset $D$ be sorted in ascending order, ${\cx_{1:n} = \curly{\cx_1 \leq \cx_2 \leq \ldots \leq \cx_n}}$, and let the unique values be ${\cu_{1:n} = \curly{\cu_1 \leq \cu_2 \leq \ldots \leq \cu_n}}$.
+The index of the last occurence of $\cu_i$ in $\cx$ is denoted $s_i$.
+
+The discretization edges $e_{1:k-1}$ mark the boundaries between discretization intervals.
+In this work they are restricted to the midpoints between unique ascending instances of $\cX$.
+Thus, each edge $e_i = \paren{\cu_{s_{j+1}} - \cu_{s_j}}/2$ for some $s_j$.
+An integer representation of $\Lambda_{\cX}$ can thus be written $\Lambda_{\cX} = \curly{\lambda_1 < \lambda_2  < \ldots < \lambda_k}$, where $\lambda_1 = s_1$ and $\lambda_i \in s_{1:|\cu|}$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Single Variable Discretization}
 \label{sec:single_var}
 
-This section covers discretization of a single continuous variable $X$ in a Bayesian network where all other variables are discrete.
+This section covers the discretization of a single continuous variable $\cX$ in a Bayesian network where all other variables are discrete.
 Let $n_p$ and $n_c$ respectively refer to the number of parents and number of children of $X$.
 Each child $C_i$ of $X$ may possess other parents, referred to as spouses of $X$.
 The set of spouses of $X$ is denoted $\boldsymbol{S_i}$.
@@ -434,18 +448,18 @@ The Bayesian network graph structure causes the likelihood term $P(D \mid M)$ to
   P\paren{D \mid M} \propto P\paren{D_{\Pi_x} \mid M} \cdot \prod_{i = 1}^{n_c} P\paren{D_{C_i} \mid M, D_{\boldsymbol{S_i}}}\text{.}
 \end{equation}
 
-For example, in Figure 1., the corresponding $P(D \mid M)$ is factorized according to
+For example, in Figure~\ref{fig:example_factorization}, the corresponding $P(D \mid M)$ is factorized according to
 \begin{equation}
 P\paren{D_{ P_1,P_2,P_3 } \mid M} \cdot P\paren{ D_{ C_1 } \mid M,D_{\boldsymbol{S_1}}} \cdot P\paren{D_{C_2} \mid M,D_{ S_2  }}\text{.}
 \end{equation}
 
 \begin{figure}[ht]
-    \begin{tabular}{cc}
-      \input{graph1}
-    \end{tabular}
+  \label{fig:example_factorization}
+  \begin{tabular}{cc}
+    \input{graph1}
+  \end{tabular}
   \caption{Factorization of $P(D \mid M)$}
 \end{figure}
-
 
 The concept behind the factorization also the motivation behind forward sampling in a Bayesian network.
 The parents of $X$ are independent of the children given $X$.
@@ -939,7 +953,7 @@ In this subsection, another two experiments are conducted on the Housing dataset
 \subsubsection{Discretization with Fixed Structure}
 \label{subsubsec:housing_exp1}
 
-The Bayesian network structure in Figure \ref{fig:housing_graph_1} is obtained by prediscretizing each continuous variable into five uniform-width intervals, then running the K2 algorithm one thousands time and choosing the network with the highest K2 score. Table \ref{table:housing_disc_table_1} shows the numbers of intervals after discretization on each continuous variables and also the log-likelihood of the dataset based on the discretization results. MDL method again does not discretize most variables. The heuristic method discretizes variables into too many intervals due to repeated values in the dataset, as we will see in later discussion. The optimal Bayesian approach has a good control of number of intervals. These numbers of intervals returned by the three methods illustrate that the heuristic method is over sensitive and the MDL method is less sensitive. The properties of sensitivity of the three algorithms will be discussed in Section \ref{subsec:discuss_exp}. On the other hand, although the heuristic method leads to high number of intervals, its corresponding log-likelihood on the dataset is not significantly better than the optimal Bayesian approach. This shows that the optimal Bayesian approach captures the important discretization edges. 
+The Bayesian network structure in Figure \ref{fig:housing_graph_1} is obtained by prediscretizing each continuous variable into five uniform-width intervals, then running the K2 algorithm one thousands time and choosing the network with the highest K2 score. Table \ref{table:housing_disc_table_1} shows the numbers of intervals after discretization on each continuous variables and also the log-likelihood of the dataset based on the discretization results. MDL method again does not discretize most variables. The heuristic method discretizes variables into too many intervals due to repeated values in the dataset, as we will see in later discussion. The optimal Bayesian approach has a good control of number of intervals. These numbers of intervals returned by the three methods illustrate that the heuristic method is over sensitive and the MDL method is less sensitive. The properties of sensitivity of the three algorithms will be discussed in Section \ref{subsec:discuss_exp}. On the other hand, although the heuristic method leads to high number of intervals, its corresponding log-likelihood on the dataset is not significantly better than the optimal Bayesian approach. This shows that the optimal Bayesian approach captures the important discretization edges.
 
 \begin{figure}[ht]
   \centering
@@ -956,7 +970,7 @@ The Bayesian network structure in Figure \ref{fig:housing_graph_1} is obtained b
   \scalebox{1.0}{
   \input{table_housing_1.tex}
   }
-  
+
   \label{table:housing_disc_table_1}
 \end{table}
 
@@ -1035,7 +1049,7 @@ To quantatively discuss the sensitivity of the three methods, consider the Bayes
 \text{Obj}_{\text{MDL}} & = Z_1 \cdot k + \log(N) \cdot \sum^k_{i=1} \sum^{J_P}_{j=1} I(a^*_i, (p_1,p_2)_j) \\
 \text{Obj}_{\text{Bayesian}} &= Z_2 \cdot k + \log {{n_i + J_P - 1}\choose{J_P -1}} + \sum^k_{i=1} \log \left(   {{n_i !}\over{n^{(P)}_{i,1}! n^{(P)}_{i,2}! \cdots n^{(P)}_{i,J_P}!    }} \right) \\
 \text{Obj}_{\text{Heuristic}} &= Z_2 \cdot k + \log {{n_i + J_{P_1} - 1}\choose{J_{P_1} -1}} + \log {{n_i + J_{P_2} - 1}\choose{J_{P_2} -1}} +\\
-& \sum^k_{i=1}  \left[ \log \left(   {{n_i !}\over{n^{(P_1)}_{i,1}! n^{(P_1)}_{i,2}! \cdots n^{(P_1)}_{i,J_{P_1}}    }} \right)  + \log \left(   {{n_i !}\over{n^{(P_2)}_{i,1}! n^{(P_2)}_{i,2} \cdots n^{(P_2)}_{i,J_{P_2}}    }} \right) \right]
+& \sum^k_{i=1}  \left[ \log \left(   {{n_i !}\over{n^{(P_1)}_{i,1}! n^{(P_1)}_{i,2}! \cdots n^{(P_1)}_{i,J_{P_1}}    }} \right)  + \log \left(   {{n_i !}\over{n^{(P_2)}_{i,1}! n^{(P_2)}_{i,2} \cdots n^{(P_2)}_{i,J_{P_2}} }} \right) \right]
 \end{aligned}
 \end{equation}
 
