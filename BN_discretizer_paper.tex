@@ -861,11 +861,11 @@ If the network structure is not known in advance, it should be learned along wit
 %\end{minipage}
 %}
 
-Figure \ref{fig:auto_exp2_distr_1_3} compares the edges of the learned network in Figure \ref{fig:auto_graph_2} with the raw data on variables $A$ and $C$. Again, the black dots are raw data points. Although the numbers of discretization edges of $A$ and $C$ shown in Figure \ref{fig:auto_graph_2} are less than Table \ref{table:auto_disc_table_1}, they still have a good capture of raw data distribution.
+Figure \ref{fig:auto_exp2_distr_1_3} compares the discretization edges of variable $A$ and $C$ in the learned network in Figure \ref{fig:auto_graph_2} with the raw data. Again, the black dots are raw data points. Although the numbers of discretization edges of $A$ and $C$ shown in Figure \ref{fig:auto_exp2_distr_1_3} are less than Figure \ref{fig:auto_exp2_distr_1_3}, they still have a good capture of raw data distribution. This indicated that although the discretization result of the optimal Bayesian approach might vary according to the network structure, it still preserves the quality of discretization.
 
 \begin{figure}[ht]
       \input{graph_auto_exp2_distr_1_3}
-  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ of the learned network in Figure \ref{fig:auto_graph_2}}.
+  \caption{Comparison of the raw data and discretization result on variable $A$ and $C$ of the learned network in Figure \ref{fig:auto_graph_2}. Although the number of discretization edges is less than in Figure \ref{fig:auto_exp1_distr_1_3}, it still matches the raw data distribution very well.}
   \label{fig:auto_exp2_distr_1_3}
 \end{figure}
 
@@ -873,16 +873,15 @@ Figure \ref{fig:auto_exp2_distr_1_3} compares the edges of the learned network i
 \subsection{Dataset 2: Wine}
 \label{subsec:wine}
 
-In this subsection, another two experiments are conducted on the Wine dataset from the Irvine repository \citep{Lichman_2013}. This dataset has 178 instances and 14 variables. Only variable $A$ is discrete-valued with cardinality number 3. Again, in the first experiment, the network structure is given. In the second experiment, the network structure is not provided.
+In this subsection, another two experiments are conducted on the Wine dataset from the Irvine repository \citep{Lichman_2013}. This dataset has 178 instances and 14 variables. Only variable $A$ is discrete-valued with cardinality number \num{3}. Again, in the first experiment, the network structure is given in advance. In the second experiment, the network structure is not provided in advance.
 
 \subsubsection{Discretization with fixed Structure}
 \label{subsubsec:wine_exp1}
 
-The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 1000 times. Table \ref{table:wine_disc_table_1} shows a comparison between the proposed method and the MDL principle discretization method.
-The proposed method is still better than MDL principle discretization in terms of likelihood, although the latter returns non-trivial result in this experiment.
-\todo{Note that the proposed method with the approximation has more intervals after discretization, and it has a slightly better result in terms of likelihood. However, the improvement is marginally small, which indicates that the proposed method without the approximation captures good enough discretization result even if the numbers of intervals after discretization are smaller.}
-In addition, as shown in next dataset, the approximation might cut continuous variables into too many intervals. Therefore, the proposed method without the approximation should be still considered a better approach.
-
+The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 a thousand times. Table \ref{table:wine_disc_table_1} shows a comparison between the optimal Bayesian approach and the MDL principle discretization method.
+The discretization result obtained by the optimal Bayesian approach is better than the MDL discretization method in terms of likelihood, although the latter returns non-trivial result in this experiment. Note that the 
+heuristic method discretizes variable $G$, $H$ and $J$ into one more interval than the optimal Bayesian approach, and has less number of intervals on variable $M$. Although the heuristic method has more intervals after discretization on all variables, it does not lead to a higher likelihood result. This can be interpreted as that the extra discretization edges on $G$, $H$ and $J$ are less necessary and the losing discretization edge on $M$ is important.
+In addition, as shown in next dataset, the heuristic method might cut continuous variables into too many intervals. Therefore, the optimal Bayesian approach should be considered a better method if the running time is not a concern.
 
 \begin{figure}[ht]
   \centering
