@@ -846,7 +846,7 @@ Table \ref{table:auto_disc_table_1} shows the positions of discretization edges,
 
 \begin{table}[h]
   \centering
-  \caption{Discretization results of Auto MPG dataset based on the graph in Fig. \ref{fig:auto_graph_1} by the three methods. The first five rows are discretization edges on each continuous variable. The sixth row is the log-likelihood of the dataset based on the discretization results. The discretization result for the heuristic matches that for the optimal Bayesian approach. The MDL method is less sensitive to distribution of values of other variables and fails to return discretization edges.}
+  \caption{Discretization results of Auto MPG dataset based on the graph in Fig. \ref{fig:auto_graph_1} by the three methods. The first five rows are discretization edges on each continuous variable. The last row is the log-likelihood of the dataset based on the discretization results. The discretization result for the heuristic matches that for the optimal Bayesian approach. The MDL method is less sensitive to distribution of values of other variables and fails to return discretization edges.}
   \input{table_autoMPG_1.tex}
   \label{table:auto_disc_table_1}
 \end{table}
@@ -1035,6 +1035,7 @@ Although the number of intervals after discretization on $H$ is not large, it ca
 \end{figure}
 
 \begin{figure}[ht]
+\centering
     % \begin{tabular}{cc}
       \input{graph_housing_exp2_distr_8_5}
     % \end{tabular}
@@ -1042,10 +1043,11 @@ Although the number of intervals after discretization on $H$ is not large, it ca
   \label{fig:housing_exp2_distr_8_5}
 \end{figure}
 
-\subsection{Experiment Discussions}
+\subsection{Discussions}
 \label{subsec:discuss_exp}
 
 \begin{figure}[ht]
+\centering
     % \begin{tabular}{cc}
       \input{graph_exp_discuss}
     % \end{tabular}
@@ -1068,6 +1070,13 @@ To quantatively discuss the sensitivity of the three methods, consider the Bayes
 
 The sensitivities toward the value distribution in $D_{\Pi_X}$ are determined by the `` Disc. Edge Positions Term" in the three objective functions. Since the penaltis of the numbers of intervals after discretization in the three objective functions take the similar form, if the `` Disc. Edge Positions Term" varies more severely due to different positions of discretization edges, then the corresponding method is more sensitive. The `` Disc. Edge Positions Term" in $\text{Obj}_{\text{MDL}}$, which is made out of the mutual information, varies less severely than the terms in $\text{Obj}_{\text{Bayesian}}$ and $\text{Obj}_{\text{Heuristic}}$, since it senses the distribution in $D_{\Pi_X}$ by empirical probability distributions, instead of the factorial terms such in $\text{Obj}_{\text{Bayesian}}$ and $\text{Obj}_{\text{Heuristic}}$. Furthermore, the `` Disc. Edge Positions Term" in $\text{Obj}_{\text{Heuristic}}$ varies more aggressively than the term in $\text{Obj}_{\text{Bayesian}}$. Therefore, the MDL method is less sensitive and the heuristic is over sensitive toward the value distributions in other variables. The effect of sensitivity can be shown as the numbers of intervals after discretization in the previous experiment.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+In this work, a new method for discretizating continuous varibles in Bayesian networks has been proposed. It is compatible with the K2 structure learning, i.e., it can discretize continuous variables along with the edge-adding process of the K2. Therefore, a discrete-valued Bayesian network can be learned from mix data.
+
+Experiments on three real-world dataset show that the new method returns to a better discretization result than previous research in terms of likelihood. The discretization edges and the resulting marginal probabilities of discretized regions returned by the new method can match the row data well.
+
+This work can extend the usage of Bayesian networks in science and engineering, especially for the fields that require discrete-valued variables but the learning data is mixed and numerical. In the future, we plan to generalize the work to the datast that has high dimensional variables, for example, 3 dimensional positions of drones, which makes the sorting in Equation \ref{eq:p_M} fails.
+
 %\begin{acknowledgements}
 %If you'd like to thank anyone, place your comments here
 %and remove the percent signs.
