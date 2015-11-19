@@ -627,7 +627,7 @@ For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
         \EndIf
         \EndFor
           \State $S[v] \leftarrow s$
-          \State $\Lambda[v] \leftarrow M[u] \cup \{ DiscEdge \}$
+          \State $\Lambda[v] \leftarrow \Lambda[u] \cup \{ DiscEdge \}$
         \EndIf
       \EndFor
       \State \Return $\Lambda[m]$
@@ -927,7 +927,7 @@ The optimal Bayesian approach and the MDL discretization method are tested on Au
   \label{fig:auto_graph_1}
 \end{figure}
 
-Table \ref{table:auto_disc_table_1} shows the positions of discretization edges, and log-likelihood of 10-fold cross validation by three discretization methods. For the Bayesian network in Fig. \ref{fig:auto_graph_1}, the approximation \ref{eq:opt_prob_approx} only reduces runtime and has no influence on discretization result. MDL principle discretization works not well, since it discretizes each continuous variable by only one interval. The reason that the MDL method discretizes variables into too few number of intervals is discussed in Section \ref{subsec:discuss_exp}.
+Table \ref{table:auto_disc_table_1} shows the positions of discretization edges, and log-likelihood of 10-fold cross validation by three discretization methods. For the Bayesian network in Fig. \ref{fig:auto_graph_1}, the approximation Equation \ref{eq:opt_prob_approx} only reduces runtime and has no influence on discretization result. MDL principle discretization works not well, since it discretizes each continuous variable by only one interval. The reason that the MDL method discretizes variables into too few number of intervals is discussed in Section \ref{subsec:discuss_exp}.
 
 \begin{table}[h]
   \centering
@@ -978,7 +978,7 @@ In this subsection, another two experiments are conducted on the Wine dataset fr
 \label{subsubsec:wine_exp1}
 
 The Bayesian network in Figure \ref{fig:wine_graph_1} is obtained by equal-width discretizing each continuous variable into 3 intervals and running K2 a thousand times. Table \ref{table:wine_disc_table_1} shows a comparison between the optimal Bayesian approach and the MDL principle discretization method.
-The discretization result obtained by the optimal Bayesian approach is better than the MDL discretization method in terms of likelihood. The heuristic method discretizes variable $G$, $H$ and $J$ into one less interval than the optimal Bayesian approach, and has one more number of intervals on variable $\Lambda$.
+The discretization result obtained by the optimal Bayesian approach is better than the MDL discretization method in terms of likelihood. The heuristic method discretizes variable $G$, $H$ and $J$ into one less interval than the optimal Bayesian approach, and has one more number of intervals on variable $M$.
 Although it returns different numbers of intervals and different positions of discretization edges with the optimal Bayesian approach, it still has a good discretization result in terms of likelihood. Furthermore, if running time is the main concern, the heuristic method can be considered a better approach in this case.
 
 Notice that there are some discretization edges appearing in all three discretization methods, such as \num{1.42} and \num{2.35} on variable $C$ and \num{0.785} on variable $L$. This indicates that MDL indeed can find some important discretization edges, but it is not sensitive enough to find more edges.
@@ -1014,7 +1014,7 @@ Figure \ref{fig:wine_exp1_distr} compares the discretization results by the opti
 
 Figure \ref{fig:wine_graph_2} is the learned discrete-valued Bayesian network from the Wine dataset, and it is obtained by running Algorithm \ref{alg:structure_learn} fifty times. The integer numbers next to variables are cardinality numbers of variables. By comparing Figure \ref{fig:wine_graph_2} with \ref{fig:wine_graph_1}, it shows that the the Bayesian network obtained by Algorithm \ref{alg:structure_learn} has more edges than the network obtained by prediscretization and the K2 algorithm. This is sensible, since when a network is learned along with discretization, variables have more freedom, by adjusting discretization edges, to construct the correlations with other variables and thus have more edges in the network.
 
-Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$ and $K$. The discretization edge at \num{17.9} on variable $E$ also appers in Figure \ref{fig:wine_exp1_distr}. This indicates that some discretization edges are robust against the network structure. Furthermore, in Figure \ref{fig:wine_exp2_distr}, the discretization edge at \num{23.5} on $E$ is lost. This is due to the number of parents of $E$ in Figure \ref{fig:wine_graph_2} is twice as in \ref{fig:wine_graph_1}. Usually, if a variable has more parents, then less number of intervals after discretization it has, since the information from parents are adulterated together.
+Figure \ref{fig:wine_exp2_distr} shows the discretization result on variable $E$ and $K$. The discretization edge at \num{17.9} on variable $E$ also appers in Figure \ref{fig:wine_exp1_distr}. This indicates that some discretization edges are robust against the network structure. Furthermore, in Figure \ref{fig:wine_exp2_distr}, the discretization edge at \num{23.5} on $E$ is lost. This is due to the number of parents of $E$ in Figure \ref{fig:wine_graph_2} is twice as in \ref{fig:wine_graph_1}. Usually, if a variable has more parents, then less number of intervals after discretization it has, since the information from parents are mixed together.
 
 \begin{figure}[ht]
   \centering
@@ -1065,7 +1065,7 @@ The Bayesian network structure in Figure \ref{fig:housing_graph_1} is obtained b
 \end{table}
 
 Figure~\ref{fig:housing_exp1_distr_3_5} and Figure~\ref{fig:housing_exp1_distr_8_5} show the discretization result of the optimal Bayesian approach on the network in Figure~\ref{fig:housing_graph_1}.
-In Figure~\ref{fig:housing_exp1_distr_3_5}, the scatter points, which stands for the raw data, has been jittered, since there are many repeated values in the raw data on the variable pair $C$ and $E$. These repeating values cause the high number of intervals for both $C$ and $E$, because in some sense, each repeated-value point form a single discretized area. On the other hand, there is no such over repeated values of the raw data on variable $H$. Thus, the numbers of intervals after discretization for variable $H$ remains normal, as what we have seen in previous datasets.
+In Figure~\ref{fig:housing_exp1_distr_3_5}, the scatter points, which stands for the raw data, has been jittered, since there are many repeated values in the raw data on the variable pair $C$ and $E$. These repeating values cause the high number of intervals for both $C$ and $E$, because in some sense, each repeated-value point form a single discretized area. On the other hand, the data instances on variable $H$ is less repeated. Thus, some resulting discretized areas cover larger space, instead of just covering a repeated value.
 
 \begin{figure}[ht]
 \centering
@@ -1108,7 +1108,7 @@ This will lead to a group of variables that are close to each other and all have
 
 Figure~\ref{fig:housing_exp2_distr_3_5} and Figure~\ref{fig:housing_exp2_distr_8_5} show the discretization result on variables of the network in Figure~\ref{fig:housing_graph_2}.
 Again, variable $C$ and $E$ have many discretization edges due to the repeated values.
-Although the number of intervals after discretization on $H$ is not large, it captures the distribution of the raw data along with the discretization edges on $E$.
+Although the number of intervals after discretization on $H$ is less the number in Figure \ref{fig:housing_exp1_distr_8_5}, it still captures the distribution of the raw data along with the discretization edges on $E$.
 
 \begin{figure}[ht]
 \centering
@@ -1124,7 +1124,7 @@ Although the number of intervals after discretization on $H$ is not large, it ca
     % \begin{tabular}{cc}
       \input{graph_housing_exp2_distr_8_5}
     % \end{tabular}
-  \caption{The discretization result on variable $H$ and $E$ of the network in Figure~\ref{fig:housing_graph_2}. Although the number of discretization edges on $H$ is not as large as $E$'s, they still match the distribution of the raw data very well.}
+  \caption{The discretization result on variable $H$ and $E$ of the network in Figure~\ref{fig:housing_graph_2}. Although the number of discretization edges on $H$ is less than the number in Figure \ref{fig:housing_exp1_distr_8_5}, it still matches the distribution of the raw data well.}
   \label{fig:housing_exp2_distr_8_5}
 \end{figure}
 
