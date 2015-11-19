@@ -131,15 +131,17 @@
 
 %\authorrunning{Short form of author list} % if too long for running head
 
-\institute{\todo{Yi-Chun Chen \at
-              first address \\
-              Tel.: +123-45-678910\\
-              Fax: +123-45-678910\\
-              \email{fauthor@example.com}           %  \\
-%             \emph{Present address:} of F. Author  %  if needed
+\institute{Yi-Chun Chen \at
+              Institute of Computational and Mathematical Engineering, Stanford University \\
+              \email{yichunc@stanford.edu}  
            \and
-           S. Author \at
-              second address}
+              Tim A. Wheeler \at
+              Department of Aeronautics and Astronautics, Stanford University\\
+              \email{wheelert@stanford.edu}
+           \and
+              Mykel J. Kochenderfer \at
+              Department of Aeronautics and Astronautics, Stanford University\\
+              \email{mykel@stanford.edu}
 }
 
 \date{Received: date / Accepted: date}
@@ -149,10 +151,11 @@
 \maketitle
 
 \begin{abstract}
-  \todo{
-  Insert your abstract here. Include keywords, PACS and mathematical
-  subject classification numbers as needed.
-  }
+Many applications of Bayesian networks assume all random variables are discrete. However, it is imperative to deal with continuous variables in the real-world data, such as positions and velocities of autonomous cars,  In this paper, a new method has been proposed to discretize continuous variables in Bayesian networks by learning from data.
+
+ In addition, the new method can be executed along with edge-adding steps in the K2 structure learning algorithm, and thus learn a discrete-valued Bayesian network.
+  
+  
   \keywords{Discretization \and Bayesian Network \and Continuous Variable}
   % \PACS{PACS code1 \and PACS code2 \and more}
   % \subclass{MSC code1 \and MSC code2 \and more}
@@ -221,13 +224,7 @@
 Bayesian networks \citep{Pearl_1988, PGM_2009} are an increasingly popular method for modeling uncertainty and causality in science and engineering.
 They provide an efficient factorization of the joint probability distribution over a set of random variables.
 Bayesian networks first emerged from artificial intelligence research and have been applied to a wide variety of problems, ranging from decision-making systems \citep{DMU_2015} \mykel{better to use a primary source} to medical diagnoses \citep{Lustgarten_2011}.
-In most cases, we assume that all random variables in Bayesian networks are discrete, since many Bayesian network learning algorithms are unable to deal with continuous variables efficiently.
-However, many applications   +Bayesian networks \citep{Pearl_1988, PGM_2009} are an increasingly popular method for modeling uncertainty and causality in science and engineering.
-They provide an efficient factorization of the joint probability distribution over a set of random variables.
-Bayesian networks first emerged from artificial intelligence research and have been applied to a wide variety of problems, ranging from decision-making systems \citep{DMU_2015} to medical diagnoses \citep{Lustgarten_2011}.
-\mykel{packages such as ....}
-In most cases, we assume that all random variables in Bayesian networks are discrete, since many Bayesian network learning algorithms are unable to deal with continuous variables efficiently.
-However, many applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
+In many application, it is assume that all random variables in Bayesian networks are discrete, since many Bayesian network algorithms are unable to deal with continuous variables efficiently. In addition, many of the commonly used Bayesian network software packages, such as \todo{find packages}, assume discrete variables. However, various applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
 
 There are three common approaches to extending Bayesian networks to continuous variables.
 The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning algorithms based on their parameters.
