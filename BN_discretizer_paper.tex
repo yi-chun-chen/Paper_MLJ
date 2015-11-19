@@ -394,7 +394,15 @@ The index of the last occurence of $\cu_i$ in $\cx_{1:n}$ is denoted $s_i$.
 The discretization edges $e_{1:k-1}$ mark the boundaries between discretization intervals.
 In this work they are restricted to the midpoints between unique ascending instances of $\cX$.
 Thus, each edge $e_i = \paren{\cu_{s_j} + \cu_{s_{j+1}}}/2$ for some $s_j$.
-An integer representation of $\Lambda_{\cX}$ can thus be written $\Lambda_{\cX} = \curly{\lambda_1 < \lambda_2  < \ldots < \lambda_k}$, where $\lambda_1 = s_1$ and $\lambda_i \in s_{1:m}$.
+Two useful integer representation of $\Lambda_{\cX}$ can be written
+
+\begin{equation}
+  \Lambda_{\cX} = \curly{\lambda_1 < \lambda_2  < \ldots < \lambda_k} \equiv \curly{\gamma_1 < \gamma_2  < \ldots < \gamma_k}\text{,}
+\end{equation}
+
+\noindent
+where $\lambda_1 = s_1$, $\lambda_i \in s_{1:m}$, $\gamma_1 = \lambda_1$, and $\gamma_i = \lambda_i - \lambda_{i-1}$.
+The $\lambda_{1:k}$ representation is the number of instances before every discretization edge whereas the $\lambda$ representation is the number of instances within each discretization interval.
 
 Finally, when discussing the discretization of a particular continuous variable $\cX$, let $P_i$ be the $i$th parent of $\cX$, let $C_i$ be the $i$th child of $\cX$, and let $\bm{S}_i$ be set of spouses of $\cX$ corresponding to the $i$th child.
 Context should make it clear when $P$ refers to a discrete probability and when it refers to a variable's parent.
@@ -420,7 +428,7 @@ An optimal discretization policy for a dataset $D$ maximizes $P(\Lambda)\cdot P(
 \subsection{Priors and Objective Function}
 
 Let $D_{\bm{Y}}$ be the subset of the data corresponding to $\bm{Y}$.
-Four principles for the optimal discretization policy enable the formulation of $P(\Lambda)$ and $P(D_{-\cX} \mid \Lambda)$, where the probability of the data associated with the target variable $P(D_{\cX})$ is already captured in $P(\Lambda)$.
+Four principles for the optimal discretization policy enable the formulation of $P(\Lambda)$ and $P(D_{-\cX} \mid \Lambda)$, where $D_{-\cX}$ is the subset of the dataset for all variables but $\cX$ and the probability of the data associated with the target variable $P(D_{\cX})$ is already captured in $P(\Lambda)$.
 The four principles, motivated by MODL \todo{and Lustgarden}, are:
 
 \begin{enumerate}
@@ -456,7 +464,7 @@ From the first principle one obtains
     }\text{.}
 \end{equation}
 
-The Bayesian network graph structure causes the likelihood term $P(D \mid \Lambda)$ to factorizes according to $\cX$'s Markov blanket:
+The Bayesian network graph structure causes the likelihood term $P(D_{-\cX} \mid \Lambda)$ to factorizes according to $\cX$'s Markov blanket:
 
 \begin{equation}
   \label{eq:p_D_given_M}
@@ -472,7 +480,7 @@ For example, in Figure~\ref{fig:example_factorization}, $P(D_{-\cX} \mid \Lambda
 \begin{figure}[ht]
   \centering
   \input{graph1}
-  \caption{Factorization of $P(D \mid \Lambda)$}
+  \caption{Factorization of $P(_{-\cX} \mid \Lambda)$}
   \label{fig:example_factorization}
 \end{figure}
 
@@ -484,60 +492,89 @@ Each component in the decomposition can be evaluated given a discretization poli
 
 \subsubsection{Evaluation of $P\paren{D_{\Pa_{\cX}} \mid \Lambda}$}
 
-Let $J_P = \prod_{i=1}^{n_p} \| P_i \|$. It follows that
+Let $J_P$ be the number of instantiations of the parents of $\cX$, and let $n^{(\text{p})}_{i,j}$ be the number of instances of $\cX$ within the $i$th discretization interval of $\Lambda$ given the $j$th parental instantiation.
+Note that $\lambda_i = \sum_j n^{(\text{p})}_{i,j}$.
+It follows that
 
 \begin{equation}
   \label{eq:likelihood_one}
-  P\paren{D_{\Pa_{\cX}} \mid \Lambda} = \prod_{i=1}^k
-    \frac{1}{{{n_i + J_P - 1}\choose{J_P - 1}}}
-    \frac{1}{
-      \frac{
-        {n_i}!
-      }{
-        {n^{(p)}_{i,1}}! \; {n^{(p)}_{i,2}}! \; \cdots \; {n^{(p)}_{i,J_P}}!
+  P\paren{D_{\Pa_{\cX}} \mid \Lambda} = \overbrace{\prod_{i=1}^k}^{\text{Principle 4}}
+    \overbrace{\rule{0pt}{2em}
+      \frac{1}{{{\lambda_i + J_P - 1}\choose{J_P - 1}}}
+      \frac{1}{
+        \frac{
+          {\lambda_i}!
+        }{
+          {n^{(\text{p})}_{i,1}}! \; {n^{(\text{p})}_{i,2}}! \; \cdots \; {n^{(\text{p})}_{i,J_P}}!
+        }
       }
-    }\text{,}
+    }^{\text{Principle 2}}\text{.}
 \end{equation}
 
-\noindent
-where $n^{(p)}_{i,j}$ is the number of instances in the $i$th discretized interval with the $j$th value of $\Pi_X$.
-Note that $n_i = \sum_{j=1}^{\| \Pi_x \|} n^{(p)}_{i,j}$.
-The two factors on the right hand side comes from the second prior: all distributions of values of $\Pi_X$ in a given interval are equiprobable. According to the fourth prior, the distribution in each interval is independent, so the two factors are multiplied together.
+The two factors on the right hand side comes from the second principle: all distributions of values of $\Pa_{\cX}$ in a given interval are equiprobable.
+According to the fourth principle, the distribution in each interval is independent, so the two factors can be multiplied together.
 
 \subsubsection{Evaluation of $P(D_{C_i} \mid \Lambda, D_{\bm{S}_i})$}
-For each pair $(C_j, \boldsymbol{S_j})$, let $\|C_j \| = J_j$ and $\| \boldsymbol{S_j} \| = L_j = \prod_{v \in \boldsymbol{S_j}} \| v \|$. It follows that
+Let $J_{C_j}$ be the number of instantiations of the $j$th child of $\cX$, let $J_S^{(j)}$ be the number instantiations of the $j$th spouse set $\bm{S}_j$, and let $n^{(j)}_{i,m,l}$ be the number of instances of $\cX$ in the $i$th discretization interval of $\Lambda$ given the $m$th instantiation of $C_j$ and the $l$th instantiation of $\boldsymbol{S_j}$.
+Let ${n^{(j)}_{i,l} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,l}}$.
+Note that ${\lambda_i = \sum_l n^{(j)}_{i,l}}$.
+It follows that
 
 \begin{equation}
-\label{eq:likelihood_two}
-P(D_{C_j}  \mid \Lambda, D_{S_j}) =
-\prod_{i=1}^{k} \prod_{l=1}^{L_j} {{1}\over{{n_{i,l} + J_j - 1}\choose{J_j-1}}}
-{{1}\over{ {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}}  }}\text{,}
+  \label{eq:likelihood_two}
+  P(D_{C_j} \mid \Lambda, D_{\bm{S}_j}) =
+  \overbrace{\prod_{i=1}^{k} \prod_{l=1}^{J_S^{(j)}}}^{\text{Principle 4}}
+    \overbrace{\rule{0pt}{2.3em}
+      {
+        \frac{1}{
+          {{n^{(j)}_{i,l} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
+        }
+        {\frac{
+          1
+        }{
+          \frac{
+            {n^{(j)}_{i,l}}!
+          }{
+            {n^{(j)}_{i,1,l}!} \; {n^{(j)}_{i,2,l}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},l}!}
+          }
+        }
+      }
+    }^{\text{Principle 3}}
+    \text{.}
+\end{equation}
+
+The two factors on the right hand side come from the third principle: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable.
+According to the fourth prior, these distributions are independent from each other, and one can thus take their product.
+If $\bm{S}_j = \emptyset$, then Equation~\ref{eq:likelihood_two} is equivalent to
+
+\begin{equation}
+  \label{eq:likelihood_three}
+  P(D_{C_j} \mid \Lambda) = \prod_{i=1}^{k}
+  {
+    {1}\over{
+      {\lambda_i + J_{C_j} - 1}\choose{J_{C_j}-1}}
+    }
+    {{1}\over{
+      {{\lambda_i}!} \over {
+        {n^{(j)}_{i,1,\emptyset}!} \; {n^{(j)}_{i,2,\emptyset}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},\emptyset} !}
+      }
+    }
+  }\text{,}
 \end{equation}
 
 \noindent
-where $n^{(j)}_{i,m,l}$ is the number of instances in $i$th interval with $m$th value of $C_j$ and $l$th value of $\boldsymbol{S_j}$, $n_{i,l} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,l}$, and $n_i = \sum_{l=1}^{L_j} n_{i,l}$.
-The two factors on the right hand side come from the third prior: all distribution of values of $C_j$ in a given interval and with a given value of $S_j$ are equiprobable. According to the forth prior, these distributions are independent from each other, and one thus takes their product. If $S_j = \emptyset$, then Equation~\ref{eq:likelihood_two} is equivalent to
-
-\begin{equation}
-\label{eq:likelihood_three}
-P(D_{C_j}  \mid \Lambda) =
-\prod_{i=1}^{k}  {{1}\over{{n_{i} + J_j - 1}\choose{J_j-1}}}
-{{1}\over{ {{n_{i}}!}\over{ {n^{(j)}_{i,1,\emptyset} !} {n^{(j)}_{i,2,\emptyset} !} \cdots {n^{(j)}_{i,J_j,\emptyset} !}}  }}\text{,}
-\end{equation}
-
-\noindent
-where $n^{(j)}_{i,m,\emptyset}$ is the number of instances in the $i$th interval with the $m$th value of $C_j$, and $\sum_{m=1}^{J_j} n^{(j)}_{i,m,\emptyset} = n_i$.
+where $n^{(j)}_{i,m,\emptyset}$ is the number of instances of $\cX$ in the $i$th discretization interval of $\Lambda$ given the $m$th instantiation of $C_j$.
 
 The objective function can be formulated given equations \ref{eq:p_M}, \ref{eq:p_D_given_M}, \ref{eq:likelihood_one}, and \ref{eq:likelihood_three}.
-The log-inverse of $P(\Lambda) \cdot P(D|\Lambda)$ is minimized for computational convenience:
+The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for computational convenience:
 
 \begin{equation}
-\label{eq:opt_prob}
-\begin{aligned}
-& \sum_{i=1}^{k-1} - \log(1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}) +  \sum_{i=1}^{k} L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}} +\\
-&  \sum_{j=1}^{n_c} \sum_{i=1}^{k}  \sum_{l=1}^{L_j} \left[  \log{{n_{i,l} + J_j - 1}\choose{J_j-1}} + \log \left( { {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}} } \right) \right] + \\
-& \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_p} !}} } \right) \right]\text{.}
-\end{aligned}
+  \label{eq:opt_prob}
+  \begin{aligned}
+  \sum_{i=1}^{k-1} - \log(1 - {\exp(- L \cdot {{x_{s_i+1} - x_{s_i}}\over{x_N - x_1}})}) +  \sum_{i=1}^{k} L \cdot {{x_{s_{i}} - x_{s_{i-1} + 1}}\over{x_N - x_1}} +\\
+   \sum_{j=1}^{n_c} \sum_{i=1}^{k}  \sum_{l=1}^{L_j} \left[  \log{{n_{i,l} + J_j - 1}\choose{J_j-1}} + \log \left( { {{n_{i,l}}!}\over{ {n^{(j)}_{i,1,l} !} {n^{(j)}_{i,2,l} !} \cdots {n^{(j)}_{i,J_j,l} !}} } \right) \right] + \\
+  \sum_{i=1}^k \left[  \log {{n_{i} + J_P - 1}\choose{J_P-1}} + \log \left( { {{n_i}!}\over{ {n^{(p)}_{i,1} !} {n^{(p)}_{i,2} !} \cdots {n^{(p)}_{i,J_p} !}} } \right) \right]\text{.}
+  \end{aligned}
 \end{equation}
 
 All parameters and variables in the objective function are explained in previous subsections.
@@ -1091,6 +1128,7 @@ To quantatively discuss the sensitivity of the three methods, consider the Bayes
 , where $Z_1$ and $Z_2$ are two constants, $k$ is the number of intervals after discretization, $X^*$ is the discretized version of $X$, and $I(X^*, \Pi_X)$ is the mutual information between $X^*$ and its parent variables. Note that the third term in $\text{Obj}_{\text{MDL}}$ is approximated by $H(p)$ as in Equation \ref{eqn:MDL} in the original paper \citep{Friedman_1996}.
 
 The sensitivities toward the value distribution in $D_{\Pi_X}$ are determined by the `` Disc. Edge Positions Term" in the three objective functions. Since the penaltis of the numbers of intervals after discretization in the three objective functions take the similar form, if the `` Disc. Edge Positions Term" varies more severely due to different positions of discretization edges, then the corresponding method is more sensitive. The `` Disc. Edge Positions Term" in $\text{Obj}_{\text{MDL}}$, which is made out of the mutual information, varies less severely than the terms in $\text{Obj}_{\text{Bayesian}}$ and $\text{Obj}_{\text{Heuristic}}$, since it senses the distribution in $D_{\Pi_X}$ by empirical probability distributions, instead of the factorial terms such in $\text{Obj}_{\text{Bayesian}}$ and $\text{Obj}_{\text{Heuristic}}$. Furthermore, the `` Disc. Edge Positions Term" in $\text{Obj}_{\text{Heuristic}}$ varies more aggressively than the term in $\text{Obj}_{\text{Bayesian}}$. Therefore, the MDL method is less sensitive and the heuristic is over sensitive toward the value distributions in other variables. The effect of sensitivity can be shown as the numbers of intervals after discretization in the previous experiment.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
 In this work, a new method for discretizating continuous varibles in Bayesian networks has been proposed. It is compatible with the K2 structure learning, i.e., it can discretize continuous variables along with the edge-adding process of the K2. Therefore, a discrete-valued Bayesian network can be learned from mix data.
