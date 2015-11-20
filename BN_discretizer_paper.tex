@@ -147,13 +147,19 @@
 \date{Received: date / Accepted: date}
 % The correct dates will be entered by the editor
 
-
 \maketitle
 
 \begin{abstract}
-Many applications of Bayesian networks assume all random variables are discrete. However, it is imperative to deal with continuous variables in the real-world data, such as positions and velocities of dynamical systems.  In this paper, a new method has been proposed to discretize continuous variables in Bayesian networks by learning from mixed data. The method adapts Bayesian statistics to find the most probable discretization policy on a continuous variable. In addition, it incorporates graph structure when discretizing continuous variables. When there are multiple continuous variables in a Bayesian network, the method iteratively discretizes each variable while treating other variables discrete by the previous discretization result. If the network structure is not given in advance, the method can be combined with the K2 structure learning algorithm to learn a discrete-valued Bayesian network. In the tests on real-world data, the method is shown that it can match the raw data distribution by providing sufficient numbers of intervals after discretization on continuous variables and also correct positions of discretization edges.
 
-  \keywords{Discretization \and Bayesian Network \and Continuous Variable}
+Real data often contains a mixture of discrete, continuous, and hybrid variables, but many Bayesian network structure learning and inference algorithms assume all random variables are discrete.
+Continuous and hybrid variables are often discretized, but the choice of discretization policy has significant impact on the accuracy, speed, and interpretability of the resulting models.
+This paper introduces a principled discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of other standard techniques.
+Emperical demonstrations show that the proposed method is superior to the state of the art.
+In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
+The proposed method was incorporated and its superior performance was empirically demonstrated.
+All software is publically available to support discretization research.
+
+\keywords{Discretization \and Bayesian Network \and Continuous Variable \and }
   % \PACS{PACS code1 \and PACS code2 \and more}
   % \subclass{MSC code1 \and MSC code2 \and more}
 \end{abstract}
@@ -589,14 +595,14 @@ Compute $h(u,v)$ for each interval $\gamma_q$ starting from $x_{u}$ to $x_{v}$ f
 \end{small}
 
 The evaluation of $h(u,v)$ for all $u \leq v$ is summarized in Algorithm~\ref{alg:h} in the appendix.
-The calculation has a $\bigo \paren{ n_c  {L'} \cdot N^2 + {L'}^{n_p} \cdot N^2 }$ runtime, where $n_c$ and $n_p$ are the numbers of child and parent variables respectively, and $L'$ is the largest cardinality of variables that directly connect to $X$. \tim{so parents and children, or parents, children and spouses?}
+\todo{The calculation has a $\bigo \paren{ n_c  {L'} \cdot N^2 + {L'}^{n_p} \cdot N^2 }$ runtime, where $n_c$ and $n_p$ are the numbers of child and parent variables respectively, and $L'$ is the largest cardinality of variables that directly connect to $X$.}
 
 The optimization problem over Equation~\ref{eq:opt_prob} can now be solved.
 The dynamic programming procedure is shown in Algorithm~\ref{alg:disc_one}.
-It takes three inputs: $\cX$, the continuous variable, $D$, the joint data instances over all variables sorted in ascending order according to $D_X$, and $G$, the network structure.
+It takes three inputs: $\cX$, the continuous variable; $D$, the joint data instances over all variables sorted in ascending order according to $D_X$; and $G$, the network structure.
 The runtime of Algorithm~\ref{alg:disc_one} is also $O(n_c  {L'} \cdot N^2 + {L'}^{n_p} \cdot N^2)$, because the runtime of the dynamic programming procedure is less than the runtime for computing $h(u,v)$.
 Algorithm~\ref{alg:disc_one} is guaranteed to be optimal.
-For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
+For faster methods with suboptimal results please refer to the work of \cite{Boulle_2006}.
 
 \begin{algorithm}
   \caption{Discretization of one continuous variable in a Bayesian network}
@@ -637,7 +643,7 @@ For faster methods with suboptimal results please refer to \citep{Boulle_2006}.
 
 \subsection{Approximation}
 
-Algorithm~\ref{alg:disc_one} has an exponential $\bigo\paren{L'^{n_p} \cdot N^2}$ runtime which severely limits discretization in networks with a large number of discretization intervals or parent variables.
+Algorithm~\ref{alg:disc_one} has an exponential $\bigo\paren{\paren{L'}^{n_p} \cdot N^2}$ runtime which severely limits discretization in networks with a large number of discretization intervals or parent variables.
 This section introduces an approximation to the objective function that significantly reduces the runtime and still preserves the quality of discretization.
 The approximation replaces the dominator of the last factor in Equation~\ref{eq:likelihood_one} with
 
@@ -749,7 +755,7 @@ The discretization of $P_1$ involves both $P_2$ and $\cX$, whereas the discretiz
 
 The algorithm is terminated when the number of discretization intervals and their associated edges converge for all variables, and a maximum number of complete passes is enforced to prevent infinite iterations when convergence does not occur.
 The algorithm typically converges within a few passes when tested on real-world data.
-In cases where it does not converge, \tim{when was this observed? What dataset?}, ten passes usually produce decent discretization results.
+In cases where it does not converge, \tim{only observed when also learning structure}, ten passes usually produce decent discretization results.
 
 The pseudocode for the multi-variable discretization procedure is shown in Algorithm~\ref{alg:disc_two}.
 It requires four inputs: $D$, a dataset of samples from the joint distribution; $G$, the fixed network structure; $\bm{\cX}$, the set of all continuous variables in reverse topological order, and $\maxpasses$, an upper bound on the number of complete passes.
@@ -816,8 +822,8 @@ It takes five inputs: $D$, a dataset of samples from the joint distribution; $\b
       \State $P_{old} \leftarrow g(X^*_i,\Pa^*_X)$ as Equation~\ref{eq:B_Score_one}
       \State OKToProceed $\leftarrow$ \textbf{true}
       \While {OKToProceed \textbf{and} $\|\Pa_{X_i}\| < u_{parent}$}
-        \State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pi_X$
-        \State $P_{new} \leftarrow f(X^*_i,\Pa^*_{X_i} \cup Y^*)$
+        \State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pa_X$
+        \State $P_{new} \leftarrow g(X^*_i,\Pa^*_{X_i} \cup Y^*)$
         \If {$P_{new} > P_{old}$}
           \State $P_{old} \leftarrow P_{new}$
           \State $\Pa_{X_i} \leftarrow \Pa_{X_i} \cup Y $
@@ -834,7 +840,7 @@ It takes five inputs: $D$, a dataset of samples from the joint distribution; $\b
   \end{algorithmic}
 \end{algorithm}
 
-The function $f$ in Algorithm~\ref{alg:structure_learn} computes a component of the Bayesian score (Equation~\ref{eq:BayesianScore}):
+The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of the Bayesian score (Equation~\ref{eq:BayesianScore}):
 
 \begin{equation}
   \label{eq:B_Score_one}
@@ -862,13 +868,13 @@ As such, Algorithm~\ref{alg:structure_learn} is run multiple times with differen
 \label{sec:experiments}
 
 This section describes experiments conducted to evaluate the proposed methods.
-All experiments were run on datasets from the publically available Irvine machine learning repository \citep{Lichman_2013}.
+All experiments were run on datasets from the publically available University of California, Irvine machine learning repository \citep{Lichman_2013}.
 Variables are labelled alphabetically in the order given on the dataset information webpage
 In the figures that follow, shaded nodes correspond to initially discrete variables and the subscripts indicate the number of discrete instantiations.
 
 Two experiments were conducted on each dataset.
 The first experiment compares the performance of the optimal Bayesian discretization method, the heuristic Bayesian discretization method, and MDL on a known Bayesian network structure.
-The structure was obtained by prediscretizing each continuous variable into $k$ uniform-width intervals, where $k$ is the median number of instantiations of the discrete variables, and using the structure with the highest Bayesian score from one thousand runs of the K2 algorithm.
+The structure was obtained by prediscretizing each continuous variable into $k$ uniform-width intervals, where $k$ is the median number of instantiations of the discrete variables, and using the structure with the highest Bayesian score from one thousand runs of the K2 algorithm with random variable orderings.
 The second experiment compares the same methods applied when simultaneously discretizing and learning network structure.
 
 The discretizations are compared using the mean cross validated log-likelihood of the data $D$ given the graph structure $G$ and discretization policies $\discset$.
@@ -883,6 +889,7 @@ where $D$ is the original dataset and $D^*$ is the dataset discretized according
 The log-likelihood of the discretized dataset is the Bayesian score (Equation~\ref{eq:BayesianScore}) evaluated with a uniform prior over graph structures and a uniform Dirichlet prior ($\alpha_{ijk} = 1$ for all $i$, $j$, and $k$).
 The log-likelihood of the original dataset given the discrete dataset is
 
+\todo{
 \begin{equation}
   \ln p\paren{D\mid \discset, D^*} = \sum_{i=1}^n
   1\curly{X_i \text{ orig. cont.}}
@@ -894,12 +901,12 @@ The log-likelihood of the original dataset given the discrete dataset is
     }
   }\text{.}
 \end{equation}
-\tim{The above equation needs work.}
+}
 
 \noindent
 The mean cross-validated log-likelihood is the mean log-likelihood on the witheld dataset among cross-validation folds.
 Cross-validation directly estimates generalization error.
-\todo{Ten} folds were used in each experiment.
+Ten folds were used in each experiment.
 
 The optimal discretization policy for MDL is found with dynamic programming in a similar manner as with the Bayesian method.
 For a Bayesian network with a single continuous variable $\cX$, the MDL objective function is
@@ -934,7 +941,7 @@ This structure was obtained by prediscretizing each continuous variable into fiv
 \begin{figure}[ht]
   \centering
    \input{graph_autocar_1}
-   \caption{Bayesian network structure obtained from running K2 on the prediscretiszed Auto MPG dataset}
+   \caption{Bayesian network structure obtained from running K2 on the prediscretized Auto MPG dataset}
   \label{fig:auto_graph_1}
 \end{figure}
 
@@ -1052,7 +1059,7 @@ This indicates that MDL indeed can find some important discretization edges, but
 
 Figure~\ref{fig:wine_exp1_distr} compares the optimal Bayesian and MODL discretizaton policies for variables $E$ and $K$ with the original Wine data.
 The discretization edges \num{17.9} for $E$ and \num{34.6} for $K$ appear in both plots.
-The MDL method creates fewer discretization edges than the optimal Bayesian method.
+The MDL method does not use enough intervals for discretization.
 Relative sensitivities of each method to the input data is discussed in Section~\ref{subsec:discuss_exp}.
 
 \begin{figure}[ht]
@@ -1069,7 +1076,7 @@ Figure~\ref{fig:wine_graph_2} is the discrete-valued Bayesian network learned fr
 A comparison of Figures~\ref{fig:wine_graph_2} and \ref{fig:wine_graph_1} show that the Bayesian network learned during the discretization process has more edges than the network learned on the prediscretized data.
 When a network is learned along with discretization, the algorithm has more freedom to adjust the structure and the discretization policy simultaneously to identify useful correlations and produce a denser structure.
 
-Figure~\ref{fig:wine_exp2_distr} shows the discretization policy for variables $E$ and $K$ obtained with the \todo{heuristic Bayesian method}.
+Figure~\ref{fig:wine_exp2_distr} shows the discretization policy for variables $E$ and $K$ obtained with the optimal Bayesian method.
 The discretization edge $E = 17.9$ also appears in all discretization policies from the fixed network (Figure~\ref{fig:wine_exp1_distr}).
 This indicates that some discretization edges are robust against the network structure.
 Furthermore, the discretization edge at $E = 23.5$ present in the fixed-structure case is missing in the learned structure.
@@ -1079,7 +1086,7 @@ The more parents a variable has, the less discretization intervals it will be ab
 \begin{figure}[ht]
   \centering
   \scalebox{0.7}{\input{graph_wine_2}}
-  \caption{The discrete-valued Bayesian network learned from the Wine dataset \todo{using the heuristic Bayesian method}.}
+  \caption{The discrete-valued Bayesian network learned from the Wine dataset using the optimal Bayesian method.}
   \label{fig:wine_graph_2}
 \end{figure}
 
@@ -1108,6 +1115,7 @@ The dataset has \num{506} samples over fourteen variables.
 Only variables $D$ and $I$ are discrete-valued, with \num{2} and \num{9} instantiations, respectively.
 Variable $A$ is the only discrete variable and has three instantiations.
 Despite their being continuous, several variables in the Housing dataset possess many repeated values.
+The following experiments were conducted with an upper limit of three on the number of parents per variable to prevent memory issues with MDL.
 
 \subsubsection{Discretization with Fixed Structure}
 \label{subsubsec:housing_exp1}
@@ -1173,20 +1181,17 @@ In contrast, the samples for $H$ are well spread out, resulting in fewer discret
 \subsubsection{Discretization while Learning Structure}
 \label{subsubsec:housing_exp2}
 
-Figure~\ref{fig:housing_graph_2} is the learned discrete-valued Bayesian network from the Housing dataset by running Algorithm~\ref{alg:structure_learn} fifty times.
-In both Figure~\ref{fig:housing_graph_1} and Figure~\ref{fig:housing_graph_2}, the variable $D$ is not connected to any other variable.
-Continuous variables $C$, $E$, $J$ and $K$, which are all in a Markov blanket, have high cardinality numbers after discretization.
-This is reasonable, since when discretizing one variable, the expected cardinality is close to highest cardinality number in the Markov blanket.
-This will lead to a group of variables that are close to each other and all have high cardinalities.
+Figure~\ref{fig:housing_graph_2} shows a learned Bayesian network structure and the corresponding numbers of intervals after discretization for each continuous variable.
+Variable $D$ is neighborless is both the learned and fixed networks.
+The continuous variables $C$, $E$, $J$ and $K$, which are all connected through $C$, have many discretization intervals.
+Typically, when discretizing a variable, the expected number of discretization intervals is close to the highest cardinality among variables in its Markov blanket.
+This naturally leads to clusters of variables with high numbers of discretization intervals.
 
 \begin{figure}[ht]
-    % \begin{tabular}{cc}
-    \centering
-    \scalebox{0.8}{
-      \input{graph_housing_2}}
-    % \end{tabular}
-  \caption{The learned discrete-valued Bayesian network from the Housing dataset. Variables $C$, $E$, $J$, $K$ have high numbers of intervals after discretization, since they are in a Markov blanket.
-  \tim{Var with 1 interval?}
+  \centering
+  \scalebox{0.8}{\input{graph_housing_2}}
+  \caption{
+    The discrete-valued Bayesian network learned from the Housing dataset using the optimal Bayesian method.
   }
   \label{fig:housing_graph_2}
 \end{figure}
@@ -1196,20 +1201,22 @@ Again, variable $C$ and $E$ have many discretization edges due to the repeated v
 Although the number of intervals after discretization on $H$ is less the number in Figure~\ref{fig:housing_exp1_distr_8_5}, it still captures the distribution of the raw data along with the discretization edges on $E$.
 
 \begin{figure}[ht]
-\centering
-     %\begin{tabular}{cc}
-      \input{graph_housing_exp2_distr_3_5}
-     %\end{tabular}
-  \caption{The discretization result on variable $C$ and $E$ of the network in Figure~\ref{fig:housing_graph_2}. The high number of discretization edges is due to the repeated values on the dataset in variable $C$ and $E$.}
+  \centering
+  \input{graph_housing_exp2_distr_3_5}
+  \caption{
+    The discretization policy for variables $C$ and $E$ on the learned network in Figure~\ref{fig:housing_graph_2}.
+    The high number of discretization edges are caused by the repeated values in variables $C$ and $E$.
+  }
   \label{fig:housing_exp2_distr_3_5}
 \end{figure}
 
 \begin{figure}[ht]
-\centering
-    % \begin{tabular}{cc}
-      \input{graph_housing_exp2_distr_8_5}
-    % \end{tabular}
-  \caption{The discretization result on variable $H$ and $E$ of the network in Figure~\ref{fig:housing_graph_2}. Although the number of discretization edges on $H$ is less than the number in Figure~\ref{fig:housing_exp1_distr_8_5}, it still matches the distribution of the raw data well.}
+  \centering
+  \input{graph_housing_exp2_distr_8_5}
+  \caption{
+    The discretization policy for variables $H$ and $E$ on the learned network in Figure~\ref{fig:housing_graph_2}.
+    The number of discretization intervals for $H$ is less than it was for the fixed network structure in Figure~\ref{fig:housing_exp1_distr_8_5}, but the discretization policy still matches the raw data.
+  }
   \label{fig:housing_exp2_distr_8_5}
 \end{figure}
 
@@ -1229,7 +1236,7 @@ If $\Pa_{\cX} = \curly{P_1, P_2}$ and $D_{\cX} = \curly{1.0,2.0,3.0, \ldots n}$,
 \begin{small}
   \begin{equation}
   \begin{aligned}
-  f_{\text{MDL}} & = \overbrace{Z_1 \cdot k + \ln(k) + \ln {{n +k - 1}\choose{k -1}} }^{\text{Penalty Term}}+   \overbrace{\rule{0pt}{1.35em} \ln(N) \cdot I(X^*, \Pi_X)}^{\text{Edge Position Term}} \\
+  f_{\text{MDL}} & = \overbrace{Z_1 \cdot k + \ln(k) + \ln {{n +k - 1}\choose{k -1}} }^{\text{Penalty Term}}+   \overbrace{\rule{0pt}{1.35em} \ln(N) \cdot I(X^*, \Pa_X)}^{\text{Edge Position Term}} \\
   f_{\text{Bayesian}} &= \overbrace{\rule{0pt}{1.85em}  Z_2 \cdot k + \sum_{i=1}^k \ln {{\gamma_i + J_P - 1}\choose{J_P -1}}}^{\text{Penalty Term}} + \overbrace{\sum^k_{i=1} \ln \left(   {{\gamma_i !}\over{n^{(P)}_{i,1}! n^{(P)}_{i,2}! \cdots n^{(P)}_{i,J_P}!    }} \right) }^{\text{Edge Position Term}}\\
   f_{\text{Heuristic}} &= \overbrace{Z_2 \cdot k + \sum_{i=1}^k \ln {{\gamma_i + J_{P_1} - 1}\choose{J_{P_1} -1}} + \sum_{i=1}^k \ln {{\gamma_i + J_{P_2} - 1}\choose{J_{P_2} -1}} }^{\text{Penalty Term}}+\\
   & \overbrace{\sum^k_{i=1}  \left[ \ln \left(   {{\gamma_i !}\over{n^{(P_1)}_{i,1}! n^{(P_1)}_{i,2}! \cdots n^{(P_1)}_{i,J_{P_1}}    }} \right)  + \ln \left(   {{\gamma_i !}\over{n^{(P_2)}_{i,1}! n^{(P_2)}_{i,2} \cdots n^{(P_2)}_{i,J_{P_2}} }} \right) \right]}^{\text{Edge Position Term}}
@@ -1238,7 +1245,7 @@ If $\Pa_{\cX} = \curly{P_1, P_2}$ and $D_{\cX} = \curly{1.0,2.0,3.0, \ldots n}$,
 \end{small}
 
 \noindent
-where $Z_1$ and $Z_2$ are constant over discretizations, $k$ is the number of discretization intervals, and $I\paren{A, B} = \sum_{a,b} \hat{P}(a,b) \ln\frac{\hat{P}(a,b)}{\hat{P}(a)p(b)}$ is the mutual information.
+where $Z_1$ and $Z_2$ are constant over discretizations, $k$ is the number of discretization intervals, and $I\paren{A, B} = \sum_{a,b} \hat{P}(a,b) \ln\frac{\hat{P}(a,b)}{\hat{P}(a)\hat{P}(b)}$ is the mutual information based on estimated probability1ies.
 Note that the third term of $f_\text{MDL}$ had been approximated using $H(p)$ (see Equation~\ref{eqn:MDL}) in the original work by \cite{Friedman_1996} but here is written without that approximation.
 
 The sensitivities of each method to the discretization edges are captured in the edge position terms, as the penalty terms are similar across methods.
@@ -1250,11 +1257,15 @@ This sensitivity gives rise to the relative performance of each method in the ex
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusion}
-In this work, a new method for discretizating continuous varibles in Bayesian networks has been proposed. It is compatible with the K2 structure learning, i.e., it can discretize continuous variables along with the edge-adding process of the K2. Therefore, a discrete-valued Bayesian network can be learned from mix data.
+This paper introduced a principled discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of other standard techniques.
+Emperical demonstrations show that the proposed method is superior to the state of the art.
+In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
+The proposed method was incorporated and its superior performance was empirically demonstrated.
+\todo{All software is publically available to support discretization research.}
 
-Experiments on three real-world dataset show that the new method returns to a better discretization result than previous research in terms of likelihood. The discretization edges and the resulting marginal probabilities of discretized regions returned by the new method can match the row data well.
-
-This work can extend the usage of Bayesian networks in science and engineering, especially for the fields that require discrete-valued variables but the learning data is mixed and numerical. In the future, we plan to generalize the work to the datast that has high dimensional variables, for example, 3 dimensional positions of drones, which makes the sorting in Equation~\ref{eq:p_M} fails.
+The methods developed in this paper increase the accuracy of Bayesian networks learned on datasets with continuous and mixed variables.
+An automated process for simultaneously constructing Bayesian networks and discretization policies is appearing because of the potential to significantly reduce development time and cost.
+Future work will investigate edge positions at locations other than the midpoints between samples and using different discretization policies for the same variable in different conditional probablity distributions.
 
 %\begin{acknowledgements}
 %If you'd like to thank anyone, place your comments here
@@ -1281,11 +1292,11 @@ This work can extend the usage of Bayesian networks in science and engineering, 
   \label{alg:h}
   \begin{algorithmic}[1]
   \State Initialize $H$ as an $N \times N$ matrix such that all elements are 0.
-  \State $count_p$ is an $N \times N \times \|\Pi_X\|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pi_X$. This matrix can be calculated in $O(\|\Pi_X\| \cdot N^2)$
+  \State $count_p$ is an $N \times N \times \|\Pa_X\|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pa_X$. This matrix can be calculated in $O(\|\Pa_X\| \cdot N^2)$
   \For {$u = 1$ to $N$}
     \For {$v = u$ to $N$}
       \State $H(u,v) \leftarrow H(u,v) + \ln((v-u + J_p)!) - \ln((J_p -1)!)$
-      \For {$w = 1$ to $\|\Pi_X\|$}
+      \For {$w = 1$ to $\|\Pa_X\|$}
         \State $H(u,v) \leftarrow H(u,v) - \ln( count_p(u,v,w)!)$
       \EndFor
     \EndFor
