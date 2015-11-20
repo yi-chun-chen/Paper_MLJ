@@ -9,7 +9,9 @@
 			point meta min=0, point meta max=0.5,
 			colormap={}{ gray(0cm)=(1); gray(1cm)=(0);},
 			colorbar style={
-			        ytick={0,0.05,...,0.5},
+			        ytick={0,0.05,...,0.51},
+			        ylabel=probability density,
+			        y label style={at={(axis description cs:6.5,0.5)},rotate=180,anchor=north},
 			        yticklabel style={
 			            text width=2.5em,
 			            align=right,
