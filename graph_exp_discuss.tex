@@ -22,8 +22,8 @@
 
   % Define nodes
   \node[latent]                               (y) {$\cX$};
-  \node[latent, above=of y, xshift=-1.2cm] (p1) {$P_1$};
-  \node[latent, above=of y, xshift=1.2cm]  (p2) {$P_2$};
+  \node[obs, above=of y, xshift=-1.2cm] (p1) {$P_1$};
+  \node[obs, above=of y, xshift=1.2cm]  (p2) {$P_2$};
 
   % Connect the nodes
   \edge {p1,p2} {y} ;
