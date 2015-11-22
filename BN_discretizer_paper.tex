@@ -530,7 +530,7 @@ The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for 
       }
     }
       + \sum_{i=1}^{k}
-      L \cdot \frac{\cx_{\lambda_{i}} - \cx_{\lambda_{i-1} + 1}}{\cx_n - \cx_1} \\
+      L \cdot \frac{\cx_{\lambda_{i}} - \cx_{\lambda_{i-1} + 1}}{\cx_n - \cx_1} + \\
   & \sum_{i=1}^{k} \brock{
   \ln{{\gamma_i + J_P - 1}\choose{J_P - 1}}
   +{ \ln \paren{
@@ -972,7 +972,7 @@ The resulting probability density is a good match to the original data.
   \label{fig:auto_exp1_distr_1_3}
 \end{figure}
 
-\subsubsection{Discretization while Learning Structure}
+%\subsubsection{Discretization while Learning Structure}
 \label{subsubsec:auto_exp2}
 
 In this experiment the network structure was not fixed in advance and was learned simultaneously with the discretization policies.
@@ -1001,12 +1001,12 @@ The discretization policy will vary according as the network structure changes, 
   \label{fig:auto_exp2_distr_1_3}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% WINE
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% WINE
-%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Dataset 2: Wine}
 \label{subsec:wine}
 
@@ -1096,13 +1096,13 @@ The more parents a variable has, the less discretization intervals it can to sup
   }
   \label{fig:wine_exp2_distr}
 \end{figure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-% Housing
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Housing
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \subsection{Data 3: Housing}
 \label{subsec:housing}
 
