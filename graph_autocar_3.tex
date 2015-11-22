@@ -1,0 +1,47 @@
+% model_pca.tex
+%
+% Copyright (C) 2012 Jaakko Luttinen
+%
+% This file may be distributed and/or modified
+%
+% 1. under the LaTeX Project Public License and/or
+% 2. under the GNU General Public License.
+%
+% See the files LICENSE_LPPL and LICENSE_GPL for more details.
+
+% PCA model
+
+%\beginpgfgraphicnamed{model-pca}
+\begin{tikzpicture}[
+      nodes={
+        draw=black!20, thick, fill=white, font=\normalsize,
+        minimum width=2.5em, minimum height=2em
+      },
+      rounded corners, semithick, >=stealth
+      ]
+      
+      \node[obs]     at  (0,0)           (c2){$B_{{(5)}}$};
+      \node[latent]  at  (2,0)           (c3){$C$};
+      \node[latent]  at  (-2,0)         (c5){$E$};
+      \node[latent]  at  (-4,0)         (c4){$D$};
+      \node[latent]  at  (1,2)     (c6){$F$};
+      \node[latent]  at  (2,4)     (c1){$A$};
+      \node[obs]     at   (4,0)          (c7){$G_{(13)}$};
+      \node[obs]     at   (-2,4)        (c8){$H_{(3)}$};           
+
+
+  % Connect the nodes
+  \edge {c1}{c3,c7,c6,c5,c4};
+  \draw[->,>=stealth', shorten >= 1pt] (c1) to[bend right](c2);
+  \edge {c5}{c4};
+  \edge {c6}{c5,c2,c3,c7};
+
+
+
+\end{tikzpicture}
+%\endpgfgraphicnamed
+
+%%% Local Variables:
+%%% mode: tex-pdf
+%%% TeX-master: "example"
+%%% End:

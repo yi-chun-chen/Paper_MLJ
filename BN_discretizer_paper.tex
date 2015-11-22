@@ -748,7 +748,14 @@ This work prediscretizes all continuous variables into $k$ equal-width intervals
 After prediscretization, the one-variable discretization method is iteratively applied over each continuous variable in reverse topoligical order, from the leaves to the root.
 Reverse topological order has the advantage of relying on fewer prediscretizations of the continuous variables during the first pass.
 For example, in the right-hand graph of Figure~\ref{fig:example_networks}, assume $S_2$ is the only discrete variable.
-The discretization of $P_1$ involves both $P_2$ and $\cX$, whereas the discretization of $C_1$ only involves $\cX$.
+The discretization of $P_1$ involves both $P_2$ and $X$, whereas the discretization of $C_1$ only involves $X$.
+
+\begin{figure}[ht]
+ \centering
+     \input{graph2_right}
+  \caption{An example network}
+   \label{fig:example_networks}
+\end{figure}
 
 The algorithm is terminated when the number of discretization intervals and their associated edges converge for all variables, and a maximum number of complete passes is enforced to prevent infinite iterations when convergence does not occur.
 The algorithm typically converges within a few passes when tested on real-world data.
@@ -945,7 +952,7 @@ This structure was obtained by prediscretizing each continuous variable into fiv
 
 Table~\ref{table:auto_disc_table_1} lists the discretization edges and mean log-likelihoods under \num{10}-fold cross validation of the discrete Bayesian network resulting from each discretization method.
 The MDL method does not produce any discretization edges, assigning one continuous interval to each continuous variable, and produces the structure with the lowest likelihood.
-The cause behind MDL's discretization policy is discussed in Section~\ref{subsec:discuss_exp}.
+\todo{The cause behind MDL's discretization policy is discussed in Section~\ref{subsec:discuss_exp}.} \yichun{Mykel has rephrased it?}. On the other hand, there is a netowrk structure where the MDL has a comparable result with the Bayesian method. Please refer to Appendix.
 
 \begin{table}[h]
   \centering
@@ -1280,28 +1287,30 @@ Future work will investigate edge positions at locations other than the midpoint
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \section*{Appendix}
+\section*{Appendix}
+\label{sec:appendix}
 
-% \begin{algorithm}
-%   \caption{ Calculation of $h(u,v)$ for all $u \leq v$}
-%   \label{alg:h}
-%   \begin{algorithmic}[1]
-%   \State Initialize $H$ as an $N \times N$ matrix such that all elements are 0.
-%   \State $count_p$ is an $N \times N \times \|\Pa_X\|$ matrix such that $count_p [u,v,w]$ is the number of instances from $x_u$ to $x_v$ with $w$th value of $\Pa_X$. This matrix can be calculated in $O(\|\Pa_X\| \cdot N^2)$
-%   \For {$u = 1$ to $N$}
-%     \For {$v = u$ to $N$}
-%       \State $H(u,v) \leftarrow H(u,v) + \ln((v-u + J_p)!) - \ln((J_p -1)!)$
-%       \For {$w = 1$ to $\|\Pa_X\|$}
-%         \State $H(u,v) \leftarrow H(u,v) - \ln( count_p(u,v,w)!)$
-%       \EndFor
-%     \EndFor
-%   \EndFor
-%   \For {$j = 1$ to $n_c$}
-%     \State \todo{XXX}
-%   \EndFor
-%   \end{algorithmic}
-% \end{algorithm}
+The following Bayesian network structure in Figure \ref{fig:auto_graph_3} and the discretization results in Table \ref{table:auto_disc_table_3} demonstrate that the MDL method does not always return smaller number of discretization intervals than the Bayesian approach and also the MDL method can return a comparable result in terms of likelihood. The Bayesian network in Figure \ref{fig:auto_graph_3} is obtained by running Algorithm \ref{alg:structure_learn} fifty times with $u_{\text{parent}} = 2$. Therefore, the network can be considered well-structured, since the \todo{to be continued}.
+Many edges appears in both discretization results, as the bold numbers in Table \ref{table:auto_disc_table_3}. 
+\begin{figure}[ht]
+  \centering
+  \scalebox{0.8}{
+   \input{graph_autocar_3}}
+   \caption{A Bayesian network structure for Auto MPG dataset that leads to a comparable discretization result of the MDL method with the Bayesian method}
+  \label{fig:auto_graph_3}
+\end{figure}
 
+\begin{table}[h]
+  \centering
+  \caption{
+    Results from discretization of the Auto MPG dataset with fixed structure from Figure~\ref{fig:auto_graph_3}.
+    The first five rows list the discretization edges for each continuous variable.
+    The last row lists the mean cross-validated log-likelihood; positive values are better.
+    The MDL method does not produce any discretization edges.
+  }
+\input{table_autoMPG_3.tex}
+  \label{table:auto_disc_table_3}
+\end{table}
 \end{document}
 % end of file template.tex
 
