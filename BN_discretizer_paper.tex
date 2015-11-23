@@ -199,7 +199,7 @@ In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL princi
 Their approach selects a discretization policy that minimizes the sum of the description lengths of the discretized Bayesian network and the information necessary for recovering the continuous values from the discretized data.
 Results in this work suggest that the MDL method suffers from \todo{fill this out.}
 
-The optimal discretization policy is found with dynamic programming.
+The optimal discretization policy is found with dynamic programming, and it takes runtime $\bigo\paren{n^3 + q \cdot n^2}$, where $n$ is the number of data instances and $q$ is a constant that exponentially depends on cardinalities of variables in Bayesian networks and will be discussed in Section \ref{sec:experiments}.
 For Bayesian networks with multiple continuous variables, MDL discretization is iteratively applied to each continuous variables.
 While iterating, only one variable is treated as continuous while all other continuous variables are treated as discretized based on an initial discretization policy or the discretization result from a previous iteration.
 
@@ -216,7 +216,7 @@ The data likelihood usually increases with the number of discretization interval
 The prior is chosen to decrease as the number of discretization intervals increases to favor simpler models and prevent overfitting.
 Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ requires a trade-off when determining the number of discretization intervals.
 
-The MODL method uses dynamic programming to find the optimal discretization policy, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $n$ is the of number of data instances and $r$ is the number of instances for the class variable.
+The MODL method uses dynamic programming to find the optimal discretization policy, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of instances for the class variable.
 \cite{Lustgarten_2011} suggest several formulations for the prior term $P(\text{Model})$.
 Under a uniform prior probability over discretizations the runtime can be reduced to $\bigo\paren{r \cdot n^2}$ without sacrificing optimality.
 
@@ -236,7 +236,7 @@ The formal definition of a discretization policy for a continuous variable is al
 
 \subsection{Bayesian Networks and Sampling}
 
-A Bayesian network $B$ is defined by a pair $(G,\bm{\theta})$, where $G$ is a directed acyclic graph whose $n$ nodes $X_{1:n}$ are random variables.
+A Bayesian network $B$ is defined by a pair $(G,\bm{\theta})$, where $G$ is a directed acyclic graph whose $N$ nodes $X_{1:N}$ are random variables.
 The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$.
 For a Bayesian network over discrete and discretized variables, $r_i$ represents the number of instantiations of $X_i$, and $q_i$ represents the number of instantiations of the parents of $X_i$.
 If $X_i$ has no parents, then $q_i = 1$.
@@ -251,7 +251,7 @@ P(X_i = k \mid \bm{\pi}_{ij}) = \theta_{ij}^{(k)}\text{.}
 The joint distribution over the variables in the Bayesian network factors according to the Markov property:
 
 \begin{equation}
-P(X_{1:n}) = \prod_{i=1}^n P(X_i \mid \Pa_{X_i})\text{.}
+P(X_{1:N}) = \prod_{i=1}^N P(X_i \mid \Pa_{X_i})\text{.}
 \end{equation}
 
 Forward sampling is often used to draw samples from the joint distribution represented by a Bayesian network.
@@ -273,7 +273,7 @@ Let $\beta_{ij}^{(k)}$ be the number of times $X_i = k$ given $\bm{\pi}_{ij}$ in
 The likelihood is given by
 
 \begin{equation}
-P(D\mid \bm{\theta}, G) = \prod_{i=1}^n \prod_{j=1}^{q_i} \prod_{k=1}^{r_i} \brock{\theta_{ij}^{(k)}}^{\beta_{ij}^{(k)}}\text{.}
+P(D\mid \bm{\theta}, G) = \prod_{i=1}^N \prod_{j=1}^{q_i} \prod_{k=1}^{r_i} \brock{\theta_{ij}^{(k)}}^{\beta_{ij}^{(k)}}\text{.}
 \end{equation}
 
 
@@ -283,7 +283,7 @@ In practice one maximizes the log-likelihood, also known as the Bayesian score~\
 \begin{small}
 \begin{equation}
 \label{eq:BayesianScore}
-  \ln P(D\mid G) = \ln P(G) + \sum_{i=1}^n \sum_{j=1}^{q_i} \ln \paren{
+  \ln P(D\mid G) = \ln P(G) + \sum_{i=1}^N \sum_{j=1}^{q_i} \ln \paren{
     \frac{
       \Gamma\paren{\alpha_{ij}^{(0)}}
     }{
@@ -587,12 +587,12 @@ Compute $h(u,v)$ for each interval $\gamma_q$ starting from $x_{u}$ to $x_{v}$ f
   \end{equation}
 \end{small}
 
-The calculation of $h(u,v)$ for all $u \leq v$ has a $\bigo \paren{ n_c \, {L}^{n_s} \cdot N^2 + {L}^{n_p} \cdot N^2 }$ runtime, where $n_c$ and $n_p$ are the numbers of child and parent variables respectively, $L$ is the largest cardinality of variables in $X$'s Markov blanket, and $n_s = \text{max}^{n_c}_{j=1}  J^{(j)}_{S}$.
+The calculation of $h(u,v)$ for all $u \leq v$ has a $\bigo \paren{ n_c \cdot {L}^{n_s} \cdot n^2 + {L}^{n_p} \cdot n^2 }$ runtime, where $n_c$ and $n_p$ are the numbers of child and parent variables respectively, $L$ is the largest cardinality of variables in $X$'s Markov blanket, and $n_s = \text{max}_j  |\Pa_{C_j}|$.
 
 The optimization problem over Equation~\ref{eq:opt_prob} can now be solved.
 The dynamic programming procedure is shown in Algorithm~\ref{alg:disc_one}.
 It takes three inputs: $\cX$, the continuous variable; $D$, the joint data instances over all variables sorted in ascending order according to $D_X$; and $G$, the network structure.
-The runtime of Algorithm~\ref{alg:disc_one} is also $\bigo \paren{ n_c \, {L}^{n_s} \cdot N^2 + {L}^{n_p} \cdot N^2 }$, because the runtime of the dynamic programming procedure is less than the runtime for computing $h(u,v)$.
+The runtime of Algorithm~\ref{alg:disc_one} is also $\bigo \paren{ n_c \cdot {L}^{n_s} \cdot n^2 + {L}^{n_p} \cdot n^2 }$, because the runtime of the dynamic programming procedure is less than the runtime for computing $h(u,v)$.
 Algorithm~\ref{alg:disc_one} is guaranteed to be optimal.
 For faster methods with suboptimal results please refer to the work of \cite{Boulle_2006}.
 
@@ -802,46 +802,6 @@ This cycle is repeated until the K2 algorithm reaches a local maximum.
 
 This procedure is given in Algorithm~\ref{alg:structure_learn}.
 It takes five inputs: $D$, a dataset of samples from the joint distribution; $\bm{\cX}$, the set of all continuous variables; $\texttt{order}$, a permutation of the variables in $D$; $\hat{n}_\text{parent}$, an upper bound on the number of parents per node; and $\maxpasses$, an upper bound on the number of complete passes.
-
-\begin{algorithm}
-  \caption{Learning a discrete-valued Bayesian network}
-  \label{alg:structure_learn}
-  \begin{algorithmic}[5]
-  \Function{Learn\_DBN}{$D$, $C$, $order$, $u_{parent}$, $C$, $\maxpasses$}
-    \State $m \leftarrow$ the number of variables in the Bayesian network
-    \State $k \leftarrow max\{ \|v\|, v\notin C\}$
-    \State $\Lambda^{(i)} \leftarrow$ the discretization policy for the continuous variable $X_i$
-    \State $D^*_{X_i} \leftarrow \Lambda^{(i)} (D_{X_i})$, list of instances of $X_i$ discretized by $\Lambda^{(i)}$
-    \State $D^* \leftarrow $ the discretized data for all variables, where $D^*_{X_j} \leftarrow D_{X_j}$ if $X_j \notin C$
-    \State $G \leftarrow$ the initial edgeless graph structure
-    \For {$i \leftarrow 1$ to $n$}
-      \If {$X_i \in C$}
-        \State $\Lambda^{(i)} \leftarrow$ equal-width discretization with $k$ intervals
-        \State $D^*_{X_i} \leftarrow  \Lambda^{(i)} (D_{X_i})$
-      \EndIf
-    \EndFor
-    \For {$i \leftarrow 1$ to $n$}
-      \State $P_{old} \leftarrow g(X^*_i,\Pa^*_X)$ as Equation~\ref{eq:B_Score_one}
-      \State OKToProceed $\leftarrow$ \textbf{true}
-      \While {OKToProceed \textbf{and} $\|\Pa_{X_i}\| < u_{parent}$}
-        \State $Y \leftarrow$ an element from the set $order[1:i] \backslash \Pa_X$
-        \State $P_{new} \leftarrow g(X^*_i,\Pa^*_{X_i} \cup Y^*)$
-        \If {$P_{new} > P_{old}$}
-          \State $P_{old} \leftarrow P_{new}$
-          \State $\Pa_{X_i} \leftarrow \Pa_{X_i} \cup Y $
-          \State $C' \leftarrow$ sorting variables in $C$ by a reverse topological order of current $G$
-          \State $\Lambda \leftarrow$ \textsc{DiscretizeAll}({$D$, $G$, $C'$, $\maxpasses$}): Algorithm~\ref{alg:disc_two}
-          \State $D*_{X_i} \leftarrow \Lambda^{(i)}(D_{X_i})$ for all $i$
-        \Else
-          \State OKToProceed $\leftarrow$ \textbf{false}
-        \EndIf
-      \EndWhile
-    \EndFor
-    \State \Return $G$, $\Lambda$
-  \EndFunction
-  \end{algorithmic}
-\end{algorithm}
-
 The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of the Bayesian score (Equation~\ref{eq:BayesianScore}):
 
 \begin{equation}
@@ -860,6 +820,42 @@ The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of 
     }
   }\text{.}
 \end{equation}
+
+\begin{algorithm}
+  \caption{Learning a discrete-valued Bayesian network}
+  \label{alg:structure_learn}
+  \begin{algorithmic}[5]
+  \Function{Learn\_DVBN}{$D$, $\bm{\cX}$, $\texttt{order}$, $\hat{n}_\text{parent}$, $\maxpasses$}
+    \State $N \leftarrow$ the number of variables in the Bayesian network
+    \State $k \leftarrow \textsc{Max} \{ \|v\|, v\notin C\}$
+    \State $\discset \leftarrow$ the discretization policies for each $\cX$ in $\bm{\cX}$
+    \State $D^* \leftarrow $ the dataset $D$ discretized according to $\discset$
+    \State $G \leftarrow$ the initial edgeless graph structure
+	\For {$\paren{\cX, X}$ such that $\cX \in \bm{\cX}$ and $X$ is the discretized version of $\cX$}
+      \State $\Lambda_{\cX} \leftarrow$ equal-width discretization of $\cX$ with $k$ intervals
+      \State $D^*_{X} \leftarrow \Lambda_{\cX} \paren{D_{\cX}}$
+    \EndFor
+    \For {$i \leftarrow 1$ to $N$}
+      \State $P_{old} \leftarrow g(X_i,\Pa_{X_i})$ as Equation~\ref{eq:B_Score_one}
+      \State OKToProceed $\leftarrow$ \textbf{true}
+      \While {OKToProceed \textbf{and} $\|\Pa_{X_i}\| < \hat{n}_\text{parent}$}
+        \State $Y \leftarrow$ an element from the set $\texttt{order}[1:i] \backslash \Pa_X$
+        \State $P_{new} \leftarrow g(X_i,\Pa_{X_i} \cup Y)$
+        \If {$P_{new} > P_{old}$}
+          \State $P_{old} \leftarrow P_{new}$
+          \State $\Pa_{X_i} \leftarrow \Pa_{X_i} \cup Y $
+          \State $\bm{\cX '} \leftarrow$ sorted $\bm{\cX}$ by a reverse topological order of current $G$
+          \State $\Lambda \leftarrow$ \textsc{DiscretizeAll}({$D$, $G$, $\bm{\cX '}$, $\maxpasses$}): Algorithm~\ref{alg:disc_two}
+          \State $D^* \leftarrow \Lambda \paren{D_{\bm{\cX }}}$
+        \Else
+          \State OKToProceed $\leftarrow$ \textbf{false}
+        \EndIf
+      \EndWhile
+    \EndFor
+    \State \Return $G$, $\Lambda$
+  \EndFunction
+  \end{algorithmic}
+\end{algorithm}
 
 It is common practice to run K2 multiple times with different variable permutations and to then choose the structure with the highest score.
 As such, Algorithm~\ref{alg:structure_learn} is run multiple times with different variable permutations and the discretized Bayesian network with the highest score is retaiend.
