@@ -559,6 +559,7 @@ The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for 
 All parameters and variables in the objective function are explained in previous subsections.
 
 \subsection{Algorithm}
+\label{subsec:algo}
 
 This section describes the procedure used to minimize the objective function.
 Note that the objective function is cumulative over intervals, thus, if a partition of $X$ into $k$ intervals by $\Lambda = \curly{\gamma_1 , \gamma_2  , \ldots , \gamma_k}$ is an optimal discretization policy, then any subinterval is optimal for the corresponding subproblem.
@@ -569,6 +570,7 @@ Compute $h(u,v)$ for each interval $\gamma_q$ starting from $x_{u}$ to $x_{v}$ f
 
 \begin{small}
   \begin{equation}
+  \label{eqn:h_function}
   \begin{aligned}
   h(u,v) &=  \ln {{\gamma_{q} + J_P - 1}\choose{J_P-1}} + \ln \left( { {{\gamma_q}!}\over{ {n^{(p)}_{q,1} !} {n^{(p)}_{q,2} !} \cdots {n^{(p)}_{q,J_p} !}} } \right) \\
   & + \sum_{j=1}^{n_c} \sum_{l=1}^{J^{(j)}_S} \brock{
@@ -918,7 +920,7 @@ For a Bayesian network with a single continuous variable $\cX$, the MDL objectiv
    + (m-1) H \paren{\frac{|X| - 1}{m -1}} -n \cdot \left[ I(X,\Pa_{\cX}) + {\sum_{j,\cX \in \Pa_{X_j}}} I(X_j, \Pa_{X_j}) \right]\text{,}
   \end{aligned}
 \end{equation}
-where $I(A,B)$ is the mutual information between two discrete variable sets $A$ and $B$, ${H(p) = -p \ln(p) - (1-p) \ln(1-p)}$, and $X$ is the discretized version of $\cX$.
+where $I(A,B)$ is the mutual information between two discrete variable sets $A$ and $B$, ${H(p) = -p \ln(p) - (1-p) \ln(1-p)}$, and $X$ is the discretized version of $\cX$. The minimum of Equation \ref{eqn:MDL} can be found by dynamical programming. It takes runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$, where the parameters are defined in Section \ref{subsec:algo}. Therefore, the runtime of the proposed method in this paper is shorter than MDL discretization method by $\bigo \paren{n^3}$.
 
 
 \subsection{Auto MPG Dataset}
