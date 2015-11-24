@@ -168,62 +168,60 @@ All software is publically available to support discretization research.
 
 \section{Introduction}
 
-Bayesian networks \citep{Pearl_1988, PGM_2009} are an increasingly popular method for modeling uncertainty and causality in science and engineering.
-They provide an efficient factorization of the joint probability distribution over a set of random variables.
-Bayesian networks first emerged from artificial intelligence research and have been applied to a wide variety of problems, ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnoses \citep{Lustgarten_2011}.
-In many application, it is assume that all random variables in Bayesian networks are discrete, since many Bayesian network algorithms are unable to deal with continuous variables efficiently. In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables. However, various applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
+Bayesian networks \citep{Pearl_1988, PGM_2009}, which first first emerged from artificial intelligence research, are an increasingly popular method for modeling uncertainty and causality with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnoses \citep{Lustgarten_2011}.
+Bayesian networks provide an efficient factorization of the joint probability distribution over a set of random variables.
+In most cases, one assumes that the random variables in a Bayesian network are discrete, since many Bayesian network learning algorithms are unable to efficiently handle continuous variables.
+In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables. However, various applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
 
 There are three common approaches to extending Bayesian networks to continuous variables.
-The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning and inference algorithms based on their parameters.
-One successful example are Gaussian graphical models \citep{Weiss_2011}.
-For other parametric distributions and non-linear functions \citep{Ihler_2009}, these redesigned algorithms are computationally expensive and do not perform well.
-The second is to use nonparametric distributions, such as particle representations and Gaussian processes \citep{Ickstadt_2010}.
+The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning and inference algorithms based on the distribution parameters.
+One successful example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
+For other parametric distributions and non-linear functions \citep{Ihler_2009}, however, these redesigned algorithms are computationally expensive and the Gaussian assumption on the underlying data does not always hold.
+
+The second approach is to use nonparametric distributions, such as particle representations and Gaussian processes \citep{Ickstadt_2010}.
 Unlike parametric methods, nonparametric methods do not make assumptions about the probability distributions being used.
 Parametric models have a fixed number of parameters, whereas the number of parameters in a nonparametric model grow with the amount of training data.
 
 The third approach is discretization.
 Automated discretization methods have been studied in machine learning and statistics for many years \citep{Dougherty_1995, Kerber_1992, Holte_1993, Fayyad_1993}, primarily for classification problems.
-They search for the best discretization policy of a continuous attribute by considering its interation with the target class variable.
-Interations and dependencies between variables in Bayesian networks are more complicated, where discretization requires considering the impact on the variable's Markov blanket.
+These methods search for the best discretization policy for a continuous attribute by considering its interation with a class variable.
+Today it is common practice to discretize all continuous variables before learning a Bayesian network structure, which does not consider variable interactions, as interations and dependencies between variables in Bayesian networks are more complicated; discretization of a variable in a network requires considering the impact on the variable's Markov blanket.
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
-
-This work is primarily concerned with the minimum description length (MDL) principle discretization \citep{Friedman_1996} and MODL discretization \citep{Boulle_2006} methods.
-The former is the predominant discretization method for continuous variables in Bayesian networks, and is compared to our proposed Bayesian method in Section~\ref{sec:experiments}.
-The latter is a Bayesian discretization method for one continuous variable against a discrete target class, which our proposed method generalizes to Bayesian networks.
-The asymptotical equivalence between MDL and MODL was examined in \citep{VL_2000}.
-
+The predominant discretization method for continuous variables in Bayesian networks is the minimum description length (MDL) principle discretization method \citep{Friedman_1996}.
 The MDL principle was first proposed by \cite{MDL_1978} and states that the best model for a dataset is one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
 MDL methods trade off goodness-of-fit against model complexity to reduce generalization error.
 In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and the optimal positions of their discretization edges.
-Their approach selects a discretization policy that minimizes the sum of the description lengths of the discretized Bayesian network and the information necessary for recovering the continuous values from the discretized data.
-Results in this work suggest that the MDL method suffers from low sensitivity to discretization edges and returns low numbers of discretization intervals on continuous variables.
+Their approach selects a discretization policy that minimizes the sum of the description length of the discretized Bayesian network and the information necessary for recovering the continuous values from the discretized data.
 
-The optimal discretization policy is found with dynamic programming, and it takes runtime $\bigo\paren{n^3 + q \cdot n^2}$, where $n$ is the number of data instances and $q$ is a constant that exponentially depends on cardinalities of variables in Bayesian networks and will be discussed in Section \ref{sec:experiments}.
-For Bayesian networks with multiple continuous variables, MDL discretization is iteratively applied to each continuous variables.
-While iterating, only one variable is treated as continuous while all other continuous variables are treated as discretized based on an initial discretization policy or the discretization result from a previous iteration.
+The optimal discretization policy of a single continuous variable under MDL is found using dynamic programming, and has runtime $\bigo\paren{n^3 + q \cdot n^2}$, where $n$ is the number of data samples and $q$ is a constant with exponential dependency on the cardinalities of the variables in the Bayesian network.
+For Bayesian networks with multiple continuous variables, MDL discretization is iteratively applied to each continuous variable.
+While iterating, only one variable is treated as continuous, while all other continuous variables are treated as discretized based on an initial discretization policy or the discretization result from a previous iteration.
 
-The network structure is not always known in advance.
-Bayesian network structure learning can be extended to distributions including continuous variables by alternating between traditional discrete structure learning and optimal discretization.
-Starting with some preliminary discretization policy, one applys a structure learning algorithm to identify the locally optimal graph structure.
-The discretization policy is refined based on the learned network.
-The cycle is continued until convergence.
 
-MODL discretization \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable.
-Bayesian methods maximize the probability of the model given the data, $P(\textit{Model} \mid \textit{Data})$.
+MDL discretization requires that the network structure be known in advance, but can be incorporated into the structure learning process which would otherwise have required pre-discretized variables.
+This approach alternates between traditional discrete structure learning and optimal discretization. \tim{Is this something this paper proposes or was this done with MDL before?}
+Starting with some preliminary discretization policy, one first applys a structure learning algorithm to identify the locally optimal graph structure.
+One then refines the discretization policy based on the learned network.
+The cycle is repeated until convergence.
+
+Results in this work suggest that the MDL method suffers from low sensitivity to discretization edges location and returns low numbers of discretization intervals on continuous variables.
+\tim{We need another sentence to make this a \P.}
+
+MODL \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable.
+Bayesian methods select the model with maximum posterior probability given the data, $P(\textit{Model} \mid \textit{Data})$.
 An application of Bayes' rule and constant $P(\textit{Data})$ shows that this is equivalent to maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$, where $P(\textit{Model})$ is a prior over models and ${P(\textit{Data} \mid \textit{Model})}$ is the data likelihood.
 The data likelihood usually increases with the number of discretization intervals, as more intervals allow for richer representations.
-The prior is chosen to decrease as the number of discretization intervals increases to favor simpler models and prevent overfitting.
+The prior is chosen to influence the relative merit between models, and for discretization policies the prior is negatively correlated with the number of discretization intervals to favor simpler models and prevent overfitting.
 Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ requires a trade-off when determining the number of discretization intervals.
 
-The MODL method uses dynamic programming to find the optimal discretization policy, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of instances for the class variable.
-\cite{Lustgarten_2011} suggest several formulations for the prior term $P(\text{Model})$.
-Under the suggested prior, which includes the uniform prior probabilities in MODL as a special case, the runtime can be reduced to $\bigo\paren{r \cdot n^2}$ without sacrificing optimality.
+The MODL method uses dynamic programming to find the optimal discretization policy for a continuous variable given a discrete class variable, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of instances for the class variable.
+\cite{Lustgarten_2011} suggest several formulations for the prior term $P(\text{Model})$, and the asymptotical equivalence between MDL and MODL on the single-variable, single-class problem was examined in \citep{VL_2000}.
 
 This paper describes a new Bayesian discretization method for continuous variables in Bayesian networks, extending prior work on single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}.
 The proposed method optimizes the discretization policy relative to the network and takes parents, children, and spouse variables into account.
-The optimal single-variable discretization method is derived in Section~\ref{sec:single_var}.
-Section~\ref{sec:multi_var} covers Bayesian networks with multiple continuous variables and discretization while simultaneously learning network structure.
+The optimal single-variable discretization method is derived in Section~\ref{sec:single_var}, using a prior which reduces the discretization runtime to $\bigo\paren{r \cdot n^2}$ without sacrificing optimality.
+Section~\ref{sec:multi_var} covers Bayesian networks with multiple continuous variables and how to discretize while simultaneously learning network structure.
 The paper concludes with a comparison against the existing minimum-description length \citep{Friedman_1996} method on real-world datasets in Section~\ref{sec:experiments}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1281,7 +1279,7 @@ Future work will investigate edge positions at locations other than the midpoint
 \label{sec:appendix}
 
 The Bayesian network structure in Figure \ref{fig:auto_graph_3} and the discretization results in Table \ref{table:auto_disc_table_3} demonstrate that the MDL method does not always return smaller number of discretization intervals than the Bayesian approach and also the MDL method can return a comparable result in terms of likelihood. The Bayesian network in Figure \ref{fig:auto_graph_3} is obtained by running Algorithm \ref{alg:structure_learn} fifty times with $u_{\text{parent}} = 2$. Therefore, this network can be considered more well-structured than the one in Figure \ref{fig:auto_graph_1}, since the effect of discretization policies has already been considered in the learning process.
-Many edges appears in both discretization results, as the bold numbers in Table \ref{table:auto_disc_table_3}. 
+Many edges appears in both discretization results, as the bold numbers in Table \ref{table:auto_disc_table_3}.
 \begin{figure}[ht]
   \centering
   \scalebox{0.8}{
