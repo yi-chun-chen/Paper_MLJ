@@ -63,6 +63,7 @@
 \usepackage{siunitx}
 \usepackage{booktabs}
 \usepackage{boondox-cal} % for lowercase caligraphic
+
 % \usepackage[capitalize]{cleveref}
 \usetikzlibrary{bayesnet}
 \setcitestyle{aysep={ }} %Author-Year Separator
@@ -106,6 +107,7 @@
 \newcommand{\mykel}[1]{\textit{\textcolor{cyan}{#1}}}
 
 \DeclareMathOperator{\Pa}{pa} % parents of a var in a BN
+\DeclareMathOperator{\Ch}{ch} % children of a var in a BN
 \newcommand{\cX}{\mathcal{X}} % continuous X
 \newcommand{\cx}{\mathcal{x}} % instance of x
 \newcommand{\cu}{\mathcal{u}} % unique sorted instances of x
@@ -168,45 +170,47 @@ All software is publically available to support discretization research.
 
 \section{Introduction}
 
-Bayesian networks \citep{Pearl_1988, PGM_2009}, which first first emerged from artificial intelligence research, are an increasingly popular method for modeling uncertainty and causality with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnoses \citep{Lustgarten_2011}.
+Bayesian networks \citep{Pearl_1988, PGM_2009}, which first emerged from artificial intelligence research, are an increasingly popular method for modeling uncertainty and causality, with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnosis \citep{Lustgarten_2011}.
 Bayesian networks provide an efficient factorization of the joint probability distribution over a set of random variables.
-In most cases, one assumes that the random variables in a Bayesian network are discrete, since many Bayesian network learning algorithms are unable to efficiently handle continuous variables.
-In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables. However, various applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
+In most cases, one assumes that the random variables in a Bayesian network are discrete, since many Bayesian network learning and inference algorithms are unable to efficiently handle continuous variables.
+In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables.
+However, many applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
 
 There are three common approaches to extending Bayesian networks to continuous variables.
-The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning and inference algorithms based on the distribution parameters.
-One successful example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
-For other parametric distributions and non-linear functions \citep{Ihler_2009}, however, these redesigned algorithms are computationally expensive and the Gaussian assumption on the underlying data does not always hold.
+The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning and inference algorithms based on the parameterization.
+One successful example of parametric, continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
+For other parametric distributions and non-linear functions \citep{Ihler_2009}, however, these redesigned algorithms are computationally expensive, and the Gaussian assumption on the underlying data does not always hold.
 
 The second approach is to use nonparametric distributions, such as particle representations and Gaussian processes \citep{Ickstadt_2010}.
-Unlike parametric methods, nonparametric methods do not make assumptions about the probability distributions being used.
+Unlike parametric methods, nonparametric methods can often fit any underlying probability distribution given sufficient data.
 Parametric models have a fixed number of parameters, whereas the number of parameters in a nonparametric model grow with the amount of training data.
+Inference algorithms on nonparametric models are often inefficient due to the large number of parameters they must refer to.
 
 The third approach is discretization.
 Automated discretization methods have been studied in machine learning and statistics for many years \citep{Dougherty_1995, Kerber_1992, Holte_1993, Fayyad_1993}, primarily for classification problems.
 These methods search for the best discretization policy for a continuous attribute by considering its interation with a class variable.
-Today it is common practice to discretize all continuous variables before learning a Bayesian network structure, which does not consider variable interactions, as interations and dependencies between variables in Bayesian networks are more complicated; discretization of a variable in a network requires considering the impact on the variable's Markov blanket.
+Today it is common practice to discretize all continuous variables before learning a Bayesian network structure to avoid having to consider variable interactions, as interations and dependencies between variables in Bayesian networks are more complicated.
+The discretization of a variable in a network requires considering the impact on the variable's Markov blanket.
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
 The predominant discretization method for continuous variables in Bayesian networks is the minimum description length (MDL) principle discretization method \citep{Friedman_1996}.
-The MDL principle was first proposed by \cite{MDL_1978} and states that the best model for a dataset is one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
+The MDL principle was first proposed by \cite{MDL_1978}, and states that the best model for a dataset is the one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
 MDL methods trade off goodness-of-fit against model complexity to reduce generalization error.
 In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and the optimal positions of their discretization edges.
 Their approach selects a discretization policy that minimizes the sum of the description length of the discretized Bayesian network and the information necessary for recovering the continuous values from the discretized data.
 
-The optimal discretization policy of a single continuous variable under MDL is found using dynamic programming, and has runtime $\bigo\paren{n^3 + q \cdot n^2}$, where $n$ is the number of data samples and $q$ is a constant with exponential dependency on the cardinalities of the variables in the Bayesian network.
+The optimal discretization policy of a single continuous variable under MDL is found using dynamic programming in runtime $\bigo\paren{n^3 + q \cdot n^2}$, where $n$ is the number of data samples and $q$ is a constant with exponential dependency on the cardinalities of the variables in the Bayesian network.
 For Bayesian networks with multiple continuous variables, MDL discretization is iteratively applied to each continuous variable.
 While iterating, only one variable is treated as continuous, while all other continuous variables are treated as discretized based on an initial discretization policy or the discretization result from a previous iteration.
 
-
-MDL discretization requires that the network structure be known in advance, but can be incorporated into the structure learning process.
+MDL discretization requires that the network structure be known in advance, but an iterative approach allows it to be incorporated into the structure learning process.
 Simultaneous structure learning and discretization alternates between traditional discrete structure learning and optimal discretization.
-Starting with some preliminary discretization policy, one first applys a structure learning algorithm to identify the locally optimal graph structure.
+Starting with some preliminary discretization policy, one first applies a structure learning algorithm to identify the locally optimal graph structure.
 One then refines the discretization policy based on the learned network.
 The cycle is repeated until convergence.
 
-Results in this work suggest that the MDL method suffers from low sensitivity to discretization edge locations and returns low numbers of discretization intervals on continuous variables.
-This is caused by the MDL's use of mutual information to rate discretization edges.
+Results in this work suggest that the MDL method suffers from low sensitivity to discretization edge locations and returns low numbers of discretization intervals for continuous variables.
+This is caused by MDL's use of mutual information to rate discretization edges.
 Mutual information, which is composed of empirical probabilities computed using event count ratios, varies less severely with the positions of discretization edges than the method proposed below.
 
 MODL \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable.
@@ -214,10 +218,10 @@ Bayesian methods select the model with maximum posterior probability given the d
 An application of Bayes' rule and constant $P(\textit{Data})$ shows that this is equivalent to maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$, where $P(\textit{Model})$ is a prior over models and ${P(\textit{Data} \mid \textit{Model})}$ is the data likelihood.
 The data likelihood usually increases with the number of discretization intervals, as more intervals allow for richer representations.
 The prior is chosen to influence the relative merit between models, and for discretization policies the prior is negatively correlated with the number of discretization intervals to favor simpler models and prevent overfitting.
-Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ requires a trade-off when determining the number of discretization intervals.
+Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ thus requires a trade-off when determining the number of discretization intervals.
 
 The MODL method uses dynamic programming to find the optimal discretization policy for a continuous variable given a discrete class variable, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of instances for the class variable.
-\cite{Lustgarten_2011} suggest several formulations for the prior term $P(\text{Model})$, and the asymptotical equivalence between MDL and MODL on the single-variable, single-class problem was examined by \citet{VL_2000}.
+\cite{Lustgarten_2011} suggest several formulations for the prior term $P(\textit{Model})$, and the asymptotical equivalence between MDL and MODL on the single-variable, single-class problem was examined by \citet{VL_2000}.
 
 This paper describes a new Bayesian discretization method for continuous variables in Bayesian networks, extending prior work on single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}.
 The proposed method optimizes the discretization policy relative to the network and takes parents, children, and spouse variables into account.
@@ -229,84 +233,8 @@ The paper concludes with a comparison against the existing minimum-description l
 
 \section{Preliminaries}
 \label{sec:preliminaries}
-This section covers the notation used throughout the paper and provides a brief overview of Bayesian networks, including the factorization of joint probability distributions, sampling from a Bayesian network, and structure learning.
-The formal definition of a discretization policy for a continuous variable is also given.
-
-\subsection{Bayesian Networks and Sampling}
-
-A Bayesian network $B$ is defined by a pair $(G,\bm{\theta})$, where $G$ is a directed acyclic graph whose $N$ nodes $X_{1:N}$ are random variables.
-The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$.
-For a Bayesian network over discrete and discretized variables, $r_i$ represents the number of instantiations of $X_i$, and $q_i$ represents the number of instantiations of the parents of $X_i$.
-If $X_i$ has no parents, then $q_i = 1$.
-The $j$th instantiation of the parents of $X_i$ is denoted $\bm{\pi}_{ij}$.
-
-The conditional relations are parameterized by the elements of $\bm{\theta}$, written $\theta_{ij}^{(k)}$, which determines
-
-\begin{equation}
-P(X_i = k \mid \bm{\pi}_{ij}) = \theta_{ij}^{(k)}\text{.}
-\end{equation}
-
-The joint distribution over the variables in the Bayesian network factors according to the Markov property:
-
-\begin{equation}
-P(X_{1:N}) = \prod_{i=1}^N P(X_i \mid \Pa_{X_i})\text{.}
-\end{equation}
-
-Forward sampling is often used to draw samples from the joint distribution represented by a Bayesian network.
-Variables are sampled in topological order such that parental instantiations are always known~\citep{PGM_2009}.
-Furthermore, the parent $\rightarrow$ child sampling order can be reversed if the marginal probability of the child variable is known.
-% By Bayes' rule,
-
-% \begin{equation}
-% P(X_i \mid \Pa_{X_i}) \cdot \prod_{Y \in \Pa_{X_i}} P(Y) = P(X_i) \cdot P(\Pa_{X_i} \mid X_i)\text{.}
-% \end{equation}
-
-\subsection{Structure Learning}
-
-It is often necessary to infer the structure of a Bayesian network from data.
-Three common approaches to Bayesian network structure learning are constraint-based, score-based, and Bayesian model averaging \citep[see][chap.~18]{PGM_2009}.
-This work uses the K2 structure learning algorithm \citep{K2}, one of the most successful score-based structure learning methods.
-Score-based structure learning methods over discrete variables commonly evaluate candidate structures according to their likelihood against a dataset $D$.
-Let $\beta_{ij}^{(k)}$ be the number of times $X_i = k$ given $\bm{\pi}_{ij}$ in $D$.
-The likelihood is given by
-
-\begin{equation}
-P(D\mid \bm{\theta}, G) = \prod_{i=1}^N \prod_{j=1}^{q_i} \prod_{k=1}^{r_i} \brock{\theta_{ij}^{(k)}}^{\beta_{ij}^{(k)}}\text{.}
-\end{equation}
-
-
-Structure search for a Bayesian network seeks the graph structure $G$ that maximizes ${P(G\mid D)}$.
-In practice, one maximizes the log-likelihood, also known as the Bayesian score~\citep{cooper1992bayesian}:
-
-\begin{small}
-\begin{equation}
-\label{eq:BayesianScore}
-  \ln P(D\mid G) = \ln P(G) + \sum_{i=1}^N \sum_{j=1}^{q_i} \ln \paren{
-    \frac{
-      \Gamma\paren{\alpha_{ij}^{(0)}}
-    }{
-      \Gamma\paren{\alpha_{ij}^{(0)} + \beta_{ij}^{(0)}}
-    }
-  } + \sum_{k=1}^{r_i} \ln \paren{
-    \frac{
-      \Gamma\paren{\alpha_{ij}^{(k)} + \beta_{ij}^{(k)}}
-    }{
-      \Gamma\paren{\alpha_{ij}^{(k)}}
-    }
-  }\text{.}
-\end{equation}
-\end{small}
-
-In the equation above,
-
-\begin{equation}
-\alpha_{ij}^{(0)} = \sum_{k=1}^{r_i} \alpha_{ij}^{(k)} \quad \qquad \beta_{ij}^{(0)} = \sum_{k=1}^{r_i} \beta_{ij}^{(k)}\text{.}
-\end{equation}
-
-The space of acyclic graphs is superexponential in the number of nodes, and it is common to rely on heuristic search strategies \citep{PGM_2009}.
-The K2 algorithm assumes a topological ordering of variables and greedily adds parents to nodes to maximally increase the Bayesian score.
-A fixed ordering ensures acyclicity but does not guarantee a globally optimal network structure.
-K2 is typically run multiple times with random variable orderings, and the network with the highest likelihood is retained.
+This section covers the notation used throughout the paper to describe discretization policies.
+This section also provides a brief overview of Bayesian networks.
 
 \subsection{Discretization Policies}
 \label{subsec:disc_policy}
@@ -334,7 +262,7 @@ Two useful integer representations of $\Lambda_{\cX}$ can be written
 
 \begin{equation}
 \label{eq:disc_def}
-  \Lambda_{\cX} = \anglebrackets{\lambda_1 < \lambda_2  < \ldots < \lambda_k} \equiv \anglebrackets{\gamma_1 , \gamma_2  , \ldots , \gamma_k}\text{,}
+  \Lambda_{\cX} = \anglebrackets{\lambda_1 < \lambda_2  < \ldots < \lambda_k} \equiv \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}\text{,}
 \end{equation}
 
 \noindent
@@ -343,6 +271,15 @@ The $\lambda_{1:k}$ representation is the number of instances before every discr
 
 When discussing the discretization of a particular continuous variable $\cX$, let $P_i$ be the $i$th parent of $\cX$, let $C_i$ be the $i$th child of $\cX$, and let $\bm{S}_i$ be the set of spouses of $\cX$ corresponding to the $i$th child.
 The context should make it clear when $P$ refers to a discrete probability and when it refers to a variable's parent.
+
+\subsection{Bayesian Networks}
+
+A Bayesian network $B$ is defined by a pair $(G,\bm{\theta})$, where $G$ is a directed acyclic graph whose $N$ nodes $X_{1:N}$ are random variables.
+The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$.
+For a Bayesian network over discrete and discretized variables, $r_i$ represents the number of instantiations of $X_i$, and $q_i$ represents the number of instantiations of the parents of $X_i$.
+If $X_i$ has no parents, then $q_i = 1$.
+The $j$th instantiation of the parents of $X_i$ is denoted $\bm{\pi}_{ij}$.
+The children of node $X_i$ are denoted $\Ch_{X_i}$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -364,8 +301,8 @@ An optimal discretization policy for a dataset $D$ maximizes $P(\Lambda)\cdot P(
 
 \subsection{Priors and Objective Function}
 
-Let $D_{\bm{Y}}$ be the subset of the data corresponding to $\bm{Y}$.
-Four principles for the optimal discretization policy enable the formulation of $P(\Lambda)$ and $P(D_{-\cX} \mid \Lambda)$, where $D_{-\cX}$ is the subset of the dataset for all variables but $\cX$ and the probability of the data associated with the target variable $P(D_{\cX})$ is already captured in $P(\Lambda)$.
+Let $D_{\bm{Y}}$ be the subset of the training data corresponding to variable subset $\bm{Y}$.
+Four principles for the optimal discretization policy enable the formulation of $P(\Lambda)$ and $P(D_{-\cX} \mid \Lambda)$, where $D_{-\cX}$ is the subset of the dataset for all variables but $\cX$ and the probability of the data associated with the target variable, $P(D_{\cX})$, is already captured in $P(\Lambda)$.
 The four principles, motivated by MODL and \cite{Lustgarten_2011}, are:
 
 \begin{enumerate}
@@ -378,12 +315,12 @@ The four principles, motivated by MODL and \cite{Lustgarten_2011}, are:
 where $L$ is the largest number of intervals among discrete variables in $\cX$'s Markov blanket.
 This encourages edges between well-separated values over edges between closely packed samples.
 
-\item For a given discretization interval, every distribution over $\Pa_{\cX}$ is equiprobable.
+\item For a given discretization interval, every distribution over the parents of $\cX$ is equiprobable.
 \item For each pair $\anglebrackets{C_i,\bm{S}_i}$ and a given discretization interval, every distribution over $C_i$ given an instance of $\bm{S}_i$ is equiprobable.
-\item The distributions over each child and each parent in each discretization interval with each instance of $\bm{S}_i$ are independent from each other.
+\item The distributions over $\cX$ given each child, parent, and spouse instantiation are independent.
 \end{enumerate}
 
-From the first principle one obtains the $P(\Lambda)$ of $\Lambda$ described in Equation~\ref{eq:disc_def}
+From the first principle one obtains the prior over the discretization policy:
 
 \begin{small}
 \begin{equation}
@@ -406,7 +343,7 @@ From the first principle one obtains the $P(\Lambda)$ of $\Lambda$ described in 
 \end{equation}
 \end{small}
 
-The Bayesian network graph structure causes the likelihood term $P(D_{-\cX} \mid \Lambda)$ to factorizes according to $\cX$'s Markov blanket:
+The Bayesian network graph structure causes the likelihood term ${P(D_{-\cX} \mid \Lambda)}$ to factor according to $\cX$'s Markov blanket:
 
 \begin{equation}
   \label{eq:p_D_given_M}
@@ -453,31 +390,31 @@ It follows that
     }^{\text{Principle 2}}\text{.}
 \end{equation}
 
-The two factors on the right hand side come from the second principle: all distributions of values of $\Pa_{\cX}$ in a given interval are equiprobable.
-According to the fourth principle, the distribution in each interval is independent, so the two factors can be multiplied together.
+The two factors on the right hand side come from the second principle: all distributions of values of the parents of $\cX$ in a given interval are equiprobable.
+The fourth principle is that the distributions for each interval are independent, so the factors can be multiplied together.
 
 \subsubsection{Evaluation of $P(D_{C_j} \mid \Lambda, D_{\bm{S}_j})$}
-Let $J_{C_j}$ be the number of instantiations of the $j$th child of $\cX$, let $J_S^{(j)}$ be the number instantiations of the $j$th spouse set $\bm{S}_j$, and let $n^{(j)}_{i,m,l}$ be the number of instances of $\cX$ in the $i$th discretization interval of $\Lambda$ given the $m$th instantiation of $C_j$ and the $l$th instantiation of $\boldsymbol{S_j}$.
-Let ${n^{(j)}_{i,l} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,l}}$.
-Note that ${\gamma_i = \sum_l n^{(j)}_{i,l}}$ for all $j$.
+Let $J_{C_j}$ be the number of instantiations of the $j$th child of $\cX$, let $J_{\bm{S}}^{(j)}$ be the number of instantiations of the $j$th spouse set $\bm{S}_j$, and let $n^{(j)}_{i,m,\ell}$ be the number of instances of $\cX$ in the $i$th discretization interval of $\Lambda$ given the $m$th instantiation of $C_j$ and the $\ell$th instantiation of $\bm{S}_j$.
+Let ${n^{(j)}_{i,\ell} = \sum_{m=1}^{J_j} n^{(j)}_{i,m,\ell}}$.
+\tim{Is this correct: Note that ${\gamma_i = \sum_l n^{(j)}_{i,\ell}}$ for all $j$.}
 It follows that
 
 \begin{equation}
   \label{eq:likelihood_two}
   P(D_{C_j} \mid \Lambda, D_{\bm{S}_j}) =
-  \overbrace{\prod_{i=1}^{k} \prod_{l=1}^{J_S^{(j)}}}^{\text{Principle 4}}
+  \overbrace{\prod_{i=1}^{k} \prod_{\ell=1}^{J_{\bm{S}}^{(j)}}}^{\text{Principle 4}}
     \overbrace{\rule{0pt}{2.3em}
       {
         \frac{1}{
-          {{n^{(j)}_{i,l} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
+          {{n^{(j)}_{i,\ell} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
         }
         {\frac{
           1
         }{
           \frac{
-            {n^{(j)}_{i,l}}!
+            {n^{(j)}_{i,\ell}}!
           }{
-            {n^{(j)}_{i,1,l}!} \; {n^{(j)}_{i,2,l}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},l}!}
+            {n^{(j)}_{i,1,\ell}!} \; {n^{(j)}_{i,2,\ell}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},\ell}!}
           }
         }
       }
@@ -491,7 +428,7 @@ If $\bm{S}_j = \emptyset$, then Equation~\ref{eq:likelihood_two} is equivalent t
 
 \begin{equation}
   \label{eq:likelihood_three}
-  P(D_{C_j} \mid \Lambda) =
+  P(D_{C_j} \mid \Lambda, \bm{S}_j = \emptyset) =
   \overbrace{\prod_{i=1}^{k}}^{\text{Principle 4}}
   \overbrace{{
     {1}\over{
@@ -510,6 +447,7 @@ If $\bm{S}_j = \emptyset$, then Equation~\ref{eq:likelihood_two} is equivalent t
 where $n^{(j)}_{i,m,\emptyset}$ is the number of instances of $\cX$ in the $i$th discretization interval of $\Lambda$ given the $m$th instantiation of $C_j$.
 
 The objective function can be formulated given equations~\ref{eq:p_M},~\ref{eq:p_D_given_M},~\ref{eq:likelihood_one}, and~\ref{eq:likelihood_three}.
+\tim{Why not Eq~\ref{eq:likelihood_two}?}
 The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for computational convenience:
 
 \begin{equation}
@@ -539,15 +477,15 @@ The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for 
         }
       }}
   } \\
-  & \sum_{j=1}^{n_c} \sum_{i=1}^k \sum_{l=1}^{J^{(j)}_S} \brock{
+  & \sum_{j=1}^{n_c} \sum_{i=1}^k \sum_{\ell=1}^{J^{(j)}_{\bm{S}}} \brock{
   { \ln
-          {{n^{(j)}_{i,l} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
+          {{n^{(j)}_{i,\ell} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
     +
     \ln \paren{ {
           \frac{
-            {n^{(j)}_{i,l}}!
+            {n^{(j)}_{i,\ell}}!
           }{
-            {n^{(j)}_{i,1,l}!} \; {n^{(j)}_{i,2,l}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},l}!}
+            {n^{(j)}_{i,1,\ell}!} \; {n^{(j)}_{i,2,\ell}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},\ell}!}
           }
         }
         } }
@@ -555,12 +493,14 @@ The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for 
 \end{equation}
 
 All parameters and variables in the objective function are explained in previous subsections.
+\tim{Stress that this is an original contribution}
+\tim{Maybe stress the runtime complexity?}
 
 \subsection{Single-Variable Discretization Algorithm}
 \label{subsec:algo}
 
 This section describes the procedure used to minimize the objective function.
-Note that because the objective function is cumulative over intervals; if a partition of $X$ into $k$ intervals by $\Lambda = \curly{\gamma_1 , \gamma_2  , \ldots , \gamma_k}$ is an optimal discretization policy, then any subinterval is optimal for the corresponding subproblem.
+Note that because the objective function is cumulative over intervals, if a partition of $\cX$ into $k$ intervals by $\Lambda = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}$ is an optimal discretization policy, then any subinterval is optimal for the corresponding subproblem.
 It follows that dynamic programming can be used to solve the optimization problem exactly.
 
 Precomputation reduces runtime.
@@ -571,15 +511,15 @@ Hence, $h(u,v)$ is computed first for each interval $\gamma_q$ starting from $x_
   \label{eqn:h_function}
   \begin{aligned}
   h(u,v) &=  \ln {{\gamma_{q} + J_P - 1}\choose{J_P-1}} + \ln \left( { {{\gamma_q}!}\over{ {n^{(p)}_{q,1} !} {n^{(p)}_{q,2} !} \cdots {n^{(p)}_{q,J_p} !}} } \right) \\
-  & + \sum_{j=1}^{n_c} \sum_{l=1}^{J^{(j)}_S} \brock{
+  & + \sum_{j=1}^{n_c} \sum_{\ell=1}^{J^{(j)}_{\bm{S}}} \brock{
     { \ln
-            {{n^{(j)}_{i,l} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
+            {{n^{(j)}_{i,\ell} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
       +
       \ln \paren{ {
             \frac{
-              {n^{(j)}_{i,l}}!
+              {n^{(j)}_{i,\ell}}!
             }{
-              {n^{(j)}_{i,1,l}!} \; {n^{(j)}_{i,2,l}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},l}!}
+              {n^{(j)}_{i,1,\ell}!} \; {n^{(j)}_{i,2,\ell}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},\ell}!}
             }
           }
           } }
@@ -624,11 +564,11 @@ For faster methods with suboptimal results, see \citet{Boulle_2006}.
             \EndIf
             \If {$\tilde{S} < \hat{S}$}
               \State $\hat{S}, \hat{u} \leftarrow \tilde{S}, u$
-              \State $\text{DiscEdge} \leftarrow ({x_{s_u} + x_{s_u+1}}) / 2$
+              \State $\text{DiscEdge} \leftarrow ({\cx_{s_u} + \cx_{s_u+1}}) / 2$
             \EndIf
           \EndFor
           \State $S[v] \leftarrow \hat{S}$
-          \State $\Lambda[v] \leftarrow \Lambda[u] \cup \{ \text{DiscEdge} \}$
+          \State $\Lambda[v] \leftarrow \Lambda[\hat{u}] \cup \{ \text{DiscEdge} \}$
         \EndIf
       \EndFor
       \State \Return $\Lambda[m]$
@@ -679,15 +619,15 @@ For faster methods with suboptimal results, see \citet{Boulle_2006}.
 %           }
 %         }}
 %     } \\
-%     & \sum_{j=1}^{n_c} \sum_{i=1}^k \sum_{l=1}^{J^{(j)}_S} \brock{
+%     & \sum_{j=1}^{n_c} \sum_{i=1}^k \sum_{\ell=1}^{J^{(j)}_\bm{S}} \brock{
 %     { \ln
-%             {{n^{(j)}_{i,l} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
+%             {{n^{(j)}_{i,\ell} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
 %       +
 %       \ln \paren{ {
 %             \frac{
-%               {n^{(j)}_{i,l}}!
+%               {n^{(j)}_{i,\ell}}!
 %             }{
-%               {n^{(j)}_{i,1,l}!} \; {n^{(j)}_{i,2,l}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},l}!}
+%               {n^{(j)}_{i,1,\ell}!} \; {n^{(j)}_{i,2,\ell}!} \; \cdots \; {n^{(j)}_{i,J_{C_j},\ell}!}
 %             }
 %           }
 %           } }
@@ -740,7 +680,7 @@ For faster methods with suboptimal results, see \citet{Boulle_2006}.
 The single-variable discretization method can be extended to Bayesian networks with multiple continuous variables by iteratively discretizing individual variables.
 The discretization process for a single variable requires that all other variables be discrete.
 The iterative approach uses a prediscretization policy in order to initialize the process.
-In this paper, prediscretization assigns $k$ equal-width intervals to each continuous variables, where $k$ is largest value of the number of intervals of initially discrete variables in the network.
+In this paper, prediscretization assigns $k$ equal-width intervals to each continuous variable, where $k$ is the largest number of intervals of initially discrete variables in the network.
 
 After prediscretization, the one-variable discretization method is iteratively applied over each continuous variable in reverse topoligical order, from the leaves to the root.
 Reverse topological order has the advantage of relying on fewer prediscretizations of the continuous variables during the first pass.
@@ -790,11 +730,46 @@ It requires four inputs: $D$, a dataset of samples from the joint distribution; 
 \section{Combining Discretization with Structure Learning}
 \label{sec:structure_learning}
 
-\todo{move relevant notation here}
+It is often necessary to infer the structure of a Bayesian network from data.
+Three common approaches to Bayesian network structure learning are constraint-based, score-based, and Bayesian model averaging \citep[see][chap.~18]{PGM_2009}.
+This work uses the K2 structure learning algorithm \citep{K2}, one of the most successful score-based structure learning methods.
+Score-based structure learning methods over discrete variables commonly evaluate candidate structures according to their likelihood against a dataset $D$.
+In practice, one maximizes the log-likelihood, also known as the Bayesian score~\citep{cooper1992bayesian}:
 
-In many situations, the network structure is not known in advance and must be learned from data.
+\begin{small}
+\begin{equation}
+\label{eq:BayesianScore}
+  \ln P(D\mid G) = \ln P(G) + \sum_{i=1}^N \sum_{j=1}^{q_i} \ln \paren{
+    \frac{
+      \mathrm{\Gamma}\paren{\alpha_{ij}^{(0)}}
+    }{
+      \mathrm{\Gamma}\paren{\alpha_{ij}^{(0)} + \beta_{ij}^{(0)}}
+    }
+  } + \sum_{k=1}^{r_i} \ln \paren{
+    \frac{
+      \mathrm{\Gamma}\paren{\alpha_{ij}^{(k)} + \beta_{ij}^{(k)}}
+    }{
+      \mathrm{\Gamma}\paren{\alpha_{ij}^{(k)}}
+    }
+  }\text{,}
+\end{equation}
+\end{small}
+
+\noindent
+where $\mathrm{\Gamma}$ is the gamma function, $\alpha_{ij}^{(k)}$ is a Dirichlet prior count and $\beta_{ij}^{(k)}$ is the observed sample count for the $k$th instantiation of $X_i$ and the $j$th instantiation of $\Pa_{X_i}$.
+In the equation above,
+
+\begin{equation}
+\alpha_{ij}^{(0)} = \sum_{k=1}^{r_i} \alpha_{ij}^{(k)} \quad \qquad \beta_{ij}^{(0)} = \sum_{k=1}^{r_i} \beta_{ij}^{(k)}\text{.}
+\end{equation}
+
+The space of acyclic graphs is superexponential in the number of nodes; it is common to rely on heuristic search strategies \citep{PGM_2009}.
+The K2 algorithm assumes a given topological ordering of variables and greedily adds parents to nodes to maximally increase the Bayesian score.
+A fixed ordering ensures acyclicity but does not guarantee a globally optimal network structure.
+K2 is typically run multiple times with different topological orderings, and the network with the highest likelihood is retained.
+
 Traditional Bayesian structure learning algorithms require discretized data, whereas the proposed discretization algorithm requires a known network structure.
-This section describes how the proposed discretization method can be combined with the K2 structure learning algorithm \citep{K2} to simultaneously perform Bayesian structure learning and discretization of continuous variables.
+The discretization methods can be combined with the K2 structure learning algorithm \citep{K2} to simultaneously perform Bayesian structure learning and discretization of continuous variables.
 
 The proposed algorithm alternates between K2 structure learning and discretization.
 The dataset is prediscretized as was described in Section~\ref{sec:multi_var}, and K2 is run to obtain an initial network structure.
@@ -810,15 +785,15 @@ The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of 
   \label{eq:B_Score_one}
   g\paren{X_i, \Pa_{X_i}} =  \sum_{j=1}^{q_i} \ln\paren{
     \frac{
-      \Gamma\paren{\alpha_{ij}^{(0)}}
+      \mathrm{\Gamma}\paren{\alpha_{ij}^{(0)}}
     }{
-      \Gamma\paren{\alpha_{ij}^{(0)} + \beta_{ij}^{(0)}}
+      \mathrm{\Gamma}\paren{\alpha_{ij}^{(0)} + \beta_{ij}^{(0)}}
     }
   } + \sum_{k=1}^{r_i} \ln \paren{
     \frac{
-      \Gamma\paren{\alpha_{ij}^{(k)} + \beta_{ij}^{(k)}}
+      \mathrm{\Gamma}\paren{\alpha_{ij}^{(k)} + \beta_{ij}^{(k)}}
     }{
-      \Gamma\paren{\alpha_{ij}^{(k)}}
+      \mathrm{\Gamma}\paren{\alpha_{ij}^{(k)}}
     }
   }\text{.}
 \end{equation}
@@ -832,22 +807,22 @@ The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of 
     \State $k \leftarrow \textsc{Max} \{ \|v\|, v\notin C\}$
     \State $\discset \leftarrow$ the discretization policies for each $\cX$ in $\bm{\cX}$
     \State $D^* \leftarrow $ the dataset $D$ discretized according to $\discset$
-    \State $G \leftarrow$ the initial edgeless graph structure
+    \State $G \leftarrow$ the initially edgeless graph structure
 	\For {$\paren{\cX, X}$ such that $\cX \in \bm{\cX}$ and $X$ is the discretized version of $\cX$}
       \State $\Lambda_{\cX} \leftarrow$ equal-width discretization of $\cX$ with $k$ intervals
       \State $D^*_{X} \leftarrow \Lambda_{\cX} \paren{D_{\cX}}$
     \EndFor
     \For {$i \leftarrow 1$ to $N$}
-      \State $P_{old} \leftarrow g(X_i,\Pa_{X_i})$ as Equation~\ref{eq:B_Score_one}
+      \State $P_\text{old} \leftarrow g(X_i,\Pa_{X_i})$ per Equation~\ref{eq:B_Score_one}
       \State OKToProceed $\leftarrow$ \textbf{true}
       \While {OKToProceed \textbf{and} $\|\Pa_{X_i}\| < \hat{n}_\text{parent}$}
-        \State $Y \leftarrow$ an element from the set $\texttt{order}[1:i] \backslash \Pa_X$
-        \State $P_{new} \leftarrow g(X_i,\Pa_{X_i} \cup Y)$
-        \If {$P_{new} > P_{old}$}
-          \State $P_{old} \leftarrow P_{new}$
-          \State $\Pa_{X_i} \leftarrow \Pa_{X_i} \cup Y $
-          \State $\bm{\cX '} \leftarrow$ sorted $\bm{\cX}$ by a reverse topological order of current $G$
-          \State $\Lambda \leftarrow$ \textsc{DiscretizeAll}({$D$, $G$, $\bm{\cX '}$, $\maxpasses$}): Algorithm~\ref{alg:disc_two}
+        \State $Y \leftarrow$ an element from the set $\texttt{order}[1:i] \backslash \paren{\Pa_X}$
+        \State $P_\text{new} \leftarrow \paren{g(X_i,\Pa_{X_i}} \cup \paren{Y})$
+        \If {$P_\text{new} > P_\text{old}$}
+          \State $P_\text{old} \leftarrow P_\text{new}$
+          \State $\Pa_{X_i} \leftarrow \paren{\Pa_{X_i}} \cup \paren{Y} $
+          \State $\bm{\cX '} \leftarrow$ $\bm{\cX}$ sorted in reverse-topological order given $G$
+          \State $\Lambda \leftarrow$ \textsc{DiscretizeAll}({$D$, $G$, $\bm{\cX '}$, $\maxpasses$}): see Algorithm~\ref{alg:disc_two}
           \State $D^* \leftarrow \Lambda \paren{D_{\bm{\cX }}}$
         \Else
           \State OKToProceed $\leftarrow$ \textbf{false}
@@ -874,7 +849,7 @@ In the figures that follow, shaded nodes correspond to initially discrete variab
 
 Two experiments were conducted on each dataset.
 The first experiment compares the performance of the Bayesian and MDL discretization methods on a known Bayesian network structure.
-The structure was obtained by prediscretizing each continuous variable into $k$ uniform-width intervals, where $k$ is the median number of instantiations of the discrete variables, and using the structure with the highest Bayesian score from \num{1000} runs of the K2 algorithm with random variable orderings.
+The structure was obtained by prediscretizing each continuous variable into $k$ uniform-width intervals, where $k$ is the median number of instantiations of the discrete variables, and using the structure with the highest Bayesian score from \num{1000} runs of the K2 algorithm with random topological orderings.
 The second experiment compares the same methods applied when simultaneously discretizing and learning network structure.
 
 The discretizations are compared using the mean cross validated log-likelihood of the data $D$ given the graph structure $G$ and discretization policies $\discset$.
@@ -903,8 +878,7 @@ The log-likelihood of the original dataset given the discrete dataset is
 Note that $e^{\Lambda_{\cX_i}}_{0} = \textsc{Min}\paren{D_{\cX_i}}$ and $e^{\Lambda_{\cX_i}}_{r_i} = \textsc{Max}\paren{D_{\cX_i}}$.
 %, where $\brock{ e^{\Lambda_{\cX_i}}_{k-1} , e^{\Lambda_{\cX_i}}_{k} }$ is the discretization interval that $\cx_i$ falls in. If $\cx_i < e^{\Lambda_{\cX_i}}_{1}$, then the corresponding interval is $\brock{ \textsc{Min}\paren{D_{X_i}} , e^{\Lambda_{\cX_i}}_{1}}$. If $\cx_i \leq e^{\Lambda_{\cX_i}}_{r_i - 1}$, then the corresponding interval is $\brock{  e^{\Lambda_{\cX_i}}_{r_i - 1},\textsc{Max}\paren{D_{X_i}}}$.
 \noindent
-The mean cross-validated log-likelihood is the mean log-likelihood on the witheld dataset among cross-validation folds.
-Cross-validation directly estimates generalization error.
+The mean cross-validated log-likelihood is the mean log-likelihood on the witheld dataset among cross-validation folds, and acts as an estimate of generalization error.
 Ten folds were used in each experiment.
 
 The method for computing the MDL discretization policy is similar to the method for the Bayesian method.
@@ -918,8 +892,11 @@ For a Bayesian network with a single continuous variable $\cX$, the MDL objectiv
    + (m-1) H \paren{\frac{|X| - 1}{m -1}} -n \cdot \left[ I(X,\Pa_{\cX}) + {\sum_{j,\cX \in \Pa_{X_j}}} I(X_j, \Pa_{X_j}) \right]\text{,}
   \end{aligned}
 \end{equation}
-where $I(A,B)$ is the mutual information between two discrete variable sets $A$ and $B$, ${H(p) = -p \ln(p) - (1-p) \ln(1-p)}$, and $X$ is the discretized version of $\cX$. The minimum of Equation \ref{eqn:MDL} can be found by dynamical programming. It takes runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$, where the parameters are defined in Section \ref{subsec:algo}. Therefore, the runtime of the proposed method in this paper is shorter than MDL discretization method by $\bigo \paren{n^3}$.
-
+where $I(A,B)$ is the mutual information between two discrete variable sets $A$ and $B$, ${H(p) = -p \ln(p) - (1-p) \ln(1-p)}$, and $X$ is the discretized version of $\cX$.
+Equation \ref{eqn:MDL} can be minimized using dynamical programming with runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$.
+All variables are defined in Section \ref{subsec:algo}.
+Therefore, the runtime of the proposed method in this paper is shorter than MDL discretization method by $\bigo \paren{n^3}$.
+\tim{It seems weird having this result being explained in the experiments section.}
 
 \subsection{Auto MPG Dataset}
 \label{subsec:auto}
@@ -941,9 +918,10 @@ This structure was obtained by prediscretizing each continuous variable into fiv
   \label{fig:auto_graph_1}
 \end{figure}
 
-Table~\ref{table:auto_disc_table_1} lists the discretization edges and mean log-likelihoods under \num{10}-fold cross validation of the discrete Bayesian network resulting from two discretization methods.
+Table~\ref{table:auto_disc_table_1} lists the discretization edges and mean log-likelihoods under \num{10}-fold cross validation of the discrete Bayesian network resulting from the two discretization methods.
 The MDL method does not produce any discretization edges, assigning one continuous interval to each continuous variable, and produces the result with the lower likelihood.
-The cause of low number of discretization edges behind the MDL method is discussed in Section~\ref{subsec:discuss_exp}. On the other hand, there is a network structure where the MDL has a comparable result with the Bayesian method. Please refer to Appendix.
+The reason why MDL produces fewer discretization edges is discussed in Section~\ref{subsec:discuss_exp}.
+An example of a network structure where MDL produces a comparable result to the Bayesian method is given in the Appendix.
 
 \begin{table}[h]
   \centering
@@ -1223,7 +1201,7 @@ Although the number of intervals after discretization on $H$ is less the number 
   \label{fig:exp_discuss}
 \end{figure}
 
-To quantatively discuss the sensitivity of each methods to the number of discretization intervals, consider the Bayesian network in Figure~\ref{fig:exp_discuss}, where $\cX$ is continuous and $P_1$ and $P_2$ are discrete.
+To quantatively discuss the sensitivity of each method to the number of discretization intervals, consider the Bayesian network in Figure~\ref{fig:exp_discuss}, where $\cX$ is continuous and $P_1$ and $P_2$ are discrete.
 If $\Pa_{\cX} = \curly{P_1, P_2}$ and $D_{\cX} = \curly{1.0,2.0,3.0, \ldots n}$, then the corresponding objective functions for the discretization methods are:
 
 \begin{small}
@@ -1242,8 +1220,8 @@ where $Z_1$ and $Z_2$ are constant over discretizations, $k$ is the number of di
 Note that the third term of $f_\text{MDL}$ had been approximated using $H(p)$ (see Equation~\ref{eqn:MDL}) in the original work by \cite{Friedman_1996}, but here is written without that approximation.
 
 The sensitivities of each method to the discretization edges are captured in the edge position terms, as the penalty terms are similar across methods.
-The value of the edge position term for MDL is primarly determined by the mutual information, which varies less severely than the corresponding terms for the Bayesian methods.
-The MDL term uses emperical probability distributions, based off of ratios of counts, whereas the Bayesian methods use factorial terms, and thus vary less severely.
+The value of the edge position term for MDL is primarly determined by the mutual information, which varies less severely than the corresponding terms for the Bayesian method.
+The MDL term uses emperical probability distributions, based off of ratios of counts, whereas the Bayesian method uses factorial terms, and thus vary less severely.
 The MDL method is therefore less sensitive to the discretization edges.
 This sensitivity gives rise to the relative performance of the two methods in the experiments conducted above.
 
@@ -1253,7 +1231,7 @@ This paper introduced a principled discretization method for continuous variable
 Emperical demonstrations show that the proposed method is superior to the state of the art.
 In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
 The proposed method was incorporated and its superior performance was empirically demonstrated.
-\todo{All software is publically available to support discretization research.}
+All software is publically available to support discretization research, \todo{and can be found at.}
 
 The methods developed in this paper increase the accuracy of Bayesian networks learned on datasets with continuous and mixed variables.
 An automated process for simultaneously constructing Bayesian networks and discretization policies is appearing because of the potential to significantly reduce development time and cost.
