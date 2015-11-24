@@ -1279,24 +1279,25 @@ Future work will investigate edge positions at locations other than the midpoint
 \section*{Appendix}
 \label{sec:appendix}
 
-The Bayesian network structure in Figure \ref{fig:auto_graph_3} and the discretization results in Table \ref{table:auto_disc_table_3} demonstrate that the MDL method does not always return smaller number of discretization intervals than the Bayesian approach and also the MDL method can return a comparable result in terms of likelihood. The Bayesian network in Figure \ref{fig:auto_graph_3} is obtained by running Algorithm \ref{alg:structure_learn} fifty times with $u_{\text{parent}} = 2$. Therefore, this network can be considered more well-structured than the one in Figure \ref{fig:auto_graph_1}, since the effect of discretization policies has already been considered in the learning process.
-Many edges appears in both discretization results, as the bold numbers in Table \ref{table:auto_disc_table_3}.
+The Bayesian network structure in Figure~\ref{fig:auto_graph_3} and the discretization results in Table~\ref{table:auto_disc_table_3} demonstrate that the MDL method does not always produce fewer discretization intervals than the Bayesian approach and that the MDL method can produce discretization policies with comparable likelihood.
+The Bayesian network in Figure~\ref{fig:auto_graph_3} was obtained by running Algorithm~\ref{alg:structure_learn} fifty times on the Auto MPG dataset with a maximum of two parents per variable.
+The network is more well-structured than the one in Figure~\ref{fig:auto_graph_1}, because the discretization policies were simultaneously learned with the network structure.
+Many edges appears in both discretization results, and are bolded in Table~\ref{table:auto_disc_table_3}.
+
 \begin{figure}[ht]
   \centering
-  \scalebox{0.8}{
-   \input{graph_autocar_3}}
-   \caption{A Bayesian network structure for Auto MPG dataset that leads to a comparable discretization result of the MDL method with the Bayesian method}
+  \scalebox{0.8}{\input{graph_autocar_3}}
+  \caption{A Bayesian network structure for the Auto MPG dataset that leads to comparable discretization policies from the MDL and Bayesian methods.}
   \label{fig:auto_graph_3}
 \end{figure}
 
 \begin{table}[h]
   \centering
   \caption{
-    Results from discretization of the Auto MPG dataset with fixed structure from Figure~\ref{fig:auto_graph_3}.
+    The discretization policies for the Auto MPG dataset with the fixed structure shown in Figure~\ref{fig:auto_graph_3}.
     The first five rows list the discretization edges for each continuous variable.
-    The last row lists the mean cross-validated log-likelihood.
-    Two methods have same discretization result on variable $A$.
-    Log-likelihood shows that the MDL method is just slightly worse than the Bayesian method.
+    The last row shows the mean cross-validated log-likelihood under each policy.
+    The methods have same discretization result on variable $A$, and the log-likelihood for the MDL method only just slightly worse than that of the Bayesian method.
   }
 \input{table_autoMPG_3.tex}
   \label{table:auto_disc_table_3}
