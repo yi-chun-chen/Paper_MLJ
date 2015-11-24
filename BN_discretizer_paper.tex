@@ -199,14 +199,15 @@ For Bayesian networks with multiple continuous variables, MDL discretization is 
 While iterating, only one variable is treated as continuous, while all other continuous variables are treated as discretized based on an initial discretization policy or the discretization result from a previous iteration.
 
 
-MDL discretization requires that the network structure be known in advance, but can be incorporated into the structure learning process which would otherwise have required pre-discretized variables.
-This approach alternates between traditional discrete structure learning and optimal discretization. \tim{Is this something this paper proposes or was this done with MDL before?}
+MDL discretization requires that the network structure be known in advance, but can be incorporated into the structure learning process.
+Simultaneous structure learning and discretization alternates between traditional discrete structure learning and optimal discretization.
 Starting with some preliminary discretization policy, one first applys a structure learning algorithm to identify the locally optimal graph structure.
 One then refines the discretization policy based on the learned network.
 The cycle is repeated until convergence.
 
-Results in this work suggest that the MDL method suffers from low sensitivity to discretization edges location and returns low numbers of discretization intervals on continuous variables.
-\tim{We need another sentence to make this a \P.}
+Results in this work suggest that the MDL method suffers from low sensitivity to discretization edge locations and returns low numbers of discretization intervals on continuous variables.
+This is caused by the MDL's use of mutual information to rate discretization edges.
+Mutual information, which is composed of empirical probabilities computed using event count ratios, varies less severely with the positions of discretization edges than the method proposed below.
 
 MODL \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable.
 Bayesian methods select the model with maximum posterior probability given the data, $P(\textit{Model} \mid \textit{Data})$.
