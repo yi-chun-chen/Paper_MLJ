@@ -221,7 +221,7 @@ The MODL method uses dynamic programming to find the optimal discretization poli
 This paper describes a new Bayesian discretization method for continuous variables in Bayesian networks, extending prior work on single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}.
 The proposed method optimizes the discretization policy relative to the network and takes parents, children, and spouse variables into account.
 The optimal single-variable discretization method is derived in Section~\ref{sec:single_var}, using a prior which reduces the discretization runtime to $\bigo\paren{r \cdot n^2}$ without sacrificing optimality.
-Section~\ref{sec:multi_var} covers Bayesian networks with multiple continuous variables and how to discretize while simultaneously learning network structure.
+Section~\ref{sec:multi_var} covers Bayesian networks with multiple continuous variables and Section~\ref{sec:structure_learning} covers discretization while simultaneously learning network structure.
 The paper concludes with a comparison against the existing minimum-description length \citep{Friedman_1996} method on real-world datasets in Section~\ref{sec:experiments}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -229,7 +229,6 @@ The paper concludes with a comparison against the existing minimum-description l
 \section{Preliminaries}
 \label{sec:preliminaries}
 This section covers the notation used throughout the paper and provides a brief overview of Bayesian networks, including the factorization of joint probability distributions, sampling from a Bayesian network, and structure learning.
-These concepts will be used in later sections.
 The formal definition of a discretization policy for a continuous variable is also given.
 
 \subsection{Bayesian Networks and Sampling}
@@ -276,7 +275,7 @@ P(D\mid \bm{\theta}, G) = \prod_{i=1}^N \prod_{j=1}^{q_i} \prod_{k=1}^{r_i} \bro
 
 
 Structure search for a Bayesian network seeks the graph structure $G$ that maximizes ${P(G\mid D)}$.
-In practice one maximizes the log-likelihood, also known as the Bayesian score~\cite{cooper1992bayesian}:
+In practice, one maximizes the log-likelihood, also known as the Bayesian score~\citep{cooper1992bayesian}:
 
 \begin{small}
 \begin{equation}
@@ -303,10 +302,10 @@ In the equation above,
 \alpha_{ij}^{(0)} = \sum_{k=1}^{r_i} \alpha_{ij}^{(k)} \quad \qquad \beta_{ij}^{(0)} = \sum_{k=1}^{r_i} \beta_{ij}^{(k)}\text{.}
 \end{equation}
 
-The space of acyclic graphcs is superexponential in the number of nodes so it is common to rely on heuristic search strategies \citep{PGM_2009}.
+The space of acyclic graphs is superexponential in the number of nodes, and it is common to rely on heuristic search strategies \citep{PGM_2009}.
 The K2 algorithm assumes a topological ordering of variables and greedily adds parents to nodes to maximally increase the Bayesian score.
 A fixed ordering ensures acyclicity but does not guarantee a globally optimal network structure.
-K2 is typically run multiple times with random variable orderings and the network with the highest likelihood is retained.
+K2 is typically run multiple times with random variable orderings, and the network with the highest likelihood is retained.
 
 \subsection{Discretization Policies}
 \label{subsec:disc_policy}
@@ -328,7 +327,7 @@ Let the samples of $\cX$ in a given dataset $D$ be sorted in ascending order, ${
 The index of the last occurence of $\cu_i$ in $\cx_{1:n}$ is denoted $s_i$.
 
 The discretization edges $e_{1:k-1}$ mark the boundaries between discretization intervals.
-In this work they are restricted to the midpoints between unique ascending instances of $\cX$.
+In this paper, as with MODL, they are restricted to the midpoints between unique ascending instances of $\cX$.
 Thus, each edge $e_i = \paren{\cu_{j} + \cu_{{j+1}}}/2$ for some $j$.
 Two useful integer representations of $\Lambda_{\cX}$ can be written
 
@@ -341,8 +340,8 @@ Two useful integer representations of $\Lambda_{\cX}$ can be written
 where $\lambda_1 = s_1$, $\lambda_i \in s_{1:m}$, $\gamma_1 = \lambda_1$, and $\gamma_i = \lambda_i - \lambda_{i-1}$.
 The $\lambda_{1:k}$ representation is the number of instances before every discretization edge whereas the $\lambda$ representation is the number of instances within each discretization interval.
 
-Finally, when discussing the discretization of a particular continuous variable $\cX$, let $P_i$ be the $i$th parent of $\cX$, let $C_i$ be the $i$th child of $\cX$, and let $\bm{S}_i$ be set of spouses of $\cX$ corresponding to the $i$th child.
-Context should make it clear when $P$ refers to a discrete probability and when it refers to a variable's parent.
+When discussing the discretization of a particular continuous variable $\cX$, let $P_i$ be the $i$th parent of $\cX$, let $C_i$ be the $i$th child of $\cX$, and let $\bm{S}_i$ be the set of spouses of $\cX$ corresponding to the $i$th child.
+The context should make it clear when $P$ refers to a discrete probability and when it refers to a variable's parent.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -453,7 +452,7 @@ It follows that
     }^{\text{Principle 2}}\text{.}
 \end{equation}
 
-The two factors on the right hand side comes from the second principle: all distributions of values of $\Pa_{\cX}$ in a given interval are equiprobable.
+The two factors on the right hand side come from the second principle: all distributions of values of $\Pa_{\cX}$ in a given interval are equiprobable.
 According to the fourth principle, the distribution in each interval is independent, so the two factors can be multiplied together.
 
 \subsubsection{Evaluation of $P(D_{C_j} \mid \Lambda, D_{\bm{S}_j})$}
@@ -556,15 +555,15 @@ The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for 
 
 All parameters and variables in the objective function are explained in previous subsections.
 
-\subsection{Algorithm}
+\subsection{Single-Variable Discretization Algorithm}
 \label{subsec:algo}
 
 This section describes the procedure used to minimize the objective function.
-Note that the objective function is cumulative over intervals, thus, if a partition of $X$ into $k$ intervals by $\Lambda = \curly{\gamma_1 , \gamma_2  , \ldots , \gamma_k}$ is an optimal discretization policy, then any subinterval is optimal for the corresponding subproblem.
+Note that because the objective function is cumulative over intervals; if a partition of $X$ into $k$ intervals by $\Lambda = \curly{\gamma_1 , \gamma_2  , \ldots , \gamma_k}$ is an optimal discretization policy, then any subinterval is optimal for the corresponding subproblem.
 It follows that dynamic programming can be used to solve the optimization problem exactly.
 
 Precomputation reduces runtime.
-Compute $h(u,v)$ for each interval $\gamma_q$ starting from $x_{u}$ to $x_{v}$ for all $u$, $v$ satisfying $u \leq v$:
+Hence, $h(u,v)$ is computed first for each interval $\gamma_q$ starting from $x_{u}$ to $x_{v}$ for all $u$, $v$ satisfying $u \leq v$:
 
 \begin{small}
   \begin{equation}
@@ -594,7 +593,7 @@ The dynamic programming procedure is shown in Algorithm~\ref{alg:disc_one}.
 It takes three inputs: $\cX$, the continuous variable; $D$, the joint data instances over all variables sorted in ascending order according to $D_X$; and $G$, the network structure.
 The runtime of Algorithm~\ref{alg:disc_one} is also $\bigo \paren{ n_c \cdot {L}^{n_s} \cdot n^2 + {L}^{n_p} \cdot n^2 }$, because the runtime of the dynamic programming procedure is less than the runtime for computing $h(u,v)$.
 Algorithm~\ref{alg:disc_one} is guaranteed to be optimal.
-For faster methods with suboptimal results please refer to the work of \cite{Boulle_2006}.
+For faster methods with suboptimal results, see \citet{Boulle_2006}.
 
 \begin{algorithm}
   \caption{Discretization of one continuous variable in a Bayesian network}
@@ -737,12 +736,10 @@ For faster methods with suboptimal results please refer to the work of \cite{Bou
 \section{Multi-Variable Discretization}
 \label{sec:multi_var}
 
-\subsection{Discretization of Multiple Continuous Variables}
-
 The single-variable discretization method can be extended to Bayesian networks with multiple continuous variables by iteratively discretizing individual variables.
 The discretization process for a single variable requires that all other variables be discrete.
 The iterative approach uses a prediscretization policy in order to initialize the process.
-This work prediscretizes all continuous variables into $k$ equal-width intervals, where $k$ is largest value of the number of intervals of initially discrete variables in the network.
+In this paper, prediscretization assigns $k$ equal-width intervals to each continuous variables, where $k$ is largest value of the number of intervals of initially discrete variables in the network.
 
 After prediscretization, the one-variable discretization method is iteratively applied over each continuous variable in reverse topoligical order, from the leaves to the root.
 Reverse topological order has the advantage of relying on fewer prediscretizations of the continuous variables during the first pass.
@@ -757,7 +754,8 @@ For example, in the network of Figure~\ref{fig:example_networks}, if $S_2$ is th
 
 The algorithm is terminated when the number of discretization intervals and their associated edges converge for all variables, and a maximum number of complete passes is enforced to prevent infinite iterations when convergence does not occur.
 The algorithm typically converges within a few passes when tested on real-world data.
-In cases where it does not converge, usually observed when also learning structure, ten passes produce decent discretization results.
+In cases where it does not converge, usually observed when also learning structure, ten passes produce sufficient discretization results.
+\tim{If it only fails to converge with structure learning, perhaps we should take out the max upper bound in Alg~\ref{alg:disc_two}.}
 
 The pseudocode for the multi-variable discretization procedure is shown in Algorithm~\ref{alg:disc_two}.
 It requires four inputs: $D$, a dataset of samples from the joint distribution; $G$, the fixed network structure; $\bm{\cX}$, the set of all continuous variables in reverse topological order, and $\maxpasses$, an upper bound on the number of complete passes.
@@ -788,20 +786,23 @@ It requires four inputs: $D$, a dataset of samples from the joint distribution; 
   \end{algorithmic}
 \end{algorithm}
 
-\subsection{Combining Discretization with Structure Learning}
+\section{Combining Discretization with Structure Learning}
+\label{sec:structure_learning}
 
-In many situations the network structure is not known in advance and must be learned from data.
+\todo{move relevant notation here}
+
+In many situations, the network structure is not known in advance and must be learned from data.
 Traditional Bayesian structure learning algorithms require discretized data, whereas the proposed discretization algorithm requires a known network structure.
-This section combines the proposed discretization method with the K2 structure learning algorithm \citep{K2} in an interative fassion to simultaneously perform Bayesian structure learning and discretization of continuous variables.
+This section describes how the proposed discretization method can be combined with the K2 structure learning algorithm \citep{K2} to simultaneously perform Bayesian structure learning and discretization of continuous variables.
 
 The proposed algorithm alternates between K2 structure learning and discretization.
-K2 is run on the discretized dataset corresponding to prediscretizations for all continuous variables.
+The dataset is prediscretized as was described in Section~\ref{sec:multi_var}, and K2 is run to obtain an initial network structure.
 The affected continuous variables are rediscretized every time an edge is added by K2.
 The resulting discretization policies are used to update the discretized dataset, and the next step of the K2 algorithm is executed.
-This cycle is repeated until the K2 algorithm reaches a local maximum.
+This cycle is repeated until the K2 algorithm converges.
 
-This procedure is given in Algorithm~\ref{alg:structure_learn}.
-It takes five inputs: $D$, a dataset of samples from the joint distribution; $\bm{\cX}$, the set of all continuous variables; $\texttt{order}$, a permutation of the variables in $D$; $\hat{n}_\text{parent}$, an upper bound on the number of parents per node; and $\maxpasses$, an upper bound on the number of complete passes.
+This procedure is given in Algorithm~\ref{alg:structure_learn}, and takes five inputs: $D$, a dataset of samples from the joint distribution; $\bm{\cX}$, the set of all continuous variables; $\texttt{order}$, a permutation of the variables in $D$; $\hat{n}_\text{parent}$, an upper bound on the number of parents per node; and $\maxpasses$, an upper bound on the number of complete passes.
+The upper bound on the number of parents is common practice, and is done to prevent computing conditional distribtions with excessively large parameter sets. \tim{cite?}
 The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of the Bayesian score (Equation~\ref{eq:BayesianScore}):
 
 \begin{equation}
@@ -858,7 +859,7 @@ The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of 
 \end{algorithm}
 
 It is common practice to run K2 multiple times with different variable permutations and to then choose the structure with the highest score.
-As such, Algorithm~\ref{alg:structure_learn} is run multiple times with different variable permutations and the discretized Bayesian network with the highest score is retaiend.
+As such, Algorithm~\ref{alg:structure_learn} is run multiple times with different variable permutations and the discretized Bayesian network with the highest score is retained.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
