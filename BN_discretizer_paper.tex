@@ -217,7 +217,7 @@ The prior is chosen to influence the relative merit between models, and for disc
 Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ requires a trade-off when determining the number of discretization intervals.
 
 The MODL method uses dynamic programming to find the optimal discretization policy for a continuous variable given a discrete class variable, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of instances for the class variable.
-\cite{Lustgarten_2011} suggest several formulations for the prior term $P(\text{Model})$, and the asymptotical equivalence between MDL and MODL on the single-variable, single-class problem was examined in \citep{VL_2000}.
+\cite{Lustgarten_2011} suggest several formulations for the prior term $P(\text{Model})$, and the asymptotical equivalence between MDL and MODL on the single-variable, single-class problem was examined by \citet{VL_2000}.
 
 This paper describes a new Bayesian discretization method for continuous variables in Bayesian networks, extending prior work on single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}.
 The proposed method optimizes the discretization policy relative to the network and takes parents, children, and spouse variables into account.
@@ -1156,7 +1156,7 @@ In contrast, the samples for $H$ are well spread out, resulting in fewer discret
   \caption{
     The discretization policies for variables $C$ and $E$ learned using the Bayesian approach on the fixed network.
     The scatter points were jittered to reveal the repeated values in the dataset.
-    The repeated values lead to a high number of discretization edges, because repeated values can easily form discretized regions by their own.
+    The repeated values lead to a high number of discretization edges, because repeated values can easily form discretized regions on their own.
   }
   \label{fig:housing_exp1_distr_3_5}
 \end{figure}
