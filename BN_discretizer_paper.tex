@@ -197,7 +197,7 @@ The MDL principle was first proposed by \cite{MDL_1978} and states that the best
 MDL methods trade off goodness-of-fit against model complexity to reduce generalization error.
 In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and the optimal positions of their discretization edges.
 Their approach selects a discretization policy that minimizes the sum of the description lengths of the discretized Bayesian network and the information necessary for recovering the continuous values from the discretized data.
-Results in this work suggest that the MDL method suffers from \todo{fill this out.}
+Results in this work suggest that the MDL method suffers from low sensitivity to discretization edges and returns low numbers of discretization intervals on continuous variables.
 
 The optimal discretization policy is found with dynamic programming, and it takes runtime $\bigo\paren{n^3 + q \cdot n^2}$, where $n$ is the number of data instances and $q$ is a constant that exponentially depends on cardinalities of variables in Bayesian networks and will be discussed in Section \ref{sec:experiments}.
 For Bayesian networks with multiple continuous variables, MDL discretization is iteratively applied to each continuous variables.
@@ -412,7 +412,7 @@ The Bayesian network graph structure causes the likelihood term $P(D_{-\cX} \mid
 
 \begin{equation}
   \label{eq:p_D_given_M}
-  P\paren{D_{-\cX} \mid \Lambda} \propto P\paren{D_{\Pa_\cX} \mid \Lambda} \cdot \prod_{C_i} P\paren{D_{C_i} \mid \Lambda, D_{\bm{S}_i}}\text{.}
+  P\paren{D_{-\cX} \mid \Lambda} \propto P\paren{D_{\Pa_\cX} \mid \Lambda} \cdot \prod_{i} P\paren{D_{C_i} \mid \Lambda, D_{\bm{S}_i}}\text{.}
 \end{equation}
 
 For example, in Figure~\ref{fig:example_factorization}, $P(D_{-\cX} \mid \Lambda)$ factors according to
@@ -890,20 +890,18 @@ where $D$ is the original dataset and $D^*$ is the dataset discretized according
 The log-likelihood of the discretized dataset is the Bayesian score (Equation~\ref{eq:BayesianScore}) evaluated with a uniform prior over graph structures and a uniform Dirichlet prior ($\alpha_{ijk} = 1$ for all $i$, $j$, and $k$).
 The log-likelihood of the original dataset given the discrete dataset is
 
-\todo{
 \begin{equation}
-  \ln p\paren{D\mid \discset, D^*} = \sum_{i=1}^n
-  1\curly{X_i \text{ orig. cont.}}
-  \sum_{j=1}^{q_i} \sum_{k=1}^{r_i} m_{ijk} \ln\paren{
+  \ln p\paren{D\mid \discset, D^*} = \sum_{i=1}^N
+  1_{\curly{ \cX_i \in \bm{\cX }}}\cdot \sum_{k=1}^{r_i}  \sum_{j=1}^{q_i} \beta_{ij}^{(k)} \ln \paren{
     \frac{
       1
     }{
-      e^{\Lambda_{\cX_i}}_{k+1} - e^{\Lambda_{\cX_i}}_{k}
+      e^{\Lambda_{\cX_i}}_{k} - e^{\Lambda_{\cX_i}}_{k-1}
     }
   }\text{.}
 \end{equation}
-}
-
+Note that $e^{\Lambda_{\cX_i}}_{0} = \textsc{Min}\paren{D_{\cX_i}}$ and $e^{\Lambda_{\cX_i}}_{r_i} = \textsc{Max}\paren{D_{\cX_i}}$.
+%, where $\brock{ e^{\Lambda_{\cX_i}}_{k-1} , e^{\Lambda_{\cX_i}}_{k} }$ is the discretization interval that $\cx_i$ falls in. If $\cx_i < e^{\Lambda_{\cX_i}}_{1}$, then the corresponding interval is $\brock{ \textsc{Min}\paren{D_{X_i}} , e^{\Lambda_{\cX_i}}_{1}}$. If $\cx_i \leq e^{\Lambda_{\cX_i}}_{r_i - 1}$, then the corresponding interval is $\brock{  e^{\Lambda_{\cX_i}}_{r_i - 1},\textsc{Max}\paren{D_{X_i}}}$.
 \noindent
 The mean cross-validated log-likelihood is the mean log-likelihood on the witheld dataset among cross-validation folds.
 Cross-validation directly estimates generalization error.
