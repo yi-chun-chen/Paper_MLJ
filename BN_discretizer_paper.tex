@@ -276,9 +276,6 @@ The context should make it clear when $P$ refers to a discrete probability and w
 
 A Bayesian network $B$ is defined by a pair $(G,\bm{\theta})$, where $G$ is a directed acyclic graph whose $N$ nodes $X_{1:N}$ are random variables.
 The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$.
-For a Bayesian network over discrete and discretized variables, $r_i$ represents the number of instantiations of $X_i$, and $q_i$ represents the number of instantiations of the parents of $X_i$.
-If $X_i$ has no parents, then $q_i = 1$.
-The $j$th instantiation of the parents of $X_i$ is denoted $\bm{\pi}_{ij}$.
 The children of node $X_i$ are denoted $\Ch_{X_i}$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -491,9 +488,8 @@ The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for 
 \end{aligned}
 \end{equation}
 
-All parameters and variables in the objective function are explained in previous subsections.
-\tim{Stress that this is an original contribution}
-\tim{Maybe stress the runtime complexity?}
+All parameters and variables in the objective function have been previously explained.
+
 
 \subsection{Single-Variable Discretization Algorithm}
 \label{subsec:algo}
@@ -532,6 +528,9 @@ The optimization problem over Equation~\ref{eq:opt_prob} can now be solved.
 The dynamic programming procedure is shown in Algorithm~\ref{alg:disc_one}.
 It takes three inputs: $\cX$, the continuous variable; $D$, the joint data instances over all variables sorted in ascending order according to $D_X$; and $G$, the network structure.
 The runtime of Algorithm~\ref{alg:disc_one} is also $\bigo \paren{ n_c \cdot {L}^{n_s} \cdot n^2 + {L}^{n_p} \cdot n^2 }$, because the runtime of the dynamic programming procedure is less than the runtime for computing $h(u,v)$.
+As will be discussed in Section~\ref{sec:experiments}, the MDL discretization method has a runtime of $\bigo\paren{ n^3 + \paren{ n_c \cdot {L}^{n_s} + {L}^{n_p}} \cdot n^2 }$, which includes an extra $\bigo\paren{ n^3}$ term.
+The Bayesian discretization method is quadratic in the sample count $n$, whereas the MDL discretization method is cubic.
+
 Algorithm~\ref{alg:disc_one} is guaranteed to be optimal.
 For faster methods with suboptimal results, see \citet{Boulle_2006}.
 
@@ -574,7 +573,6 @@ For faster methods with suboptimal results, see \citet{Boulle_2006}.
     \EndFunction
   \end{algorithmic}
 \end{algorithm}
-
 
 % \subsection{Approximation}
 
@@ -634,9 +632,8 @@ For faster methods with suboptimal results, see \citet{Boulle_2006}.
 %   \end{equation}
 % \end{small}
 
-% The approximation reduces the runtime of Algorithm~\ref{alg:disc_one} to a polynomial, $\todo{\bigo\paren{ {v'_\text{max}} \cdot (n_c + n_p) \cdot n^2}}$.
+% The approximation reduces the runtime of Algorithm~\ref{alg:disc_one} to a polynomial, $\bigo\paren{ {v'_\text{max}} \cdot (n_c + n_p) \cdot n^2}$.
 % It will be shown in Section~\ref{sec:experiments} that the approximation is more sensitive to the distribution over other variables and is biased towards slightly higher interval counts.
-% \tim{We need to have a more specific thing to say along the lines of `When does it fail?'}
 
 % The approximated objective function, Equation~\ref{eq:opt_prob_approx}, provides intuition into how child and parent variables contribute to the objective function.
 % For example, in the left graph of Figure~\ref{fig:example_networks}, the corresponding square brackets in the approximated objective function are
@@ -695,7 +692,6 @@ For example, in the network of Figure~\ref{fig:example_networks}, if $S_2$ is th
 The algorithm is terminated when the number of discretization intervals and their associated edges converge for all variables, and a maximum number of complete passes is enforced to prevent infinite iterations when convergence does not occur.
 The algorithm typically converges within a few passes when tested on real-world data.
 In cases where it does not converge, usually observed when also learning structure, ten passes produce sufficient discretization results.
-\tim{If it only fails to converge with structure learning, perhaps we should take out the max upper bound in Alg~\ref{alg:disc_two}.}
 
 The pseudocode for the multi-variable discretization procedure is shown in Algorithm~\ref{alg:disc_two}.
 It requires four inputs: $D$, a dataset of samples from the joint distribution; $G$, the fixed network structure; $\bm{\cX}$, the set of all continuous variables in reverse topological order, and $\maxpasses$, an upper bound on the number of complete passes.
@@ -733,7 +729,11 @@ It is often necessary to infer the structure of a Bayesian network from data.
 Three common approaches to Bayesian network structure learning are constraint-based, score-based, and Bayesian model averaging \citep[see][chap.~18]{PGM_2009}.
 This work uses the K2 structure learning algorithm \citep{K2}, one of the most successful score-based structure learning methods.
 Score-based structure learning methods over discrete variables commonly evaluate candidate structures according to their likelihood against a dataset $D$.
-In practice, one maximizes the log-likelihood, also known as the Bayesian score~\citep{cooper1992bayesian}:
+In practice, one maximizes the log-likelihood, also known as the Bayesian score, $\ln P(G\mid D)$~\citep{cooper1992bayesian}.
+
+For a Bayesian network over $N$ discrete and discretized variables $X_{1:N}$, $r_i$ represents the number of instantiations of $X_i$, and $q_i$ represents the number of instantiations of the parents of $X_i$.
+If $X_i$ has no parents, then $q_i = 1$.
+The Bayesian score is:
 
 \begin{small}
 \begin{equation}
@@ -777,7 +777,7 @@ The resulting discretization policies are used to update the discretized dataset
 This cycle is repeated until the K2 algorithm converges.
 
 This procedure is given in Algorithm~\ref{alg:structure_learn}, and takes five inputs: $D$, a dataset of samples from the joint distribution; $\bm{\cX}$, the set of all continuous variables; $\texttt{order}$, a permutation of the variables in $D$; $\hat{n}_\text{parent}$, an upper bound on the number of parents per node; and $\maxpasses$, an upper bound on the number of complete passes.
-The upper bound on the number of parents is common practice, and is done to prevent computing conditional distribtions with excessively large parameter sets. \tim{cite?}
+The upper bound on the number of parents is common practice, and is used to prevent computing conditional distribtions with excessively large parameter sets.
 The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of the Bayesian score (Equation~\ref{eq:BayesianScore}):
 
 \begin{equation}
@@ -861,12 +861,29 @@ The log-likelihood has two components,
 
 \noindent
 where $D$ is the original dataset and $D^*$ is the dataset discretized according to $\discset$.
-The log-likelihood of the discretized dataset is the Bayesian score (Equation~\ref{eq:BayesianScore}) evaluated with a uniform prior over graph structures and a uniform Dirichlet prior ($\alpha_{ijk} = 1$ for all $i$, $j$, and $k$).
+
+The log-likelihood of the discretized dataset given the Bayesian network is
+
+\begin{equation}
+P(D^* \mid \bm{\alpha}, \bm{\beta}, G) = \prod_{i=1}^N \prod_{j=1}^{q_i} \prod_{k=1}^{r_i}
+\paren{
+  \frac{
+    \alpha_{ij}^{(k)} + \beta_{ij}^{(k)}
+  }{
+    \alpha_{ij}^{(0)} + \beta_{ij}^{(0)}
+    }
+}^{\beta_{ij}^{*(k)}}\text{,}
+\end{equation}
+
+\noindent
+where $\bm{\alpha}$ and $\bm{\beta}$ were previously defined for the Bayesian score (Equation~\ref{eq:BayesianScore}), and $\bm{\beta}^*$ is the set of observed counts in $D^*$.
+The experiments below used a uniform Dirichlet prior of $\alpha_{ijk} = 1$ for all $i$, $j$, and $k$.
+
 The log-likelihood of the original dataset given the discrete dataset is
 
 \begin{equation}
   \ln p\paren{D\mid \discset, D^*} = \sum_{i=1}^N
-  1_{\curly{ \cX_i \in \bm{\cX }}}\cdot \sum_{k=1}^{r_i}  \sum_{j=1}^{q_i} \beta_{ij}^{(k)} \ln \paren{
+  1_{\curly{ \cX_i \in \bm{\cX }}}\cdot \sum_{k=1}^{r_i}  \sum_{j=1}^{q_i} \beta_{ij}^{*(k)} \ln \paren{
     \frac{
       1
     }{
@@ -895,7 +912,6 @@ where $I(A,B)$ is the mutual information between two discrete variable sets $A$ 
 Equation \ref{eqn:MDL} can be minimized using dynamical programming with runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$.
 All variables are defined in Section \ref{subsec:algo}.
 Therefore, the runtime of the proposed method in this paper is shorter than MDL discretization method by $\bigo \paren{n^3}$.
-\tim{It seems weird having this result being explained in the experiments section.}
 
 \subsection{Auto MPG Dataset}
 \label{subsec:auto}
@@ -1000,7 +1016,6 @@ The Bayesian method outperforms the MDL method in likelihood by a significant ma
 The MDL method creates significantly fewer discretization edges.
 % The heuristic method discretizes the variables $G$, $H$, and $J$ into one fewer interval and the variable $M$ into one more interval than the optimal Bayesian approach, resulting in a slightly lower mean cross validated log likelihood.
 % The overall performance of the heuristic method is still very high, and if runtime is the primary concern, the heuristic method can be considered the better approach.
-% \tim{Do we need to list runtime too?}
 
 Some discretization edges appear in all three discretization methods, such as \num{1.42} and \num{2.35} for variable $C$ and \num{0.785} for variable $L$.
 This indicates that MDL indeed can find some important discretization edges, but it is not sensitive enough to find more edges.
@@ -1095,7 +1110,6 @@ Table~\ref{table:housing_disc_table_1} shows the numbers of intervals after disc
 MDL method does not produce any discretization edges for most variables.
 % The heuristic Bayesian method produces far more discretization edges than the Bayesian method due to repeated instances in the dataset.
 % The numbers of intervals returned by the each method illustrate the over-sensitive nature of the heuristic method and the under-sensitive nature of the MDL method.
-% \tim{I am not sure we are using `sensitive' correctly. Sensitive to what? Perhaps `biased towards higher edge counts'?}
 The relative weighting of each method's objective function will be discussed in Section~\ref{subsec:discuss_exp}.
 
 % The heurstic method produces the discretization with the highest cross-validated log-likelihood; and although the heuristic method leads to a higher number of intervals, its likelihood is not significantly better than the Bayesian approach.
@@ -1114,7 +1128,7 @@ The relative weighting of each method's objective function will be discussed in 
     Discretization policy summary of the Housing dataset based on the fixed network structure shown.
     The first twelve rows show the numbers of intervals after discretization for each method.
     The last row is the mean cross-validated log-likelihood based on each discretization result.
-    % The heuristic method is over-sensitive \todo{to what?} and discretizes some variables into too many intervals.
+    % The heuristic method is over-sensitive and discretizes some variables into too many intervals.
     % The MDL method is less sensitive and on many cases does not produce any discretization intervals.
     % The optimal Bayesian approach produces a reasonable number of discretization edges.
   }
