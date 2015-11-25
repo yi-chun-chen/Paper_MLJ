@@ -1,0 +1,25 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[round]{natbib}
+\usepackage{graphicx}
+
+\title{Information Sheet}
+\author{Yi-Chun Chen, Tim A. Wheeler, Mykel J. Kochenderfer}
+
+
+\begin{document}
+
+\maketitle
+
+This paper introduces a principled discretization method to continuous variables in Bayesian network. It learns the discretization policy for each continuous variable from mixed data and also takes the network structure into account in the learning process. Compared with a predominant existing method \citep{Friedman_1996}, which has cubic time complexity, the proposed method learns the discretization with quadratic complexity.
+
+The tests on the real-world data \citep{Lichman_2013} demonstrates that the proposed method is superior to the work of \cite{Friedman_1996}. The latter usually discretizes continuous variables with low numbers of intervals, and it is unable to match the distribution of original dataset. The former, on the other hand, finds more necessary discretization edges for recovering the distribution of orginal data. The recovering is illustrated by cross-validated likelihood and comparisons of original data with the learned marginalized probability density.
+
+This paper also shows how to incorporate the proposed discretization method to the structure learning process \cite{k2}, and therefore learn a discrete-valued Bayesian network.
+
+
+The proposed method is related to \cite{Boulle_2006} and \cite{Lustgarten_2011}. These two works is to discretize continuous attribute accroding to one class variable by Bayesian statistics method. The proposed method can be considered an extension of these two works to general Bayesian network case.
+
+\bibliographystyle{spbasic}
+\bibliography{my_bib}
+\end{document}
