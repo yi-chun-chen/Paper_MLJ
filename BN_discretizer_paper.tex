@@ -271,7 +271,7 @@ The $\lambda_{1:k}$ representation is the number of instances before every discr
 
 \subsection{Bayesian Networks}
 
-A Bayesian network $B$ is defined by a pair $(G,\bm{\theta})$, where $G$ is a directed acyclic graph whose $N$ nodes $X_{1:N}$ are random variables.
+A Bayesian network $B$ over $N$ random variables $X_{1:N}$ is defined by a directed acyclic graph $G$ whose nodes are the random variables and a conditional probability distribution for each node given its parents.
 The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$.
 The children of node $X_i$ are denoted $\Ch_{X_i}$.
 
