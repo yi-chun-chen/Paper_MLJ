@@ -6,12 +6,13 @@
 			xlabel=C,
 			ylabel=E,
 			colorbar,
-			point meta min=0, point meta max=1.2,
+			point meta min=0, point meta max=1,
 			colormap={}{ gray(0cm)=(1); gray(1cm)=(0);},
 			colorbar style={
-			        ytick={0,0.24,...,1.3},
+			        ytick={0,0.2,...,1.01},
 			        ylabel={probability density$ \times 10^{-1}$},
 			        y label style={at={(axis description cs:6.5,0.5)},rotate=180,anchor=north},
+			        yticklabels={\num{0.00},\num{0.20},\num{0.40},\num{0.60},\num{0.80},$\geq 1$},
 			        yticklabel style={
 			            text width=2.5em,
 			            align=right,
@@ -64,7 +65,8 @@
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(3.8750,0.6115,0.000000) (3.9850,0.6115,0.000000) (3.9850,0.6190,0.0000) (3.8750,0.6190,0.0000)};
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(3.8750,0.6190,0.000000) (3.9850,0.6190,0.000000) (3.9850,0.6275,0.0000) (3.8750,0.6275,0.0000)};
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(3.8750,0.6275,0.000000) (3.9850,0.6275,0.000000) (3.9850,0.6390,0.0000) (3.8750,0.6390,0.0000)};
-			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(3.8750,0.6390,1.704545) (3.9850,0.6390,1.704545) (3.9850,0.6510,1.7045) (3.8750,0.6510,1.7045)};
+			% \addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(3.8750,0.6390,1.704545) (3.9850,0.6390,1.704545) (3.9850,0.6510,1.7045) (3.8750,0.6510,1.7045)};
+			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(3.8750,0.6390,1.000000) (3.9850,0.6390,1.000000) (3.9850,0.6510,1.0000) (3.8750,0.6510,1.0000)};
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(3.8750,0.6510,0.000000) (3.9850,0.6510,0.000000) (3.9850,0.8205,0.0000) (3.8750,0.8205,0.0000)};
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(3.8750,0.8205,0.000000) (3.9850,0.8205,0.000000) (3.9850,0.8710,0.0000) (3.8750,0.8710,0.0000)};
 
@@ -115,7 +117,8 @@
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(6.1450,0.8205,0.000000) (6.3050,0.8205,0.000000) (6.3050,0.8710,0.0000) (6.1450,0.8710,0.0000)};
 
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(6.3050,0.3850,0.000000) (7.2250,0.3850,0.000000) (7.2250,0.4460,0.0000) (6.3050,0.4460,0.0000)};
-			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(6.3050,0.4460,1.239130) (7.2250,0.4460,1.239130) (7.2250,0.4485,1.2391) (6.3050,0.4485,1.2391)};
+			% \addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(6.3050,0.4460,1.239130) (7.2250,0.4460,1.239130) (7.2250,0.4485,1.2391) (6.3050,0.4485,1.2391)};
+			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(6.3050,0.4460,1.000000) (7.2250,0.4460,1.000000) (7.2250,0.4485,1.0000) (6.3050,0.4485,1.0000)};
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(6.3050,0.4485,0.000000) (7.2250,0.4485,0.000000) (7.2250,0.4555,0.0000) (6.3050,0.4555,0.0000)};
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(6.3050,0.4555,0.000000) (7.2250,0.4555,0.000000) (7.2250,0.4620,0.0000) (6.3050,0.4620,0.0000)};
 			\addplot3[patch,shader=faceted,patch type=rectangle] coordinates {(6.3050,0.4620,0.210997) (7.2250,0.4620,0.210997) (7.2250,0.4705,0.2110) (6.3050,0.4705,0.2110)};
