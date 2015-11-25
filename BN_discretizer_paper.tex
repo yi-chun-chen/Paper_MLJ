@@ -252,7 +252,7 @@ A discretization policy $\Lambda_{\cX} = \anglebrackets{e_1 < e_2 < \ldots < e_{
 
 \noindent
 The discretization policy discretizes $\cX$ into $k$ intervals.
-Let the samples of $\cX$ in a given dataset $D$ be sorted in ascending order, ${\cx_{1:n} = \curly{\cx_1 \leq \cx_2 \leq \ldots \leq \cx_n}}$, and let the unique values be ${\cu_{1:m} = \curly{\cu_1 \leq \cu_2 \leq \ldots \leq \cu_{m}}}$.
+Let the samples of $\cX$ in a given dataset $D$ be sorted in ascending order, ${\cx_{1:n} = \curly{\cx_1 \leq \cx_2 \leq \ldots \leq \cx_n}}$, and let the unique values be ${\cu_{1:m} = \curly{\cu_1 < \cu_2 < \ldots < \cu_{m}}}$.
 The index of the last occurence of $\cu_i$ in $\cx_{1:n}$ is denoted $s_i$.
 
 The discretization edges $e_{1:k-1}$ mark the boundaries between discretization intervals.
@@ -738,7 +738,7 @@ In practice, one maximizes the log-likelihood, also known as the Bayesian score~
 \begin{small}
 \begin{equation}
 \label{eq:BayesianScore}
-  \ln P(D\mid G) = \ln P(G) + \sum_{i=1}^N \sum_{j=1}^{q_i} \ln \paren{
+  \ln P(G\mid D) = \ln P(G) + \sum_{i=1}^N \sum_{j=1}^{q_i} \ln \paren{
     \frac{
       \mathrm{\Gamma}\paren{\alpha_{ij}^{(0)}}
     }{
