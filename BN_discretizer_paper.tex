@@ -851,21 +851,21 @@ The first experiment compares the performance of the Bayesian and MDL discretiza
 The structure was obtained by prediscretizing each continuous variable into $k$ uniform-width intervals, where $k$ is the median number of instantiations of the discrete variables, and using the structure with the highest Bayesian score from \num{1000} runs of the K2 algorithm with random topological orderings.
 The second experiment compares the same methods applied when simultaneously discretizing and learning network structure.
 
-The discretizations are compared using the mean cross validated log-likelihood of the data $D$ given the graph structure $G$ and discretization policies $\discset$.
+The discretizations are compared using the mean cross validated log-likelihood of the data $D$ given the Bayesian network $B$ and discretization policies $\discset$.
 Note that all log-likelihoods shown have been normalized by the number of data samples.
 The log-likelihood has two components,
 
 \begin{equation}
-\ln p(D\mid G, \discset) = \ln P(D^*\mid G) + \ln p(D\mid \discset, D^*)\text{,}
+\ln p(D\mid B, \discset) = \ln P(D^*\mid B) + \ln p(D\mid \discset, D^*)\text{,}
 \end{equation}
 
 \noindent
-where $D$ is the original dataset and $D^*$ is the dataset discretized according to $\discset$.
+where $D$ is the original test dataset and $D^*$ is the test dataset discretized according to $\discset$.
 
 The log-likelihood of the discretized dataset given the Bayesian network is
 
 \begin{equation}
-P(D^* \mid \bm{\alpha}, \bm{\beta}, G) = \prod_{i=1}^N \prod_{j=1}^{q_i} \prod_{k=1}^{r_i}
+P(D^* \mid B) = \prod_{i=1}^N \prod_{j=1}^{q_i} \prod_{k=1}^{r_i}
 \paren{
   \frac{
     \alpha_{ij}^{(k)} + \beta_{ij}^{(k)}
@@ -876,7 +876,7 @@ P(D^* \mid \bm{\alpha}, \bm{\beta}, G) = \prod_{i=1}^N \prod_{j=1}^{q_i} \prod_{
 \end{equation}
 
 \noindent
-where $\bm{\alpha}$ and $\bm{\beta}$ were previously defined for the Bayesian score (Equation~\ref{eq:BayesianScore}), and $\bm{\beta}^*$ is the set of observed counts in $D^*$.
+where $\bm{\alpha}$ and $\bm{\beta}$ are the Dirichlet prior counts and observed counts in the training set for $B$, and $\bm{\beta}^*$ is the set of observed counts in the test set $D^*$.
 The experiments below used a uniform Dirichlet prior of $\alpha_{ijk} = 1$ for all $i$, $j$, and $k$.
 
 The log-likelihood of the original dataset given the discrete dataset is
