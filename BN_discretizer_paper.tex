@@ -56,7 +56,6 @@
 \usepackage{multirow}
 \usepackage{pgfplots}
 \usepackage{pgfplotstable}
-\usepgfplotslibrary{groupplots}
 \usepackage{tikz}
 \usepackage{lscape}
 \usepackage{caption}
@@ -64,7 +63,6 @@
 \usepackage{booktabs}
 \usepackage{boondox-cal} % for lowercase caligraphic
 
-% \usepackage[capitalize]{cleveref}
 \usetikzlibrary{bayesnet}
 \setcitestyle{aysep={ }} %Author-Year Separator
 %
@@ -155,7 +153,7 @@
 
 Real data often contains a mixture of discrete, continuous, and hybrid variables, but many Bayesian network structure learning and inference algorithms assume all random variables are discrete.
 Continuous and hybrid variables are often discretized, but the choice of discretization policy has significant impact on the accuracy, speed, and interpretability of the resulting models.
-This paper introduces a principled discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of other standard techniques.
+This paper introduces a principled Bayesian discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of other standard techniques.
 Emperical demonstrations show that the proposed method is superior to the state of the art.
 In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
 The proposed method was incorporated and its superior performance was empirically demonstrated.
@@ -911,7 +909,7 @@ For a Bayesian network with a single continuous variable $\cX$, the MDL objectiv
 where $I(A,B)$ is the mutual information between two discrete variable sets $A$ and $B$, ${H(p) = -p \ln(p) - (1-p) \ln(1-p)}$, and $X$ is the discretized version of $\cX$.
 Equation \ref{eqn:MDL} can be minimized using dynamical programming with runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$.
 All variables are defined in Section \ref{subsec:algo}.
-Therefore, the runtime of the proposed method in this paper is shorter than MDL discretization method by $\bigo \paren{n^3}$.
+Therefore, the runtime of the proposed method in this paper is shorter than the MDL discretization method by $\bigo \paren{n^3}$.
 
 \subsection{Auto MPG Dataset}
 \label{subsec:auto}
