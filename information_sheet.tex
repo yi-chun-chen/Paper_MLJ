@@ -2,23 +2,58 @@
 \usepackage[utf8]{inputenc}
 \usepackage[round]{natbib}
 \usepackage{graphicx}
+\usepackage{color}
 
-\title{Information Sheet}
-\author{Yi-Chun Chen, Tim A. Wheeler, Mykel J. Kochenderfer}
+\newcommand{\todo}[1]{\textcolor{magenta}{#1}}
+\newcommand{\yichun}[1]{\textit{\textcolor{green}{#1}}}
+\newcommand{\tim}[1]{\textit{\textcolor{blue}{#1}}}
+\newcommand{\mykel}[1]{\textit{\textcolor{cyan}{#1}}}
 
+\title{Information Sheet \\ {\large Learning Discrete-valued Bayesian Networks from Mixed Data}}
+\author{\normalsize Yi-Chun Chen, Tim A. Wheeler, Mykel J. Kochenderfer}
+\date{}
 
 \begin{document}
 
 \maketitle
 
-This paper introduces a principled discretization method to continuous variables in Bayesian network. It learns the discretization policy for each continuous variable from mixed data and also takes the network structure into account in the learning process. Compared with a predominant existing method \citep{Friedman_1996}, which has cubic time complexity, the proposed method learns the discretization with quadratic complexity.
+\noindent
+\textbf{What is the main claim of the paper?}
 
-The tests on the real-world data \citep{Lichman_2013} demonstrates that the proposed method is superior to the work of \cite{Friedman_1996}. The latter usually discretizes continuous variables with low numbers of intervals, and it is unable to match the distribution of original dataset. The former, on the other hand, finds more necessary discretization edges for recovering the distribution of orginal data. The recovering is illustrated by cross-validated likelihood and comparisons of original data with the learned marginalized probability density.
+This paper introduces a principled Bayesian discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of the standard minimum-discription length (MDL) technique.
+In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.\\[0em]
 
-This paper also shows how to incorporate the proposed discretization method to the structure learning process \cite{k2}, and therefore learn a discrete-valued Bayesian network.
+\noindent
+\textbf{Why is this an important contribution to the machine learning literature?}
 
+Bayesian networks are an increasingly popular method for modeling uncertainty and causality.
+In most cases, one assumes that the random variables in a Bayesian network are discrete, since many Bayesian network learning and inference algorithms are unable to efficiently handle continuous variables.
+However, many applications require the use of continuous variables, in which case one must adopt Bayesian networks with continuous parametric distributions or discretize all continuous variables.
 
-The proposed method is related to \cite{Boulle_2006} and \cite{Lustgarten_2011}. These two works is to discretize continuous attribute accroding to one class variable by Bayesian statistics method. The proposed method can be considered an extension of these two works to general Bayesian network case.
+The proposed method learns discretization policies for continuous variables from mixed data while taking the Bayesian network structure into account.
+Prior Bayesian methods, such as MODL (\citep{Boulle_2006, Lustgarten_2011}), only considered the discretization of a single continuous variable with respect to another single discrete variable.
+The predominant existing method for discretizing continuous variables in Bayesian networks is based on MDL~\citep{Friedman_1996}, and has cubic time complexity in the number of data samples.
+The proposed method learns the discretization with quadratic complexity in the number of data samples, allowing it to scale to larger datasets more effectively.
+Furthermore, emperical demonstrations show that the proposed method produces superior discretization schemes in terms, evalated using the cross-validated log-likelihood.\\[0em]
+
+\noindent
+\textbf{What is the evidence you provide to support your claim?}
+
+\todo{
+The tests on the real-world data \citep{Lichman_2013} demonstrates that the proposed method is superior to the work of \cite{Friedman_1996}. The latter usually discretizes continuous variables with low numbers of intervals, and it is unable to match the distribution of original dataset. The former, on the other hand, finds more necessary discretization edges for recovering the distribution of orginal data. The recovering is illustrated by cross-validated likelihood and comparisons of original data with the learned marginalized probability density.\\[0em]
+}
+
+\noindent
+\textbf{What papers by other authors make the most closely related contributions, and how is your paper related to them?}
+
+\todo{
+The proposed method is related to \cite{Boulle_2006} and \cite{Lustgarten_2011}. These two works is to discretize continuous attribute accroding to one class variable by Bayesian statistics method. The proposed method can be considered an extension of these two works to general Bayesian network case.\\[0em]
+}
+
+\noindent
+\textbf{Have you published parts of your paper before?}
+
+No parts of this paper have been previously published.
 
 \bibliographystyle{spbasic}
 \bibliography{my_bib}
