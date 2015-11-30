@@ -187,8 +187,8 @@ Inference algorithms on nonparametric models can be also inefficient.
 
 The third approach is discretization.
 Automated discretization methods have been studied in machine learning and statistics for many years \citep{Dougherty_1995, Kerber_1992, Holte_1993, Fayyad_1993}, primarily for classification problems.
-These methods search for the best discretization policy for a continuous attribute by considering its interation with a class variable.
-It is common to discretize all continuous variables before learning a Bayesian network structure to avoid having to consider variable interactions, as the interations and dependencies between variables in Bayesian networks introduce complexity.
+These methods search for the best discretization policy for a continuous attribute by considering its interaction with a class variable.
+It is common to discretize all continuous variables before learning a Bayesian network structure to avoid having to consider variable interactions, as the interactions and dependencies between variables in Bayesian networks introduce complexity.
 The discretization of a variable in a network requires considering the impact on the variable's Markov blanket.
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
@@ -220,7 +220,7 @@ The prior is chosen to influence the relative merit between models, and for disc
 Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ thus requires a trade-off when determining the number of discretization intervals.
 
 The MODL method uses dynamic programming to find the optimal discretization policy for a continuous variable given a discrete class variable, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of instances for the class variable.
-\cite{Lustgarten_2011} suggest several formulations for the prior term $P(\textit{Model})$, and the asymptotical equivalence between MDL and MODL on the single-variable, single-class problem was examined by \citet{VL_2000}.
+\cite{Lustgarten_2011} suggest several formulations for the prior term $P(\textit{Model})$, and the asymptotic equivalence between MDL and MODL on the single-variable, single-class problem was examined by \citet{VL_2000}.
 
 This paper describes a new Bayesian discretization method for continuous variables in Bayesian networks, extending prior work on single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}.
 The proposed method optimizes the discretization policy relative to the network and takes parents, children, and spouse variables into account.
@@ -252,7 +252,7 @@ A discretization policy $\Lambda_{\cX} = \anglebrackets{e_1 < e_2 < \ldots < e_{
 \noindent
 The discretization policy discretizes $\cX$ into $k$ intervals.
 Let the samples of $\cX$ in a given dataset $D$ be sorted in ascending order, ${\cx_{1:n} = \curly{\cx_1 \leq \cx_2 \leq \ldots \leq \cx_n}}$, and let the unique values be ${\cu_{1:m} = \curly{\cu_1 < \cu_2 < \ldots < \cu_{m}}}$.
-The index of the last occurence of $\cu_i$ in $\cx_{1:n}$ is denoted $s_i$.
+The index of the last occurrence of $\cu_i$ in $\cx_{1:n}$ is denoted $s_i$.
 
 The discretization edges $e_{1:k-1}$ mark the boundaries between discretization intervals.
 In this paper, as with MODL, they are restricted to the midpoints between unique ascending instances of $\cX$.
