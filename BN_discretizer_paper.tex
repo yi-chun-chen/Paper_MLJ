@@ -211,10 +211,9 @@ Starting with some preliminary discretization policy, one first applies a struct
 One then refines the discretization policy based on the learned network.
 The cycle is repeated until convergence.
 
-Results in this work suggest that the MDL method suffers from low \yichun{sensitivity} to discretization edge locations and returns too few discretization intervals for continuous variables.
+Results in this work suggest that the MDL method suffers from low sensitivity to discretization edge locations and returns too few discretization intervals for continuous variables.
 This is caused by MDL's use of mutual information to measure the quality of discretization edges.
 Mutual information, which is composed of empirical probabilities computed using event count ratios, varies less severely with the positions of discretization edges than the method we suggest in this article.
-\tim{Let's discuss sensitivity tomorrow}
 
 
 % The probability of the data given the model typically increases with the number of discretization intervals, and the model prior is chosen to decrease with the number of discretization intervals
@@ -784,7 +783,7 @@ The affected continuous variables are rediscretized every time an edge is added 
 The resulting discretization policies are used to update the discretized dataset, and the next step of the K2 algorithm is executed.
 This cycle is repeated until the K2 algorithm converges.
 
-This procedure is given in Algorithm~\ref{alg:structure_learn}, and takes five inputs: $D$, a dataset of samples from the joint distribution; $\bm{\cX}$, the set of all continuous variables; \todo{$\texttt{order}$}, a permutation of the variables in $D$; $\hat{n}_\text{parent}$, an upper bound on the number of parents per node; and $\maxpasses$, an upper bound on the number of complete passes.
+This procedure is given in Algorithm~\ref{alg:structure_learn}, and takes five inputs: $D$, a dataset of samples from the joint distribution; $\bm{\cX}$, the set of all continuous variables; $\texttt{order}$, a permutation of the variables in $D$; $\hat{n}_\text{parent}$, an upper bound on the number of parents per node; and $\maxpasses$, an upper bound on the number of complete passes.
 The upper bound on the number of parents is common practice, and is used to prevent computing conditional distributions with excessively large parameter sets.
 The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of the Bayesian score (Equation~\ref{eq:BayesianScore}):
 
@@ -1233,7 +1232,7 @@ If $\Pa_{\cX} = \curly{P_1, P_2}$ and $D_{\cX} = \curly{1.0,2.0,3.0, \ldots n}$,
 \begin{small}
   \begin{equation}
   \begin{aligned}
-  f_{\text{MDL}} & = \overbrace{Z_1 \cdot k + \ln(k) + \ln {{n +k - 1}\choose{k -1}} }^{\text{Penalty Term}}+   \overbrace{\rule{0pt}{1.35em} \ln(N) \cdot I(X^*, \Pa_X)}^{\text{Edge Position Term}} \\
+  f_{\text{MDL}} & = \overbrace{Z_1 \cdot k + \ln(k) + \ln {{n +k - 1}\choose{k -1}} }^{\text{Penalty Term}}+   \overbrace{\rule{0pt}{1.35em} \ln(n) \cdot I(X^*, \Pa_X)}^{\text{Edge Position Term}} \\
   f_{\text{Bayesian}} &= \underbrace{{\vrule width0pt height0pt depth1.48em\relax}  Z_2 \cdot k + \sum_{i=1}^k \ln {{\gamma_i + J_\text{P} - 1}\choose{J_\text{P} -1}}}_{\text{Penalty Term}} + \underbrace{\sum^k_{i=1} \ln \left(   {{\gamma_i !}\over{n^{\text{P}}_{i,1}! n^{\text{P}}_{i,2}! \cdots n^{\text{P}}_{i,J_\text{P}}!    }} \right) }_{\text{Edge Position Term}}
   % f_{\text{Heuristic}} &= \overbrace{Z_2 \cdot k + \sum_{i=1}^k \ln {{\gamma_i + J_{P_1} - 1}\choose{J_{P_1} -1}} + \sum_{i=1}^k \ln {{\gamma_i + J_{P_2} - 1}\choose{J_{P_2} -1}} }^{\text{Penalty Term}}+\\
   % & \overbrace{\sum^k_{i=1}  \left[ \ln \left(   {{\gamma_i !}\over{n^{(P_1)}_{i,1}! n^{(P_1)}_{i,2}! \cdots n^{(P_1)}_{i,J_{P_1}}    }} \right)  + \ln \left(   {{\gamma_i !}\over{n^{(P_2)}_{i,1}! n^{(P_2)}_{i,2} \cdots n^{(P_2)}_{i,J_{P_2}} }} \right) \right]}^{\text{Edge Position Term}}
@@ -1245,7 +1244,9 @@ If $\Pa_{\cX} = \curly{P_1, P_2}$ and $D_{\cX} = \curly{1.0,2.0,3.0, \ldots n}$,
 where $Z_1$ and $Z_2$ are constant over discretizations, $k$ is the number of discretization intervals, and $I\paren{A, B} = \sum_{a,b} \hat{P}(a,b) \ln\frac{\hat{P}(a,b)}{\hat{P}(a)\hat{P}(b)}$ is the mutual information based on estimated probabilities.
 Note that the third term of $f_\text{MDL}$ had been approximated using $H(p)$ (see Equation~\ref{eqn:MDL}) in the original work by \cite{Friedman_1996}, but it is written here without that approximation.
 
-The sensitivity of each method to the discretization edges are captured in the edge position terms, as the penalty terms are similar across methods.
+The penalty terms tend to increase with the number of discretization intervals; the edge position terms vary with the position and number of the discretization edges.
+A policy with a larger number of discretization edges is only optimal if the edge position term varies enough with respect to the penalty term in order to produce a local minimum of sufficiently low value.
+
 The value of the edge position term for MDL is primarily determined by the mutual information, which varies less severely than the corresponding terms in the Bayesian method.
 The MDL term uses empirical probability distributions, based off of ratios of counts, whereas the Bayesian method uses factorial terms, and thus the MDL method varies less.
 The MDL method is therefore less sensitive to the discretization edges.

@@ -6,5 +6,5 @@
 *.pdf
 *.bcf
 *.run.xml
-
-BN_discretizer_paper.synctex.gz
+*.jpg
+*.synctex.gz
