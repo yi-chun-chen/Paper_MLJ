@@ -59,10 +59,10 @@
 \usepackage{tikz}
 \usepgfplotslibrary{groupplots}
 \usepackage{lscape}
-\usepackage{caption}
+% \usepackage{caption}
 \usepackage{siunitx}
 \usepackage{booktabs}
-\usepackage{boondox-cal} % for lowercase caligraphic
+\usepackage{BOONDOX-cal} % for lowercase caligraphic
 \usepackage[font=small,skip=5pt]{caption}
 \usepackage[hyphens]{url}
 
@@ -81,6 +81,8 @@
 % Insert the name of "your journal" with
 % \journalname{myjournal}
 %
+
+\pgfplotsset{compat=1.11}
 \pgfplotsset{
     jitter/.style={
         x filter/.code={\pgfmathparse{\pgfmathresult+rnd*#1}}
@@ -1301,8 +1303,8 @@ Many edges appear in both discretization results, and are bolded in Table~\ref{t
   \centering
   \caption{
     The discretization policies for the Auto MPG dataset with the fixed structure shown in Figure~\ref{fig:auto_graph_3}.
-    The first five rows list the discretization edges for each continuous variable.
-    The last row shows the mean cross-validated log-likelihood under each policy.
+    % The first five rows list the discretization edges for each continuous variable.
+    % The last row shows the mean cross-validated log-likelihood under each policy.
     The methods have the same discretization for variable $A$, and the log-likelihood for the Bayesian method is only slightly better than that for the MDL method.
   }
 \input{table_autoMPG_3.tex}
