@@ -364,7 +364,7 @@ For example, in Figure~\ref{fig:example_factorization}, $P(D_{-\cX} \mid \Lambda
 
 \begin{figure}[ht]
   \centering
-  \input{graph1}
+  \input{Fig1}
   \caption{Factorization of $P(_{-\cX} \mid \Lambda)$}
   \label{fig:example_factorization}
 \end{figure}
@@ -693,7 +693,7 @@ For example, in the network of Figure~\ref{fig:example_networks}, if $S_2$ is th
 
 \begin{figure}[ht]
  \centering
-     \input{graph2_right}
+     \input{Fig2}
   \caption{An example network}
    \label{fig:example_networks}
 \end{figure}
@@ -943,7 +943,7 @@ This structure was obtained by prediscretizing each continuous variable into fiv
 
 \begin{figure}[ht]
   \centering
-   \input{graph_autocar_1}
+   \input{Fig3}
    \caption{Bayesian network structure obtained from running K2 on the prediscretized Auto MPG dataset.}
   \label{fig:auto_graph_1}
 \end{figure}
@@ -960,7 +960,7 @@ An example of a network structure where MDL produces a comparable result to the 
     The first five rows list the discretization edges and the last row lists the mean cross-validated log-likelihood; positive values are better.
     %The MDL method does not produce any discretization edges.
   }
-  \input{table_autoMPG_1.tex}
+  \input{Table1.tex}
   \label{table:auto_disc_table_1}
 \end{table}
 
@@ -969,7 +969,7 @@ The resulting probability density is a good match to the original data.
 
 \begin{figure}[ht]
   \centering
-  \input{graph_auto_exp1_distr_1_3}
+  \input{Fig4}
   \caption{
     Comparison of the Bayesian discretization policy for variables $A$ and $C$ to the original Auto MPG data learned with a fixed network.
     The marginal probability density closely matches the data.
@@ -986,7 +986,7 @@ This result was obtained by running Algorithm~\ref{alg:structure_learn} fifty ti
 
 \begin{figure}[ht]
   \centering
-  \input{graph_autocar_2}
+  \input{Fig5}
   \caption{The discrete-valued Bayesian network learned from the Auto MPG dataset using the Bayesian method.}
   \label{fig:auto_graph_2}
 \end{figure}
@@ -998,7 +998,7 @@ The discretization policy will vary as the network structure changes, and it sti
 
 \begin{figure}[ht]
   \centering
-  \input{graph_auto_exp2_distr_1_3}
+  \input{Fig6}
   \caption{
     Comparison of the Bayesian discretization policy for variables $A$ and $C$ to the original Auto MPG data learned simultaneously with the network structure.
     Although the number of discretization edges is less than those in Figure~\ref{fig:auto_exp1_distr_1_3}, the probability distribution still closely matches the original data.
@@ -1036,7 +1036,7 @@ This indicates that MDL indeed can find some important discretization edges, but
 
 \begin{figure}[ht]
   \centering
-  \scalebox{0.8}{\input{graph_wine_1}}
+  \scalebox{0.8}{\input{Fig7}}
   \caption{Bayesian network structure obtained from running K2 on the prediscretized Wine dataset}
   \label{fig:wine_graph_1}
 \end{figure}
@@ -1053,7 +1053,7 @@ This indicates that MDL indeed can find some important discretization edges, but
     Bold discretization edges were identified by both methods.
   }
   \scalebox{1.0}{
-  \input{table_wine_1.tex}
+  \input{Table2.tex}
   }
   \label{table:wine_disc_table_1}
 \end{table}
@@ -1065,7 +1065,7 @@ Relative sensitivities of each method to the input data is discussed in Section~
 
 \begin{figure}[ht]
   \centering
-  \input{graph_wine_exp1_distr}
+  \input{Fig8}
   \caption{Comparison of the discretization policies for variables $A$ and $C$ obtained using the Bayesian and MDL methods}
   \label{fig:wine_exp1_distr}
 \end{figure}
@@ -1086,14 +1086,14 @@ The more parents a variable has, the fewer discretization intervals it can to su
 
 \begin{figure}[ht]
   \centering
-  \scalebox{0.7}{\input{graph_wine_2}}
+  \scalebox{0.7}{\input{Fig9}}
   \caption{The discrete-valued Bayesian network learned from the Wine dataset using the Bayesian method.}
   \label{fig:wine_graph_2}
 \end{figure}
 
 \begin{figure}[ht]
   \centering
-  \input{graph_wine_exp2_distr_5_11}
+  \input{Fig10}
   \caption{
     The discretization policy for variables $E$ and $K$ on the learned network.
     The discretization edge $E = 17.9$ also appears in the policies for the fixed network.
@@ -1131,7 +1131,7 @@ The relative weighting of each method's objective function will be discussed in 
 
 \begin{figure}[ht]
   \centering
-  \scalebox{0.8}{\input{graph_housing_1}}
+  \scalebox{0.8}{\input{Fig11}}
   \caption{Bayesian network structure obtained from running K2 on the prediscretized Housing dataset}
   \label{fig:housing_graph_1}
 \end{figure}
@@ -1145,7 +1145,7 @@ The relative weighting of each method's objective function will be discussed in 
     % The MDL method is less sensitive and on many cases does not produce any discretization intervals.
     % The optimal Bayesian approach produces a reasonable number of discretization edges.
   }
-  \input{table_housing_1.tex}
+  \input{Table3.tex}
   \label{table:housing_disc_table_1}
 \end{table}
 
@@ -1156,7 +1156,7 @@ In contrast, the samples for $H$ are well spread out, resulting in fewer discret
 
 \begin{figure}[ht]
   \centering
-  \input{graph_housing_exp1_distr_3_5}
+  \input{Fig12}
   \caption{
     The discretization policies for variables $C$ and $E$ learned using the Bayesian approach on the fixed network.
     The scatter points were jittered to reveal the repeated values in the dataset.
@@ -1180,7 +1180,7 @@ Although the number of intervals after discretization on $H$ is less the number 
 
 \begin{figure}[H]
   \centering
-  \input{graph_housing_exp1_distr_8_5}
+  \input{Fig13}
   \caption{
     The discretization policies for variables $H$ and $E$ learned using the optimal Bayesian approach on the fixed network shown in Figure~\ref{fig:housing_graph_1}.
     The values for variable $H$ are less frequently repeated, thus producing fewer discretization intervals than $E$.
@@ -1190,7 +1190,7 @@ Although the number of intervals after discretization on $H$ is less the number 
 
 \begin{figure}[H]
   \centering
-  \scalebox{0.8}{\input{graph_housing_2}}
+  \scalebox{0.8}{\input{Fig14}}
   \caption{
     The discrete-valued Bayesian network learned from the Housing dataset using the optimal Bayesian method.
   }
@@ -1199,7 +1199,7 @@ Although the number of intervals after discretization on $H$ is less the number 
 
 \begin{figure}[H]
   \centering
-  \input{graph_housing_exp2_distr_3_5}
+  \input{Fig15}
   \caption{
     The discretization policy for variables $C$ and $E$ on the learned network in Figure~\ref{fig:housing_graph_2}.
     The high number of discretization edges are caused by repeated values in $C$ and $E$.
@@ -1210,7 +1210,7 @@ Although the number of intervals after discretization on $H$ is less the number 
 
 \begin{figure}[H]
   \centering
-  \input{graph_housing_exp2_distr_8_5}
+  \input{Fig16}
   \caption{
     The discretization policy for variables $H$ and $E$ on the learned network in Figure~\ref{fig:housing_graph_2}.
     The number of discretization intervals for $H$ is less than it was for the fixed network structure in Figure~\ref{fig:housing_exp1_distr_8_5}, but the discretization policy still matches the raw data.
@@ -1223,7 +1223,7 @@ Although the number of intervals after discretization on $H$ is less the number 
 
 \begin{figure}[ht]
   \centering
-  \input{graph_exp_discuss}
+  \input{Fig17}
   \caption{A simple Bayesian network used to demonstrate the sensitivity of each method}
   \label{fig:exp_discuss}
 \end{figure}
@@ -1294,7 +1294,7 @@ Many edges appear in both discretization results, and are bolded in Table~\ref{t
 
 \begin{figure}[ht]
   \centering
-  \scalebox{0.8}{\input{graph_autocar_3}}
+  \scalebox{0.8}{\input{Fig18}}
   \caption{A Bayesian network structure for the Auto MPG dataset that leads to comparable discretization policies for the MDL and Bayesian methods.}
   \label{fig:auto_graph_3}
 \end{figure}
@@ -1307,7 +1307,7 @@ Many edges appear in both discretization results, and are bolded in Table~\ref{t
     % The last row shows the mean cross-validated log-likelihood under each policy.
     The methods have the same discretization for variable $A$, and the log-likelihood for the Bayesian method is only slightly better than that for the MDL method.
   }
-\input{table_autoMPG_3.tex}
+\input{Table4.tex}
   \label{table:auto_disc_table_3}
 \end{table}
 \end{document}
