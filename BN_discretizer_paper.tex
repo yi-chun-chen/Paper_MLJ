@@ -919,7 +919,7 @@ For a Bayesian network with a single continuous variable $\cX$, the MDL objectiv
 \end{equation}
 where $I(A,B)$ is the mutual information between two discrete variable sets $A$ and $B$, ${H(p) = -p \ln(p) - (1-p) \ln(1-p)}$, and $X$ is the discretized version of $\cX$.
 
-Equation~\ref{eqn:MDL} can be minimized exactly using dynamic programming.
+The global minimum of Equation~\ref{eqn:MDL} can be found using using dynamic programming.
 For a given Bayesian network, the first three terms only depend on the number of discretization intervals $|X|$ and the fourth term is cumulative over the intervals.
 Hence, if $\Lambda = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}$ is a MDL optimal discretization policy with $k$ intervals, then $\Lambda' = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_{k-1}}$ is a MDL optimal discretization policy for the corresponding subproblem with $k-1$ intervals.
 This procedure takes runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$.
