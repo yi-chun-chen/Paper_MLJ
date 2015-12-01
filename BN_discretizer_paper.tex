@@ -178,14 +178,13 @@ However, many applications require the use of continuous variables, such as posi
 
 There are three common approaches to extending Bayesian networks to continuous variables.
 The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning and inference algorithms based on the parameterizations.
-One successful example of parametric, continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}. \yichun{Is the comma between ``parametric" and ``continuous" necessay?}
+One successful example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
 %For other parametric distributions and non-linear functions \citep{Ihler_2009}, however, these redesigned algorithms can be computationally expensive.
 
 The second approach is to use nonparametric distributions, such as particle representations and Gaussian processes \citep{Ickstadt_2010}.
 Unlike parametric methods, nonparametric methods can often fit any underlying probability distribution given sufficient data.
 Parametric models have a fixed number of parameters, whereas the number of parameters in a nonparametric model grow with the amount of training data.
 %Inference algorithms on nonparametric models can be also inefficient.
-\yichun{I comment out all computational cost issues}
 
 The third approach is discretization.
 Automated discretization methods have been studied in machine learning and statistics for many years \citep{Dougherty_1995, Kerber_1992, Holte_1993, Fayyad_1993}, primarily for classification problems.
@@ -194,13 +193,15 @@ It is common to discretize all continuous variables before learning a Bayesian n
 %The discretization of a variable in a network requires considering the impact on the variable's Markov blanket.
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
-\yichun{A common discretization method for Bayesian networks is to split continuous variables by uniform width or by expertises from application fields. A more principled method is the minimum description length (MDL) principle discretization \citep{Friedman_1996}.}
+
+A common discretization method for Bayesian networks is to split continuous variables into uniform-width intervals or by using field-specific expertise.
+A more principled method is the minimum description length (MDL) principle discretization \citep{Friedman_1996}.
 The MDL principle proposed by \cite{MDL_1978} states that the best model for a dataset is the one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
 MDL methods trade off goodness-of-fit against model complexity to reduce generalization error.
 In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and the optimal positions of their discretization edges.
 Their approach selects a discretization policy that minimizes the sum of the description length of the discretized Bayesian network and the information necessary for recovering the continuous values from the discretized data.
 
-The optimal discretization policy of a single continuous variable under MDL can be found using dynamic programming \yichun{with cubic runtime of number of data instances.}
+The optimal discretization policy of a single continuous variable under MDL can be found using dynamic programming in cubic runtime with the number of data instances.
 For Bayesian networks with multiple continuous variables, MDL discretization can be iteratively applied to each continuous variable.
 Only one variable is treated as continuous at a time, while all other continuous variables are treated as discretized based on an initial discretization policy or the discretization result from a previous iteration.
 
@@ -213,11 +214,11 @@ The cycle is repeated until convergence.
 Results in this work suggest that the MDL method suffers from low \yichun{sensitivity} to discretization edge locations and returns too few discretization intervals for continuous variables.
 This is caused by MDL's use of mutual information to measure the quality of discretization edges.
 Mutual information, which is composed of empirical probabilities computed using event count ratios, varies less severely with the positions of discretization edges than the method we suggest in this article.
+\tim{Let's discuss sensitivity tomorrow}
 
-MODL \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable. \yichun{
-It selects the model with maximum posterior probability given the data. 
-Along with Bayes' rule, this is equivalent to maximize ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$, where ${P(\textit{Data} \mid \textit{Model})}$ usually increases with the number of discretization intervals and $P(\textit{Model})$ is chosen to decrease with the number of discretization intervals. 
-Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ thus requires a trade-off when determining the number of discretization intervals.}
+
+% The probability of the data given the model typically increases with the number of discretization intervals, and the model prior is chosen to decrease with the number of discretization intervals
+% Maximizing the model likelihood thus requires a trade-off in the number of discretization intervals.
 
 
 %Bayesian methods select the model with maximum posterior probability given the data, %$P(\textit{Model} \mid \textit{Data})$.
@@ -226,7 +227,8 @@ Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ thus
 %The prior is chosen to influence the relative merit between models, and for %discretization policies the prior is negatively correlated with the number of %discretization intervals to favor simpler models and prevent overfitting.
 %Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ thus requires %a trade-off when determining the number of discretization intervals.
 
-The MODL method uses dynamic programming to find the optimal discretization policy for a continuous variable given a discrete class variable, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of instances for the class variable.
+MODL \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable, which selects the model with maximum probability given the data.
+The MODL method uses dynamic programming to find the optimal discretization policy for a continuous variable given a discrete class variable, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of class variable instantiations.
 \cite{Lustgarten_2011} suggest several formulations for the prior term $P(\textit{Model})$, and the asymptotic equivalence between MDL and MODL on the single-variable, single-class problem was examined by \citet{VL_2000}.
 
 This paper describes a new Bayesian discretization method for continuous variables in Bayesian networks, extending prior work on single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}.
@@ -305,8 +307,8 @@ An optimal discretization policy for a dataset $D$ maximizes $P(\Lambda)\cdot P(
 \subsection{Priors and Objective Function}
 
 Let $D_{\bm{Y}}$ be the subset of the training data corresponding to variable subset $\bm{Y}$.
-Four principles for the optimal discretization policy enable the formulation of $P(\Lambda)$ and $P(D_{-\cX} \mid \Lambda)$, where $D_{-\cX}$ is the subset of the dataset for all variables but $\cX$ and the probability of the data associated with the target variable, $P(D_{\cX})$, is already captured in $P(\Lambda)$.
-The four principles, \yichun{ which can be considered an extension of the priors in MODL and \cite{Lustgarten_2011} to Bayesian networks}, are:
+Four principles for the optimal discretization policy enable the formulation of $P(\Lambda)$ and $P(D_{-\cX} \mid \Lambda)$, where $D_{-\cX}$ is the subset of the dataset for all variables but $\cX$, and the probability of the data associated with the target variable, $P(D_{\cX})$, is already captured in $P(\Lambda)$.
+The four principles, which can be considered an extension of the priors in MODL and \cite{Lustgarten_2011} to Bayesian networks, are:
 
 \begin{enumerate}
 \item The prior probability of a discretization edge between two consecutive unique values $\cu_i$ and $\cu_{i+1}$ is proportional to their difference:
@@ -916,8 +918,10 @@ For a Bayesian network with a single continuous variable $\cX$, the MDL objectiv
 \end{equation}
 where $I(A,B)$ is the mutual information between two discrete variable sets $A$ and $B$, ${H(p) = -p \ln(p) - (1-p) \ln(1-p)}$, and $X$ is the discretized version of $\cX$.
 
-\yichun{Equation \ref{eqn:MDL} can be minimized exactly using dynamic programming. For a given Bayesian network, the first three terms only depends on the number of discretization intervals $\lvert X \rvert$ and the fourth term is cumulative on the intervals. Hence, if $\Lambda = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}$ is a MDL optimal discretization policy with $k$ intervals, then  $\Lambda' = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_{k-1}}$ is a MDL optimal discretization policy of the corresponding subproblems with $k-1$ intervals.}
-This procedure takes runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$. 
+Equation~\ref{eqn:MDL} can be minimized exactly using dynamic programming.
+For a given Bayesian network, the first three terms only depend on the number of discretization intervals $|X|$ and the fourth term is cumulative over the intervals.
+Hence, if $\Lambda = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}$ is a MDL optimal discretization policy with $k$ intervals, then $\Lambda' = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_{k-1}}$ is a MDL optimal discretization policy for the corresponding subproblem with $k-1$ intervals.
+This procedure takes runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$.
 All variables are defined in Section \ref{subsec:algo}.
 Therefore, the runtime of the proposed method in this paper is shorter than the MDL discretization method by $\bigo \paren{n^3}$, since the former has a more efficient form of dynamical programming.
 
@@ -1178,7 +1182,7 @@ Although the number of intervals after discretization on $H$ is less the number 
   \input{graph_housing_exp1_distr_8_5}
   \caption{
     The discretization policies for variables $H$ and $E$ learned using the optimal Bayesian approach on the fixed network shown in Figure~\ref{fig:housing_graph_1}.
-    \yichun{The variable $H$ possesses less frequenly repeated values, thus producing less number of discretization intervals than $E$.}
+    The values for variable $H$ are less frequently repeated, thus producing fewer discretization intervals than $E$.
   }
   \label{fig:housing_exp1_distr_8_5}
 \end{figure}
@@ -1243,7 +1247,7 @@ Note that the third term of $f_\text{MDL}$ had been approximated using $H(p)$ (s
 
 The sensitivity of each method to the discretization edges are captured in the edge position terms, as the penalty terms are similar across methods.
 The value of the edge position term for MDL is primarily determined by the mutual information, which varies less severely than the corresponding terms in the Bayesian method.
-The MDL term uses empirical probability distributions, based off of ratios of counts, whereas the Bayesian method uses factorial terms, and thus varies less.
+The MDL term uses empirical probability distributions, based off of ratios of counts, whereas the Bayesian method uses factorial terms, and thus the MDL method varies less.
 The MDL method is therefore less sensitive to the discretization edges.
 This sensitivity gives rise to the relative performance of the two methods in the experiments conducted above.
 
@@ -1253,7 +1257,7 @@ This paper introduced a principled discretization method for continuous variable
 Empirical demonstrations show that the proposed method is superior to the state of the art.
 In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
 The proposed method was incorporated and its superior performance was empirically demonstrated.
-All software is publically available to support discretization research, and \yichun{can be found at \url{github.com/sisl/LearnDiscreteBayesNets.jl}}.
+All software is publically available to support discretization research, and can be found at \url{github.com/sisl/LearnDiscreteBayesNets.jl}.
 
 The methods developed in this paper increase the accuracy of Bayesian networks learned on datasets with continuous and mixed variables.
 An automated process for simultaneously constructing Bayesian networks and discretization policies is appealing because of the potential to significantly reduce development time and cost when developing models for uncertainty and causality.
