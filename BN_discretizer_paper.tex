@@ -542,7 +542,7 @@ As will be discussed in Section~\ref{sec:experiments}, the MDL discretization me
 The Bayesian discretization method is quadratic in the sample count $n$, whereas the MDL discretization method is cubic.
 
 Algorithm~\ref{alg:disc_one} is guaranteed to be optimal.
-For faster methods with suboptimal results, see \citet{Boulle_2006}.
+For faster methods with suboptimal results, see \citet{Friedman_1996} and \citet{Boulle_2006}.
 
 \begin{algorithm}
   \caption{Discretization of one continuous variable in a Bayesian network}
@@ -1326,7 +1326,7 @@ The following experiment was conducted on the naive Bayes: variable $E$ is the p
   \centering
   \caption{
     The discretization policies for the Iris dataset with the naive Bayes structure. 
-    Two methods produce same discretization policy on each continuous variable and have same prediction accuracy.
+    Two methods produce same discretization policy on each continuous variable and have close 10-fold prediction accuracy and log-likelihood.
   }
 \input{Table5.tex}
   \label{table:iris_table_1}
