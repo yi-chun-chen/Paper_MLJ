@@ -952,7 +952,7 @@ This structure was obtained by prediscretizing each continuous variable into fiv
 Table~\ref{table:auto_disc_table_1} lists the discretization edges and mean log-likelihoods under \num{10}-fold cross validation of the discrete Bayesian network resulting from the two discretization methods.
 The MDL method does not produce any discretization edges, assigning one continuous interval to each continuous variable, and produces the result with the lower likelihood.
 The reason why MDL produces fewer discretization edges is discussed in Section~\ref{subsec:discuss_exp}.
-An example of a network structure where MDL produces a comparable result to the Bayesian method is given in the Appendix.
+Two examples of MDL producing comparble results to the Bayesian method are given in the Appendix.
 
 \begin{table}[ht]
   \centering
@@ -1291,7 +1291,7 @@ All software is publicly available at \url{github.com/sisl/LearnDiscreteBayesNet
 
 The Bayesian network structure in Figure~\ref{fig:auto_graph_3} and the discretization results in Table~\ref{table:auto_disc_table_3} demonstrate that the MDL method does not always produce fewer discretization intervals than the Bayesian approach and that the MDL method can produce discretization policies with comparable likelihood.
 The Bayesian network in Figure~\ref{fig:auto_graph_3} was obtained by running Algorithm~\ref{alg:structure_learn} fifty times on the Auto MPG dataset with a maximum of two parents per variable.
-The network is better-structured than the one in Figure~\ref{fig:auto_graph_1} because the discretization policies were simultaneously learned with the network structure.
+The network is structured more favorably with regards to discretization than the network in Figure~\ref{fig:auto_graph_1}, as the discretization policies were simultaneously learned with the network structure, resulting in higher data likelihood.
 Many edges appear in both discretization results and are bolded in Table~\ref{table:auto_disc_table_3}.
 
 \begin{figure}[ht]
