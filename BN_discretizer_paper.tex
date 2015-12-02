@@ -1289,7 +1289,11 @@ All software is publicly available at \url{github.com/sisl/LearnDiscreteBayesNet
 \section*{Appendix}
 \label{sec:appendix}
 
-Two examples of Bayesian networks where MDL produces comparable results to the Bayesian method are given in this section. The first example is on the Auto MPG dataset. Instead of testing on the network obtained by prediscretization and structure learning, the tested network is obtained by Algorithm \ref{alg:structure_learn}, which can be considered better-structured than the network in Figure \ref{fig:auto_graph_1}. The second example is on the IRIS dataset \citep{Lichman_2013}. In the work of \cite{Friedman_1996}, the IRIS dataset was tested on the navie Bayes and the prediction accuracy was shown. The same test is reproduced to compare the Bayesian method with the MDL discretization method.
+Two examples of Bayesian networks where MDL produces comparable results to the Bayesian method are given in this section.
+The first example is on the Auto MPG dataset. Instead of testing on the network obtained by prediscretization and structure learning, the tested network is obtained by Algorithm \ref{alg:structure_learn}, which can be considered better-structured than the network in Figure \ref{fig:auto_graph_1}.
+The second example is on the Iris dataset \citep{Lichman_2013}.
+In the work of \cite{Friedman_1996}, the Iris dataset was tested on the naive Bayes network structure and the prediction accuracy was shown.
+The same test is reproduced below to compare the Bayesian method to the MDL discretization method.
 
 \subsection{Example 1}
 The Bayesian network structure in Figure~\ref{fig:auto_graph_3} and the discretization results in Table~\ref{table:auto_disc_table_3} demonstrate that the MDL method does not always produce fewer discretization intervals than the Bayesian approach and that the MDL method can produce discretization policies with comparable likelihood.
@@ -1319,14 +1323,17 @@ Many edges appear in both discretization results and are bolded in Table~\ref{ta
 \subsection{Example 2}
 The Iris dataset contains variables related to the morphologic variation of three Iris flower species.
 The dataset has \num{150} samples over five variables.
-Only variables $E$ is discrete-valued, which corresponds to the three species.
-The following experiment was conducted on the naive Bayes: variable $E$ is the parent of variable $A$, $B$, $C$, and $D$. Table \ref{table:iris_table_1} shows the discretization edges, the prediction accuracy of the learned classifiers, and the mean log-likelihood. The latter two use 10-fold cross validation. The MDL discretization method and the Bayesian method have same discretization result: all discretization edges coincide. In addition, both methods have $94 \% $ accuarcy, which matches the number in \cite{Friedman_1996}. The log-likelihood for the Bayesian method is only slightly better than the MDL method.
+Only variables $E$ is discrete-valued, and corresponds to the species category.
+The following experiment was conducted on the naive Bayes structure: variable $E$ is the parent of variable $A$, $B$, $C$, and $D$. Table \ref{table:iris_table_1} shows the discretization edges, the prediction accuracy of the learned classifiers, and the mean log-likelihood.
+The discretization policy shown is for running the algorithms on the full dataset; the likelihood and prediction accuracies were found with 10-fold cross validation.
+The MDL discretization method and the Bayesian method have same discretization result: all discretization edges coincide. In addition, both methods have $94 \%$ accuarcy, which matches the number in \cite{Friedman_1996}.
+The Bayesian method likelihood is slightly higher across folds than the MDL method likelihood.
 
 \begin{table}[ht]
   \centering
   \caption{
     The discretization policies for the Iris dataset with the naive Bayes structure.
-    Two methods produce same discretization policy on each continuous variable and have close 10-fold prediction accuracy and log-likelihood.
+    The two methods produce the same discretization policy on each continuous variable and have close 10-fold prediction accuracy and log-likelihood.
   }
 \input{Table5.tex}
   \label{table:iris_table_1}
