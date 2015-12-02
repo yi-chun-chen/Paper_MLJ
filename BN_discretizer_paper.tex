@@ -1320,7 +1320,7 @@ Many edges appear in both discretization results and are bolded in Table~\ref{ta
 The Iris dataset contains variables related to the morphologic variation of three Iris flower species.
 The dataset has \num{150} samples over five variables.
 Only variables $E$ is discrete-valued, which corresponds to the three species.
-The following experiment was conducted on the naive Bayes: variable $E$ is the parent of variable $A$, $B$, $C$, and $D$. Table \ref{table:iris_table_1} shows the discretization edges and the prediction accuracy of the learned classifiers using 10-fold cross validation. The MDL discretization method and the Bayesian method have same discretization result: all discretization edges coincide. In addition, both methods have $94 \% $ accuarcy, which matches the number in \cite{Friedman_1996}.
+The following experiment was conducted on the naive Bayes: variable $E$ is the parent of variable $A$, $B$, $C$, and $D$. Table \ref{table:iris_table_1} shows the discretization edges, the prediction accuracy of the learned classifiers, and the mean log-likelihood. The latter two use 10-fold cross validation. The MDL discretization method and the Bayesian method have same discretization result: all discretization edges coincide. In addition, both methods have $94 \% $ accuarcy, which matches the number in \cite{Friedman_1996}. The log-likelihood for the Bayesian method is only slightly better than the MDL method.
 
 \begin{table}[ht]
   \centering
