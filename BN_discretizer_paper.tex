@@ -1161,7 +1161,8 @@ In contrast, the samples for $H$ are well spread out, resulting in fewer discret
   \caption{
     The discretization policies for variables $C$ and $E$ learned using the Bayesian approach on the fixed network.
     The scatter points were jittered to reveal the repeated values in the dataset.
-    The repeated values lead to many discretization edges because repeated values can easily form \todo{discretized regions on their own.}
+    Values perfectly repeated in $C$ and $E$ lead to high correlation and concentrated densities in the marginal distribution.
+    % The repeated values lead to many discretization edges because repeated values can easily form \todo{discretized regions on their own.}
   }
   \label{fig:housing_exp1_distr_3_5}
 \end{figure}
@@ -1261,11 +1262,11 @@ This paper introduced a principled discretization method for continuous variable
 Empirical demonstrations show that the proposed method is superior to the state of the art.
 In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
 The proposed method was incorporated and its superior performance was empirically demonstrated.
+Future work will investigate edge positions at locations other than the midpoints between samples and will extend the approach to cluster categorical variables with very many levels.
 All software is publicly available at \url{github.com/sisl/LearnDiscreteBayesNets.jl}.
 
-The methods developed in this paper increase the accuracy of Bayesian networks learned on datasets with continuous and mixed variables.
-An automated process for simultaneously constructing Bayesian networks and discretization policies is appealing because of the potential to significantly reduce development time and cost when developing models for uncertainty and causality.
-Future work will investigate edge positions at locations other than the midpoints between samples and using different discretization policies for the same variable in different conditional probablity distributions.
+% The methods developed in this paper increase the accuracy of Bayesian networks learned on datasets with continuous and mixed variables.
+% An automated process for simultaneously constructing Bayesian networks and discretization policies is appealing because of the potential to significantly reduce development time and cost when developing models for uncertainty and causality.
 
 %\begin{acknowledgements}
 %If you'd like to thank anyone, place your comments here
