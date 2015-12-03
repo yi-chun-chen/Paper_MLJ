@@ -685,11 +685,10 @@ For faster methods with suboptimal results, see \citet{Friedman_1996} and \citet
 
 The single-variable discretization method can be extended to Bayesian networks with multiple continuous variables by iteratively discretizing individual variables.
 The discretization process for a single variable requires that all other variables be discrete.
-The iterative approach uses a prediscretization policy in order to initialize the process.
-In this paper, prediscretization assigns $k$ equal-width intervals to each continuous variable, where $k$ is the largest number of intervals of initially discrete variables in the network.
+The iterative approach uses an initial discretization policy in order to start the process which assigns $k$ equal-width intervals to each continuous variable, where $k$ is the largest number of intervals of initially discrete variables in the network.
 
-After prediscretization, the one-variable discretization method is iteratively applied over each continuous variable in reverse topoligical order, from the leaves to the root.
-Reverse topological order has the advantage of relying on fewer prediscretizations of the continuous variables during the first pass.
+After the initial discretization, the one-variable discretization method is iteratively applied over each continuous variable in reverse topoligical order, from the leaves to the root.
+Reverse topological order has the advantage of relying on fewer initial discretizations of the continuous variables during the first pass.
 For example, in the network of Figure~\ref{fig:example_networks}, if $S_2$ is the only discrete variable, then the discretization of $P_1$ involves both $P_2$ and $X$, whereas the discretization of $C_1$ only involves $X$.
 
 \begin{figure}[ht]
@@ -781,7 +780,7 @@ Traditional Bayesian structure learning algorithms require discretized data, whe
 The discretization methods can be combined with the K2 structure learning algorithm \citep{cooper1992bayesian} to simultaneously perform Bayesian structure learning and discretization of continuous variables.
 
 The proposed algorithm alternates between K2 structure learning and discretization.
-The dataset is prediscretized as was described in Section~\ref{sec:multi_var}, and K2 is run to obtain an initial network structure.
+The dataset is initially discretized as was described in Section~\ref{sec:multi_var}, and K2 is run to obtain an initial network structure.
 The affected continuous variables are rediscretized every time an edge is added by K2.
 The resulting discretization policies are used to update the discretized dataset, and the next step of the K2 algorithm is executed.
 This cycle is repeated until the K2 algorithm converges.
@@ -940,12 +939,12 @@ Three variables are discrete: $B$, $G$, and $H$, with \num{5}, \num{13}, and \nu
 \label{subsubsec:auto_exp1}
 
 The Bayesian and MDL discretization methods were tested on the Auto MPG data using the network shown in Figure~\ref{fig:auto_graph_1}.
-This structure was obtained by prediscretizing each continuous variable into five uniform-width intervals, where five is the median cardinality of the discrete variables, and then taking the structure with highest likelihood from \num{1000} runs of K2.
+This structure was obtained by initially discretizing each continuous variable into five uniform-width intervals, where five is the median cardinality of the discrete variables, and then taking the structure with highest likelihood from \num{1000} runs of K2.
 
 \begin{figure}[ht]
   \centering
    \input{Fig3}
-   \caption{Bayesian network structure obtained from running K2 on the prediscretized Auto MPG dataset.}
+   \caption{Bayesian network structure obtained from running K2 on the initially uniformly discretized Auto MPG dataset.}
   \label{fig:auto_graph_1}
 \end{figure}
 
@@ -1024,7 +1023,7 @@ Variable $A$ is the only discrete variable and has three instantiations.
 \label{subsubsec:wine_exp1}
 
 The Bayesian and MDL discretization methods were tested on the Wine data using the network shown in Figure~\ref{fig:wine_graph_1}.
-This structure was obtained by prediscretizing each continuous variable into three uniform-width intervals, where three is the median cardinality of the discrete variables, and then taking the structure with highest likelihood from \num{1000} runs of K2.
+This structure was obtained by initially discretizing each continuous variable into three uniform-width intervals, where three is the median cardinality of the discrete variables, and then taking the structure with highest likelihood from \num{1000} runs of K2.
 
 Table~\ref{table:wine_disc_table_1} lists the discretization edges and mean log-likelihoods under \num{10}-fold cross validation of the Bayesian network resulting from each discretization method.
 The Bayesian method outperforms the MDL method in likelihood by a significant margin.
@@ -1038,7 +1037,7 @@ This indicates sufficiently MDL indeed can find some important discretization ed
 \begin{figure}[ht]
   \centering
   \scalebox{0.8}{\input{Fig7}}
-  \caption{Bayesian network structure obtained from running K2 on the prediscretized Wine dataset.}
+  \caption{Bayesian network structure obtained from running K2 on the initially uniformly discretized Wine dataset.}
   \label{fig:wine_graph_1}
 \end{figure}
 
@@ -1075,7 +1074,7 @@ Relative sensitivities of each method to the input data is discussed in Section~
 \label{subsubsec:wine_exp2}
 
 Figure~\ref{fig:wine_graph_2} is the discrete-valued Bayesian network learned from the Wine dataset, obtained by running Algorithm~\ref{alg:structure_learn} fifty times.
-A comparison of Figures~\ref{fig:wine_graph_2} and \ref{fig:wine_graph_1} show that the Bayesian network learned during the discretization process has more edges than the network learned on the prediscretized data.
+A comparison of Figures~\ref{fig:wine_graph_2} and \ref{fig:wine_graph_1} show that the Bayesian network learned during the discretization process has more edges than the network learned on the initially discretized data.
 When a network is learned along with discretization, the algorithm has more freedom to adjust the structure and the discretization policy simultaneously to identify useful correlations and produce a denser structure.
 
 Figure~\ref{fig:wine_exp2_distr} shows the discretization policy for variables $E$ and $K$ obtained with the Bayesian method.
@@ -1120,7 +1119,7 @@ The following experiments were conducted with a maximum of three parents per var
 \subsubsection{Discretization with Fixed Structure}
 \label{subsubsec:housing_exp1}
 
-The Bayesian network structure in Figure~\ref{fig:housing_graph_1} was obtained by prediscretizing each continuous variable into five uniform-width intervals and then running the K2 algorithm \num{1000} times and choosing the network with the highest likelihood.
+The Bayesian network structure in Figure~\ref{fig:housing_graph_1} was obtained by initially discretizing each continuous variable into five uniform-width intervals and then running the K2 algorithm \num{1000} times and choosing the network with the highest likelihood.
 Table~\ref{table:housing_disc_table_1} shows the numbers of interval after discretization for each continuous variable and the log-likelihood of the dataset based on each discretization method.
 MDL method does not produce any discretization edges for most variables.
 % The heuristic Bayesian method produces far more discretization edges than the Bayesian method due to repeated instances in the dataset.
@@ -1133,7 +1132,7 @@ The relative weighting of each method's objective function will be discussed in 
 \begin{figure}[ht]
   \centering
   \scalebox{0.8}{\input{Fig11}}
-  \caption{Bayesian network structure obtained from running K2 on the prediscretized Housing dataset.}
+  \caption{Bayesian network structure obtained from running K2 on the initially uniformly discretized Housing dataset.}
   \label{fig:housing_graph_1}
 \end{figure}
 
@@ -1289,13 +1288,14 @@ All software is publicly available at \url{github.com/sisl/LearnDiscreteBayesNet
 \section*{Appendix}
 \label{sec:appendix}
 
-Two examples of Bayesian networks where MDL produces comparable results to the Bayesian method are given in this section.
-The first example is on the Auto MPG dataset. Instead of testing on the network obtained by prediscretization and structure learning, the tested network is obtained by Algorithm \ref{alg:structure_learn}, which can be considered better-structured than the network in Figure \ref{fig:auto_graph_1}.
+This section gives two examples of Bayesian networks where MDL produces comparable results to the Bayesian method.
+The first example used the Auto MPG dataset.
+Instead of testing on the network obtained using initially uniform discretization and structure learning, the tested network is obtained by Algorithm \ref{alg:structure_learn}, which can be considered better-structured than the network in Figure \ref{fig:auto_graph_1}.
 The second example is on the Iris dataset \citep{Lichman_2013}.
 In the work of \cite{Friedman_1996}, the Iris dataset was tested on the naive Bayes network structure and the prediction accuracy was shown.
 The same test is reproduced below to compare the Bayesian method to the MDL discretization method.
 
-\subsection{Example 1}
+\subsection{Auto MPG with Comparable MDL Performance}
 The Bayesian network structure in Figure~\ref{fig:auto_graph_3} and the discretization results in Table~\ref{table:auto_disc_table_3} demonstrate that the MDL method does not always produce fewer discretization intervals than the Bayesian approach and that the MDL method can produce discretization policies with comparable likelihood.
 The Bayesian network in Figure~\ref{fig:auto_graph_3} was obtained by running Algorithm~\ref{alg:structure_learn} fifty times on the Auto MPG dataset with a maximum of two parents per variable.
 The network is structured more favorably with regards to discretization than the network in Figure~\ref{fig:auto_graph_1}, as the discretization policies were simultaneously learned with the network structure, resulting in higher data likelihood.
@@ -1320,7 +1320,8 @@ Many edges appear in both discretization results and are bolded in Table~\ref{ta
   \label{table:auto_disc_table_3}
 \end{table}
 
-\subsection{Example 2}
+\subsection{Reproducing MDL Results from the Literature}
+
 The Iris dataset contains variables related to the morphologic variation of three Iris flower species.
 The dataset has \num{150} samples over five variables.
 Only variables $E$ is discrete-valued, and corresponds to the species category.
