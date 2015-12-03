@@ -479,7 +479,7 @@ The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for 
         \frac{
           {\gamma_i}!
         }{
-          {n^{({P})}_{i,1}}! \; {n^{({P})}_{i,2}}! \; \cdots \; {n^{({P})}_{i,J_\text{P}}}!
+          {n^{(\text{P})}_{i,1}}! \; {n^{(\text{P})}_{i,2}}! \; \cdots \; {n^{(\text{P})}_{i,J_\text{P}}}!
         }
       }}
   } + \\
@@ -515,7 +515,7 @@ Hence, $h(u,v)$ is computed first for each interval $\gamma_q$ starting from $x_
   \begin{equation}
   \label{eqn:h_function}
   \begin{aligned}
-  h(u,v) &=  \ln {{\gamma_{q} + J_\text{P} - 1}\choose{J_\text{P}-1}} + \ln \left( { {{\gamma_q}!}\over{ {n^{(p)}_{q,1} !} {n^{(p)}_{q,2} !} \cdots {n^{(p)}_{q,J_p} !}} } \right) \\
+  h(u,v) &=  \ln {{\gamma_{q} + J_\text{P} - 1}\choose{J_\text{P}-1}} + \ln \left( { {{\gamma_q}!}\over{ {n^{(\text{P})}_{q,1} !} {n^{(\text{P})}_{q,2} !} \cdots {n^{(\text{P})}_{q,J_p} !}} } \right) \\
   & + \sum_{j=1}^{n_c} \sum_{\ell=1}^{J^{(j)}_{\bm{S}}} \brock{
     { \ln
             {{n^{(j)}_{i,\ell} + J_{C_j} - 1}\choose{J_{C_j}-1}}}
@@ -928,14 +928,14 @@ Therefore, the runtime of the proposed method in this paper is shorter than the 
 
 Note that the preliminary discretization and the discretization order of variables can be arbitrary for the MDL discretization method, as stated in the original work \citep{Friedman_1996}. In order to make a fair comparison between the Bayesian and MDL method, the preliminary discretization and the discretization order follows the same procedure as in Section \ref{sec:multi_var}.
 
-\subsection{Auto MPG Dataset}
+\subsection{Dataset 1: Auto MPG}
 \label{subsec:auto}
 
 The Auto MPG dataset contains variables related to the fuel consumption of automobiles in urban driving.
 The dataset has \num{392} samples over eight variables, not including six instances with missing data.
 Three variables are discrete: $B$, $G$, and $H$, with \num{5}, \num{13}, and \num{3} instantiations respectively.
 
-\subsubsection{Discretization with fixed Structure}
+\subsubsection{Discretization with Fixed Structure}
 \label{subsubsec:auto_exp1}
 
 The Bayesian and MDL discretization methods were tested on the Auto MPG data using the network shown in Figure~\ref{fig:auto_graph_1}.
@@ -951,7 +951,7 @@ This structure was obtained by initially discretizing each continuous variable i
 Table~\ref{table:auto_disc_table_1} lists the discretization edges and mean log-likelihoods under \num{10}-fold cross validation of the discrete Bayesian network resulting from the two discretization methods.
 The MDL method does not produce any discretization edges, assigning one continuous interval to each continuous variable, and produces the result with the lower likelihood.
 The reason why MDL produces fewer discretization edges is discussed in Section~\ref{subsec:discuss_exp}.
-Two examples of MDL producing comparble results to the Bayesian method are given in the Appendix.
+Two examples that MDL produces comparble results to the Bayesian method are given in the Appendix.
 
 \begin{table}[ht]
   \centering
@@ -986,7 +986,8 @@ This result was obtained by running Algorithm~\ref{alg:structure_learn} fifty ti
 
 \begin{figure}[ht]
   \centering
-  \input{Fig5}
+  \scalebox{0.9}{
+  \input{Fig5}}
   \caption{The discrete-valued Bayesian network learned from the Auto MPG dataset using the Bayesian method.}
   \label{fig:auto_graph_2}
 \end{figure}
@@ -1019,7 +1020,7 @@ The Wine dataset contains variables related to the chemical analysis of wines fr
 The dataset has \num{178} samples over fourteen variables.
 Variable $A$ is the only discrete variable and has three instantiations.
 
-\subsubsection{Discretization with fixed Structure}
+\subsubsection{Discretization with Fixed Structure}
 \label{subsubsec:wine_exp1}
 
 The Bayesian and MDL discretization methods were tested on the Wine data using the network shown in Figure~\ref{fig:wine_graph_1}.
@@ -1107,7 +1108,7 @@ The more parents a variable has, the fewer discretization intervals it can to su
 %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
-\subsection{Data 3: Housing}
+\subsection{Dataset 3: Housing}
 \label{subsec:housing}
 
 The Housing dataset contains variables related to the values of houses in Boston suburbs.
@@ -1225,7 +1226,7 @@ Although the number of intervals after discretization on $H$ is less the number 
 \begin{figure}[ht]
   \centering
   \input{Fig17}
-  \caption{A simple Bayesian network used to demonstrate the sensitivity of each method}
+  \caption{A simple Bayesian network used to demonstrate the sensitivity of each method.}
   \label{fig:exp_discuss}
 \end{figure}
 
@@ -1295,7 +1296,7 @@ The second example is on the Iris dataset \citep{Lichman_2013}.
 In the work of \cite{Friedman_1996}, the Iris dataset was tested on the naive Bayes network structure and the prediction accuracy was shown.
 The same test is reproduced below to compare the Bayesian method to the MDL discretization method.
 
-\subsection{Auto MPG with Comparable MDL Performance}
+\subsection*{Auto MPG with Comparable MDL Performance}
 The Bayesian network structure in Figure~\ref{fig:auto_graph_3} and the discretization results in Table~\ref{table:auto_disc_table_3} demonstrate that the MDL method does not always produce fewer discretization intervals than the Bayesian approach and that the MDL method can produce discretization policies with comparable likelihood.
 The Bayesian network in Figure~\ref{fig:auto_graph_3} was obtained by running Algorithm~\ref{alg:structure_learn} fifty times on the Auto MPG dataset with a maximum of two parents per variable.
 The network is structured more favorably with regards to discretization than the network in Figure~\ref{fig:auto_graph_1}, as the discretization policies were simultaneously learned with the network structure, resulting in higher data likelihood.
@@ -1320,7 +1321,7 @@ Many edges appear in both discretization results and are bolded in Table~\ref{ta
   \label{table:auto_disc_table_3}
 \end{table}
 
-\subsection{Reproducing MDL Results from the Literature}
+\subsection*{Reproducing MDL Results from the Literature}
 
 The Iris dataset contains variables related to the morphologic variation of three Iris flower species.
 The dataset has \num{150} samples over five variables.

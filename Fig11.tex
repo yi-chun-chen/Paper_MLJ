@@ -40,25 +40,15 @@
   % Connect the nodes
 
   \edge {c5}{c2,c3,c8,c9};
-  \draw[->,>=stealth', shorten >= 1pt] (c5) to[bend right](c7);
+  \draw[->] (c5) to[bend right](c7);
   \edge {c2}{c9,c3,c7}
-  \draw[->,>=stealth', shorten >= 1pt] (c2) to[bend right](c10);
-  %\draw[->,>=stealth', shorten >= 1pt] (c4) to[bend left](c5);  
+  \draw[->] (c2) to[bend right](c10);
   \edge {c3}{c9,c10,c11};
   \edge{c9}{c10,c11};
-  %\draw[->,>=stealth', shorten >= 1pt] (c9) to[bend left](c5);
-  %\draw[->,>=stealth', shorten >= 1pt] (c9) to[bend right](c2);
   \edge {c10}{c11,c12};
   \edge {c7}{c13};
   \edge {c13}{c14};
   \edge {c14,c1}{c6};
-  %\edge {c1}{c6,c11,c8,c5};
-  %\edge {c2}{c1};
-  %\draw[->,>=stealth', shorten >= 1pt] (c12) to[bend right](c1);
-  %\draw[->,>=stealth', shorten >= 1pt] (c1) to[bend right](c7);
-  %\edge {p1,p2} {y} ; %
-  %\edge {y} {c2} ;
-  %\edge {y}{c1};
 
 
 
