@@ -9,7 +9,7 @@
 \newcommand{\tim}[1]{\textit{\textcolor{blue}{#1}}}
 \newcommand{\mykel}[1]{\textit{\textcolor{cyan}{#1}}}
 
-\title{Information Sheet \\ {\large Learning Discrete-valued Bayesian Networks from Mixed Data}}
+\title{Information Sheet \\ {\large Learning Discrete Bayesian Networks from Continuous Data}}
 \author{\normalsize Yi-Chun Chen, Tim A. Wheeler, Mykel J. Kochenderfer}
 \date{}
 
@@ -30,9 +30,9 @@ Bayesian networks are an increasingly popular method for modeling uncertainty an
 In most cases, one assumes that the random variables in a Bayesian network are discrete, since many Bayesian network learning and inference algorithms are unable to efficiently handle continuous variables.
 However, many applications require the use of continuous variables, in which case one must use Bayesian networks with continuous parametric distributions or discretize all continuous variables.
 
-The proposed method learns discretization policies for continuous variables from mixed data while taking the Bayesian network structure into account.
+The proposed method learns discretization policies for continuous variables from continuous data while taking the Bayesian network structure into account.
 Prior Bayesian methods, such as MODL \citep{Boulle_2006, Lustgarten_2011}, only consider the discretization of a single continuous variable with respect to another single discrete variable.
-The predominant existing method for discretizing continuous variables in Bayesian networks is based on MDL~\citep{Friedman_1996}, and has cubic runtime in the number of data samples.
+The predominant existing method for discretizing continuous variables in Bayesian networks is based on MDL~\citep{Friedman_1996}, and has cubic runtime in the number of data samples for optimal discretization.
 The proposed method learns the discretization with quadratic runtime in the number of data samples, allowing it to more efficiently scale to larger datasets.
 Furthermore, empirical demonstrations show that the proposed method produces superior discretization policies, which was objectively evaluated using the cross-validated log-likelihood.\\[0em]
 
