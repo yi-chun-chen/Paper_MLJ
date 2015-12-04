@@ -32,7 +32,7 @@ However, many applications require the use of continuous variables, in which cas
 
 The proposed method learns discretization policies for continuous variables from continuous data while taking the Bayesian network structure into account.
 Prior Bayesian methods, such as MODL \citep{Boulle_2006, Lustgarten_2011}, only consider the discretization of a single continuous variable with respect to another single discrete variable.
-The predominant existing method for discretizing continuous variables in Bayesian networks is based on MDL~\citep{Friedman_1996}, and has cubic runtime in the number of data samples for optimal discretization.
+The predominant existing method for discretizing continuous variables in Bayesian networks is based on MDL~\citep{Friedman_1996}, and has cubic runtime in the number of data samples.
 The proposed method learns the discretization with quadratic runtime in the number of data samples, allowing it to more efficiently scale to larger datasets.
 Furthermore, empirical demonstrations show that the proposed method produces superior discretization policies, which was objectively evaluated using the cross-validated log-likelihood.\\[0em]
 

@@ -542,7 +542,7 @@ As will be discussed in Section~\ref{sec:experiments}, the MDL discretization me
 The Bayesian discretization method is quadratic in the sample count $n$, whereas the MDL discretization method is cubic.
 
 Algorithm~\ref{alg:disc_one} is guaranteed to be optimal.
-For faster methods with suboptimal results, see \citet{Friedman_1996} and \citet{Boulle_2006}.
+For faster methods with suboptimal results, see \citet{Boulle_2006}.
 
 \begin{algorithm}
   \caption{Discretization of one continuous variable in a Bayesian network}
@@ -925,6 +925,7 @@ Hence, if $\Lambda = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}$ is a 
 This procedure takes runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$.
 All variables are defined in Section \ref{subsec:algo}.
 Therefore, the runtime of the proposed method in this paper is shorter than the MDL discretization method by $\bigo \paren{n^3}$, since the former has a more efficient form of dynamical programming.
+For faster methods of MDL discretization with suboptimal results, see \citet{Friedman_1996}.
 
 Note that the preliminary discretization and the discretization order of variables can be arbitrary for the MDL discretization method, as stated in the original work \citep{Friedman_1996}. In order to make a fair comparison between the Bayesian and MDL method, the preliminary discretization and the discretization order follows the same procedure as in Section \ref{sec:multi_var}.
 
