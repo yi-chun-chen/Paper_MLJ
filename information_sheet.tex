@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[round]{natbib}
+\usepackage{graphicx}
+\usepackage{color}
+
+\newcommand{\todo}[1]{\textcolor{magenta}{#1}}
+\newcommand{\yichun}[1]{\textit{\textcolor{green}{#1}}}
+\newcommand{\tim}[1]{\textit{\textcolor{blue}{#1}}}
+\newcommand{\mykel}[1]{\textit{\textcolor{cyan}{#1}}}
+
+\title{Information Sheet \\ {\large Learning Discrete Bayesian Networks from Continuous Data}}
+\author{\normalsize Yi-Chun Chen, Tim A. Wheeler, Mykel J. Kochenderfer}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+\textbf{What is the main claim of the paper?}
+
+This paper introduces a principled Bayesian discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of the standard minimum-description length (MDL) technique.
+In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables while simultaneously learning Bayesian network structures.\\[0em]
+
+\noindent
+\textbf{How is this a contribution to the machine learning literature?}
+
+Bayesian networks are an increasingly popular method for modeling uncertainty and causality.
+In most cases, one assumes that the random variables in a Bayesian network are discrete, since many Bayesian network learning and inference algorithms are unable to efficiently handle continuous variables.
+However, many applications require the use of continuous variables, in which case one must use Bayesian networks with continuous parametric distributions or discretize all continuous variables.
+
+The proposed method learns discretization policies for continuous variables from continuous data while taking the Bayesian network structure into account.
+Prior Bayesian methods, such as MODL \citep{Boulle_2006, Lustgarten_2011}, only consider the discretization of a single continuous variable with respect to another single discrete variable.
+A common discretization method for Bayesian networks is to split continuous variables into uniform-width intervals or to use field-specific expertise.
+A more principled method is the minimum description length (MDL) principle discretization \citep{Friedman_1996} which has cubic runtime in the number of data samples.
+
+The proposed method learns the discretization with quadratic runtime in the number of data samples, allowing it to more efficiently scale to larger datasets.
+Furthermore, empirical demonstrations show that the proposed method produces superior discretization policies, which was objectively evaluated using the cross-validated log-likelihood.\\[0em]
+
+\noindent
+\textbf{What is the evidence you provide to support your claim?}
+
+The Bayesian discretization algorithm is derived from base priors and the pseudocode is given.
+Experiments were conducted on three datasets from the University of California, Irvine machine learning repository~\citep{Lichman_2013}.
+Each dataset possesses different qualities which affect the behavior of the discretization algorithms.
+
+Two experiments were conducted for each dataset: one experiment in which the continuous variables are discretized with a known Bayesian network structure, and a second experiment in which the network structure is simultaneously learned along with the discretization policy.
+The resulting discretization policies are given and discussed for each dataset.
+
+Results demonstrate that the proposed method is superior to the MDL work of \cite{Friedman_1996}.
+The latter tends to produce discretization policies with low numbers of intervals, and the models produced by the proposed Bayesian method have significantly higher validation log-likelihood.\\[0em]
+
+\noindent
+\textbf{What papers by other authors make the most closely related contributions, and how is your paper related to them?}
+
+The proposed method is related to \cite{Boulle_2006} and \cite{Lustgarten_2011}.
+These two works discuss the discretization of a continuous variable given a single class variable using a principled Bayesian method.
+This paper is an extension of these two works to discretization in a general Bayesian network, where the discretization of a particular variable requires considering that variable's Markov blanket.\\[0em]
+
+\noindent
+\textbf{Have you published parts of your paper before?}
+
+No parts of this paper have been previously published.
+
+\bibliographystyle{spbasic}
+\bibliography{my_bib}
+\end{document}
