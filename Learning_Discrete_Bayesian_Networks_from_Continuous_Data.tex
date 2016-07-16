@@ -279,7 +279,7 @@ Two useful integer representations of $\Lambda_{\cX}$ can be written
 
 \noindent
 where $\lambda_1 = s_1$, $\lambda_i \in s_{1:m}$, $\gamma_1 = \lambda_1$, and $\gamma_i = \lambda_i - \lambda_{i-1}$.
-The $\lambda_{1:k}$ representation is the number of instances before every discretization edge whereas the $\gamma_{1:k}$ representation is the number of instances within each discretization interval. Table \ref{table:data_demo} and \ref{table:data_demo_2} make an example of variables defined in this subsection.
+The $\lambda_{1:k}$ representation is the number of instances before every discretization edge whereas the $\gamma_{1:k}$ representation is the number of instances within each discretization interval. Table \ref{table:data_demo} and \ref{table:data_demo_2} demonstrate variable assignments for an example dataset.
 
 %For example, Table \ref{table:data_demo} is a dataset that mixes continuous variable $\cX$ and discrete variables $A$ and $B$. Data samples are arranged in an ascending order of $\cX$. Therefore, $n = 10$, $m =6$, $\cx_{1:10} = \curly{ 1.1, 1.2, 1.2, 2.9, 2.9, 2.9, 3.5, 4.3, 4.3, 5.0} $, and  $\cu_{1:6} = \curly{ 1.1,1.2,2.9,3.5,4.3,5.0}$. The corresponding index $s$ of $\cu$ in $\cx$ is $s_{1:6} = \curly{1,3,6,7,9,10}$. In addition, a three-interval discretization policy $\Lambda^0_{\cX}$ with edges $e_1 = 1.55$ and $e_2 = 4.65$ can be represented as
 %\begin{equation}
@@ -289,27 +289,28 @@ The $\lambda_{1:k}$ representation is the number of instances before every discr
 \begin{table}[ht]
   \centering
   \caption{
-    An example dataset that demonstrates variables defined in Section \ref{subsec:disc_policy} to discretize continuous variable $\cX$.
+    An example dataset used to demonstrate the variables defined in Section \ref{subsec:disc_policy}. Rows are assignments to continuous variable $\cX$ and discrete variables $A$ and $B$.
   }
   \input{Table0.tex}
   \label{table:data_demo}
   \bigskip
   \centering
   \caption{
-  	Illustrate variables defined in Section \ref{subsec:disc_policy} along with the dataset in Table \ref{table:data_demo}. Note that $\Lambda^{\text{ex}}_{\cX}$ is an example of a valid discretization policy. $\anglebrackets{}_{e}$, $\anglebrackets{}_{\lambda}$, and $\anglebrackets{}_{\gamma}$ are the three equivalent representations of discretization policies.
- }
-  	\begin{tabular}{cc}
-  		\toprule
-  		Variable &  Value \\
-  		\midrule
-  		$n$ &  \num{10} \\
-  		$m$ &  \num{6} \\
-  		$\cx_{1:10}$ & $\curly{ 1.1, 1.2, 1.2, 2.9, 2.9, 2.9, 3.5, 4.3, 4.3, 5.0} $\\
-  		$\cu_{1:6} $ & $\curly{ 1.1,1.2,2.9,3.5,4.3,5.0}$\\
-  		$s_{1:6}$ & $\curly{1,3,6,7,9,10}$\\
-  		$\Lambda^{\text{ex}}_{\cX}$ & $\anglebrackets{1.55,4.65}_{e}$, $ \anglebrackets{3 ,9,10}_{\lambda}$, $\anglebrackets{3, 6, 1}_{\gamma} $\\
-  		\bottomrule
-  	\end{tabular}
+    Assignments for variables defined in Section~\ref{subsec:disc_policy} according to the dataset in Table~\ref{table:data_demo}.
+  	Note that $\Lambda^{\text{ex}}_{\cX}$ is an example of a valid discretization policy. Discretization policies can be represented by their edges $\anglebrackets{}_{e}$, their sorted unique dataset indeces $\anglebrackets{}_{\lambda}$, or by the interval between sorted unique dataset indeces $\anglebrackets{}_{\gamma}$.
+  }
+	\begin{tabular}{cc}
+		\toprule
+		Variable &  Value \\
+		\midrule
+		$n$ &  \num{10} \\
+		$m$ &  \num{6} \\
+		$\cx_{1:10}$ & $\curly{ 1.1, 1.2, 1.2, 2.9, 2.9, 2.9, 3.5, 4.3, 4.3, 5.0} $\\
+		$\cu_{1:6} $ & $\curly{ 1.1,1.2,2.9,3.5,4.3,5.0}$\\
+		$s_{1:6}$ & $\curly{1,3,6,7,9,10}$\\
+		$\Lambda^{\text{ex}}_{\cX}$ & $\anglebrackets{1.55,4.65}_{e}$, $ \anglebrackets{3 ,9,10}_{\lambda}$, $\anglebrackets{3, 6, 1}_{\gamma} $\\
+		\bottomrule
+	\end{tabular}
   \label{table:data_demo_2}
 \end{table}
 
@@ -384,7 +385,7 @@ From the first principle one obtains the prior over the discretization policy:
 \end{equation}
 \end{small}
 
-The Bayesian network graph structure causes the likelihood term ${P(D_{-\cX} \mid \Lambda)}$ to factor according to $\cX$'s Markov blanket:
+The likelihood term ${P(D_{-\cX} \mid \Lambda)}$ for a Bayesian network graph structure factors according to $\cX$'s Markov blanket:
 
 \begin{equation}
   \label{eq:p_D_given_M}
@@ -1255,15 +1256,20 @@ Although the number of intervals after discretization on $H$ is less the number 
   \label{fig:housing_exp2_distr_8_5}
 \end{figure}
 
-\subsection{Results on More Datasets}
+\subsection{Results on Additional Datasets}
 
-Six additional datasets \citep{Lichman_2013} are tested to compare the proposed Bayesian approach and MDL discretization method. The results are summarized in Table \ref{table:more_data_set}. For each dataset, number of samples $n$, number of variables $m$, the fixed network to execute discretization, and resulted log-likelihood by the two methods are shown in the same row. Note that the fixed network structures are obtained by the same principle as in previous three datasets. The network representation in Table \ref{table:more_data_set} records the parent variables of each variable. For example, in the first row, the representation $\curly{\emptyset,A,BE,AB,B,AH,BDG,B}$ indicates that $\Pa_A = \emptyset$, $\Pa_B = A$, $\Pa_c = \curly{B,E}$, etc. Again, the results show that the proposed Bayesian discretization method outperforms the MDL method in terms of likelihood.
+Six additional datasets \citep{Lichman_2013} are tested to compare the Bayesian and MDL discretization methods.
+The results are summarized in Table~\ref{table:more_data_set}.
+Each row corresponds to a dataset and provides the number of samples $n$, the number of variables $m$, the fixed network structure, and the log-likelihood for each method.
+Fixed network structures are obtained by the same principle as in previous three datasets and are represented in the table by listing the parents for each variable.
+For example, in the first row, the representation $\curly{\emptyset,A,BE,AB,B,AH,BDG,B}$ indicates that $\Pa_A = \emptyset$, $\Pa_B = A$, $\Pa_c = \curly{B,E}$, etc.
+The Bayesian discretization method has higher mean cross-validated log likelihood in all cases.
 
 \begin{table}[ht]
 	\centering
 	\caption{
-		The discretization results on several datasets.
-	    Each row corresponds to a dataset. Names of datasets, numbers of samples, numbers of variables, network structures for discretization, log-likelihood obtained by the proposed Bayesian method and MDL method are shown.
+		Discretization results for several datasets.
+    The number of samples, number of variables, network structure, and mean cross-validated log-likelihood under each discretization method are given.
 	}
 	\input{Table3_2.tex}
 	\label{table:more_data_set}
@@ -1295,7 +1301,7 @@ If $\Pa_{\cX} = \curly{P_1, P_2}$ and $D_{\cX} = \curly{1,2,3, \ldots n}$, then 
 
 \noindent
 where $Z_1$ and $Z_2$ are constant over discretizations, $k$ is the number of discretization intervals, and $I\paren{A, B} = \sum_{a,b} \hat{P}(a,b) \ln\frac{\hat{P}(a,b)}{\hat{P}(a)\hat{P}(b)}$ is the mutual information based on estimated probabilities.
-Note that the third term of $f_\text{MDL}$ had been approximated using $H(p)$ (see Equation~\ref{eqn:MDL}) in the original work by \cite{Friedman_1996}, but it is written here without that approximation.
+Note that the third term of $f_\text{MDL}$ was approximated using $H(p)$ (see Equation~\ref{eqn:MDL}) in the original work by \cite{Friedman_1996}, but it is written here without that approximation.
 
 The penalty terms tend to increase with the number of discretization intervals; the edge position terms vary with the position and number of the discretization edges.
 A policy with a larger number of discretization edges is only optimal if the edge position term varies enough with respect to the penalty term in order to produce a local minimum of sufficiently low value.
@@ -1305,9 +1311,15 @@ The MDL term uses empirical probability distributions based off of ratios of cou
 The MDL method is therefore less sensitive to the discretization edges.
 This sensitivity gives rise to the relative performance of the two methods in the experiments conducted above.
 
-To further demonstrate the above discussion, the discretization results on Iris dataset with respect to different cropped data sizes are analyzed. As shown in Appendix, the results of the two methods coincide on Iris dataset under naive Bayes structure. However, if the dataset is cropped and the distribution pattern of data samples becomes less obvious, the two discretization methods would have different outcomes. 
+We use the Iris dataset to support this discussion.
+In the appendix we show that the Bayesian and MDL methods produce equivalent results under a naive Bayes structure.
+However, if a subset of the samples are used then the distribution pattern of data samples becomes less obvious, and the two discretization methods have different outcomes.
 
-Figure \ref{fig:iris_four} shows the relation between number of samples in cropped datasets and number of resulted discretization edges on each continuous variable. Samples are drawn randomly from the dataset and the result of number of edges are averaged over one thousand times. On variable $C$ and $D$, since data distribution is easier to discriminate, both methods have already located two discretization edges even if there were only thirty samples (one fifth of the entire dataset). On variable $A$ and $B$, more data samples are required to locate the discretization edges. Under this case, the proposed Bayesian method is more sensitive than the MDL method and able to lay down more discretization edges even if the data distribution is still vague for the MDL method.
+Figure \ref{fig:iris_four} shows the relation between the number of samples and the number of \todo{I thought this would be likelihood?} discretization edges on each continuous variable.
+Samples are drawn randomly from the dataset \tim{without replacement?} and the result of number of edges are averaged over a thousand runs.
+For the variables $C$ and $D$, the correct discretization policy is easier to obtain, and both methods locate two discretization edges within thirty samples, one fifth of the full Iris dataset.
+For the variables $A$ and $B$, more data samples are required before settling on the final discretization edges.
+Under this case, the proposed Bayesian method is more sensitive than the MDL method and produces discretizations with higher cross-validated likelihood.
 
 \begin{figure}
 	\begin{subfigure}{0.45\textwidth}
@@ -1335,7 +1347,7 @@ Figure \ref{fig:iris_four} shows the relation between number of samples in cropp
 		%\caption{D}
 		%\label{fig:iris_d}
 	\end{subfigure}
-	\caption{Number of resulted discretization edges on each continuous variable with respect to number of data samples}
+	\caption{Number of \todo{discretization edges} for each continuous variable in the Iris dataset as the number of samples used in training are varied.}
 	\label{fig:iris_four}
 \end{figure}
 
