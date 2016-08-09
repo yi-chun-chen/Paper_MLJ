@@ -69,6 +69,8 @@
 \captionsetup{compatibility=false}
 \usepackage{tabularx}
 
+\DeclareCaptionLabelFormat{andtable}{#1~#2  \&  \tablename~\thetable}
+
 \usetikzlibrary{bayesnet}
 \setcitestyle{aysep={ }} %Author-Year Separator
 %
@@ -198,8 +200,8 @@ It is common to discretize all continuous variables before learning a Bayesian n
 %The discretization of a variable in a network requires considering the impact on the variable's Markov blanket.
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
-
-A common discretization method for Bayesian networks is to split continuous variables into uniform-width intervals or to use field-specific expertise \citep{scott1979optimal, freedman1981histogram, knuth2013optimal, scargle2013studies}.
+A common discretization method for Bayesian networks is to split continuous variables into uniform-width intervals or to use field-specific expertise.
+Several Bayesian methods exist to discretize according to the marginal distribution \citep{scott1979optimal, freedman1981histogram, knuth2013optimal, scargle2013studies}, but this ignores dependencies between variables and leads to suboptimal performance, as demonstrated in Appendix A.
 A more principled method is the minimum description length (MDL) principle discretization \citep{Friedman_1996}.
 The MDL principle proposed by \cite{MDL_1978} states that the best model for a dataset is the one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
 MDL methods trade off goodness-of-fit against model complexity to reduce generalization error.
@@ -297,7 +299,7 @@ The $\lambda_{1:k}$ representation is the number of instances before every discr
   \centering
   \caption{
     Assignments for variables defined in Section~\ref{subsec:disc_policy} according to the dataset in Table~\ref{table:data_demo}.
-  	Note that $\Lambda^{\text{ex}}_{\cX}$ is an example of a valid discretization policy. Discretization policies can be represented by their edges $\anglebrackets{}_{e}$, their sorted unique dataset indeces $\anglebrackets{}_{\lambda}$, or by the interval between sorted unique dataset indeces $\anglebrackets{}_{\gamma}$.
+  	Note that $\Lambda^{\text{ex}}_{\cX}$ is an example of a valid discretization policy. Discretization policies can be represented by their edges $\anglebrackets{}_{e}$, their sorted unique dataset indices $\anglebrackets{}_{\lambda}$, or by the interval between sorted unique dataset indices $\anglebrackets{}_{\gamma}$.
   }
 	\begin{tabular}{cc}
 		\toprule
@@ -356,8 +358,8 @@ The four principles, which can be considered an extension of the priors in MODL 
 
 where larger values of $L$ encourage more discretization intervals.
 This prior encourages edges between well-separated values over edges between closely packed samples.
-All experiments set $L$ to the largest number of intervals among discrete variables in $\cX$'s Markov blanket, which encourages Bayesian networks with consistent interval counts.
-In some cases it may be desirable to use higher values for $L$, such as when discrete variables are binary and the continuous variable requires higher fidelity.
+All following content sets $L$ to the largest number of intervals among discrete variables in $\cX$'s Markov blanket, which encourages Bayesian networks with consistent interval counts.
+Higher values of $L$ can be used when the continuous variable requires more discretization intervals than its Markov blanket.
 
 \item For a given discretization interval, every distribution over the parents of $\cX$ is equiprobable.
 \item For each pair $\anglebrackets{C_i,\bm{S}_i}$ and a given discretization interval, every distribution over $C_i$ given an instance of $\bm{S}_i$ is equiprobable.
@@ -541,7 +543,7 @@ The log-inverse of $P(\Lambda) \cdot P(D_{-\cX} \mid \Lambda)$ is minimized for 
 \subsection{Single-Variable Discretization Algorithm}
 \label{subsec:algo}
 
-The procedure used to minimize the objective function involves dynamical programming.
+The procedure used to minimize the objective function involves dynamic programming.
 Note that because the objective function is cumulative over intervals, if a partition $\Lambda = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}$ of $\cX$ is an optimal discretization policy, then any subinterval is optimal for the corresponding subproblem.
 It follows that dynamic programming can be used to solve the optimization problem exactly.
 
@@ -847,7 +849,7 @@ The function $g$ in Algorithm~\ref{alg:structure_learn} computes a component of 
   \caption{Learning a discrete-valued Bayesian network}
   \label{alg:structure_learn}
   \begin{algorithmic}[5]
-  \Function{Learn\_DVBN}{$D$, $\bm{\cX}$, $\texttt{order}$, $\hat{n}_\text{parent}$, $\maxpasses$}
+  \Function{LearnDVBN}{$D$, $\bm{\cX}$, $\texttt{order}$, $\hat{n}_\text{parent}$, $\maxpasses$}
     \State $N \leftarrow$ the number of variables in the Bayesian network
     \State $k \leftarrow \textsc{Max} \{ \|v\|, v\notin C\}$
     \State $\discset \leftarrow$ the discretization policies for each $\cX$ in $\bm{\cX}$
@@ -898,7 +900,7 @@ The structure was obtained by discretizing each continuous variable into $k$ uni
 The second experiment compares the same methods applied when simultaneously discretizing and learning network structure.
 
 The discretizations are compared using the mean cross validated log-likelihood of the data $D$ given the Bayesian network $B$ and discretization policies $\discset$.
-\tim{Did we also normalize each variable to be zero mean and unit covariance?}
+% \tim{Did we also normalize each variable to be zero mean and unit covariance?} - No, we did not
 Note that all log-likelihoods shown have been normalized by the number of data samples.
 The log-likelihood has two components,
 
@@ -962,7 +964,7 @@ For a given Bayesian network, the first three terms only depend on the number of
 Hence, if $\Lambda = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}$ is a MDL optimal discretization policy with $k$ intervals, then $\Lambda' = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_{k-1}}$ is a MDL optimal discretization policy for the corresponding subproblem with $k-1$ intervals.
 This procedure takes runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$.
 All variables are defined in Section \ref{subsec:algo}.
-Therefore, the runtime of the proposed method in this paper is shorter than the MDL discretization method by $\bigo \paren{n^3}$, since the former has a more efficient form of dynamical programming.
+Therefore, the runtime of the proposed method in this paper is less than the MDL discretization method by $\bigo \paren{n^3}$, since the former has a more efficient form of dynamical programming.
 For faster methods of MDL discretization with suboptimal results, see \citet{Friedman_1996}.
 
 Note that the preliminary discretization and the discretization order of variables can be arbitrary for the MDL discretization method, as stated in the original work \citep{Friedman_1996}. In order to make a fair comparison between the Bayesian and MDL method, the preliminary discretization and the discretization order follows the same procedure as in Section \ref{sec:multi_var}.
@@ -990,7 +992,7 @@ This structure was obtained by initially discretizing each continuous variable i
 Table~\ref{table:auto_disc_table_1} lists the discretization edges and mean log-likelihoods under \num{10}-fold cross validation of the discrete Bayesian network resulting from the two discretization methods.
 The MDL method does not produce any discretization edges, assigning one continuous interval to each continuous variable, and produces the result with the lower likelihood.
 The reason why MDL produces fewer discretization edges is discussed in Section~\ref{subsec:discuss_exp}.
-Two examples that MDL produces comparble results to the Bayesian method are given in the Appendix.
+Two examples that MDL produces comparble results to the Bayesian method are given in Appendix B.
 
 \begin{table}[ht]
   \centering
@@ -1161,7 +1163,7 @@ The following experiments were conducted with a maximum of three parents per var
 
 The Bayesian network structure in Figure~\ref{fig:housing_graph_1} was obtained by initially discretizing each continuous variable into five uniform-width intervals and then running the K2 algorithm \num{1000} times and choosing the network with the highest likelihood.
 Table~\ref{table:housing_disc_table_1} shows the numbers of interval after discretization for each continuous variable and the log-likelihood of the dataset based on each discretization method.
-MDL method does not produce any discretization edges for most variables.
+The MDL method does not produce any discretization edges for most variables.
 % The heuristic Bayesian method produces far more discretization edges than the Bayesian method due to repeated instances in the dataset.
 % The numbers of intervals returned by the each method illustrate the over-sensitive nature of the heuristic method and the under-sensitive nature of the MDL method.
 The relative weighting of each method's objective function will be discussed in Section~\ref{subsec:discuss_exp}.
@@ -1264,7 +1266,7 @@ Although the number of intervals after discretization on $H$ is less the number 
 Six additional datasets \citep{Lichman_2013} are tested to compare the Bayesian and MDL discretization methods.
 The results are summarized in Table~\ref{table:more_data_set}.
 Each row corresponds to a dataset and provides the number of samples $n$, the number of variables $N$, the fixed network structure, and the log-likelihood for each method.
-Fixed network structures are obtained by the same principle as in previous three datasets and are represented in the table by listing the parents for each variable.
+Fixed network structures are obtained by the same principle as with the previous three datasets and are represented by listing the parents for each variable.
 For example, in the first row, the representation $\curly{\emptyset,A,BE,AB,B,AH,BDG,B}$ indicates that $\Pa_A = \emptyset$, $\Pa_B = A$, $\Pa_c = \curly{B,E}$, etc.
 The Bayesian discretization method has higher mean cross-validated log likelihood in all cases.
 
@@ -1273,6 +1275,7 @@ The Bayesian discretization method has higher mean cross-validated log likelihoo
 	\caption{
 		Discretization results for several datasets.
     The number of samples, number of variables, network structure, and mean cross-validated log-likelihood under each discretization method are given.
+    The Bayesian method consitently has highest likelihood.
 	}
   \resizebox{\textwidth}{!}{
 	 \input{Table3_2.tex}
@@ -1344,10 +1347,10 @@ The optimal discretization policy on $\cX$ has six edges, $\curly{2.0,3.0,4.0,4.
 
 
 Figure~\ref{fig:synthetic} shows how the test likelihood and the number of discretization edges for $\cX$ vary with respect to the number of training samples.
-Trained data are drawn randomly from the synthetic dataset.
-\todo{The remaining ones are tested data.}
+A dataset of \num{800} samples is drawn from the synthetic distribution.
+The size of the subset used for training is varied, and the remaining samples are used as the test set.
 When the training set is small, it is difficult to recognize the underlying pattern and discretize the continuous variable $\cX$ accordingly.
-In this case, both the likelihood of the training data and number of discretization edges is small.
+In this case, both the likelihood of the training data and number of discretization edges are small.
 However, the Bayesian method is more sensitive to variation in the data and produces a distribution both with higher likelihood and more discretization edges.
 As the size of the training set grows, both methods converge towards the optimal discretization policy.
 The Bayesian method finds the six discretization edges faster than the MDL method and consistently outperforms in likelihood.
@@ -1378,8 +1381,10 @@ The results in Figure~\ref{fig:synthetic} are averaged over one hundred trials.
 		%\label{fig:iris_b}
 	\end{subfigure}
 
-	\caption{The average log-likelihood of the trained data and the average number of discretization edges for $\cX$ as the number of training samples is varied. Training data are drawn randomly from the synthetic distribution. \todo{The remaining ones are tested data.} \tim{$\leftarrow$ What does this mean?} Results are averaged over one hundred trials.
-  \tim{Why do we plot training set likelihood and not test set likelihood?}}
+	\caption{The average test log-likelihood and the average number of discretization edges for $\cX$ as the number of training samples is varied.
+  The complete dataset size is fixed at \num{800} samples, drawn randomly from the synthetic distribution.
+  The size of the subset used for training is varied, and the remaining samples are used as the test set.
+  }
 	\label{fig:synthetic}
 \end{figure}
 
@@ -1392,8 +1397,8 @@ The proposed method was incorporated and its superior performance was empiricall
 Future work will investigate edge positions at locations other than the midpoints between samples and will extend the approach to cluster categorical variables with very many levels.
 All software is publicly available at \url{github.com/sisl/LearnDiscreteBayesNets.jl}.
 
-% The methods developed in this paper increase the accuracy of Bayesian networks learned on datasets with continuous and mixed variables.
-% An automated process for simultaneously constructing Bayesian networks and discretization policies is appealing because of the potential to significantly reduce development time and cost when developing models for uncertainty and causality.
+The methods developed in this paper increase the accuracy of Bayesian networks learned on datasets with continuous and mixed variables.
+An automated process for simultaneously constructing Bayesian networks and discretization policies is appealing because of the potential to significantly reduce development time and cost when developing models for uncertainty and causality.
 
 %\begin{acknowledgements}
 %If you'd like to thank anyone, place your comments here
@@ -1413,28 +1418,70 @@ All software is publicly available at \url{github.com/sisl/LearnDiscreteBayesNet
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Appendix A}
+\label{sec:appendixA}
 
-This section provides a counterexample of marginal discretization methods. Different from more principled methods, as such the MDL discretization or the proposed Bayesian approach, the marginal discretization methods ignore the dependency of data samples between different variables. Therefore, it might lead to worse discretization outcomes. Here is an example: consider a synthetic dataset with two variable $A$ and $B$, with $500$ data samples generated by the Bayesian network $A \rightarrow B$ and the probability distribution shown in Table \ref{table:marginal_counter}. Following the experiment procedure in Section \ref{sec:experiments}, both the MDL method and the proposed Bayesian approach find a discretization edge of $B$ around $1.0$ and have log likelihood $-0.023$. On the other hand, while discretizing variable $B$ based on its marginal distribution of samples, the Bayesian block and other marginal discretization can not locate a discretization edge and result in log likelihood $-0.69$. This example shows that the discretization method without considering the dependency between variables might lead to fatal outcomes.
 
-\begin{table}[ht]
-	\centering
-	\caption{Probability distributions for the variables in the network $A \rightarrow B$, in which $A$ is a discrete variable and $B$ is a continuous one
-	}
-	\label{table:marginal_counter}
-	\begin{tabular}{cl}
-		\toprule
-		Variable               & Distribution                                   \\ \midrule
-		\multirow{2}{*}{$A$}&$P(a^1) = 0.5$     \\
-		& $P( a^2) = 0.5$     \\ \midrule
-	
-		\multirow{2}{*}{$B$} & $p(b \mid A = a^1 \sim U[0,1]$\\
-		& $p(b \mid A = a^2 \sim U[1,2]$\\
-		\bottomrule
-	\end{tabular}
-\end{table}
+This section illustrates the advantage of structure-aware discretization methods over marginal discretization methods \citep{scott1979optimal, freedman1981histogram, knuth2013optimal, scargle2013studies}.
+Marginal discretization methods ignore intervariable dependencies and can thus lead to suboptimal discretizations for the joint distribution.
+Consider a synthetic dataset with two variables, discrete $A$ and continuous $B$, with \num{500} data samples sampled from the Bayesian network $A \rightarrow B$ described in Table~8.  %~\ref{table:marginal_counter}.
+Following the experiment procedure in Section~\ref{sec:experiments}, both the MDL method and the proposed Bayesian approach find the true discretization edge for $B$ near $1.0$ and have log likelihood \num{-0.023}.
+They recover the discretization shown in Figure~\ref{fig:marginal_counter}.
+The Bayesian Blocks method~\citep{scargle2013studies}, as with any marginal method, cannot distinguish between the different conditional distributions and thus does not locate a discretization edge.
+The resulting log likelihood is worse, at \num{-0.69}.
+This example shows that structure-aware discretization methods can leverage additional information and thus produce better joint representations.
+
+\begin{minipage}{\textwidth}
+  \begin{minipage}[b]{0.49\textwidth}
+    \centering
+    \begin{tabular}{cl}
+      \toprule
+      Variable               & Distribution                                   \\ \midrule
+      \multirow{2}{*}{$A$}&$P(a^1) = 0.5$     \\
+      & $P( a^2) = 0.5$     \\ \midrule
+
+      \multirow{2}{*}{$B$} & $p(b \mid A = a^1) \sim U[0,1]$\\
+      & $p(b \mid A = a^2) \sim U[1,2]$\\
+      \bottomrule
+    \end{tabular}
+    \vspace{1cm}
+    \captionof{table}{Probability distributions for $A \rightarrow B$, in which $A$ is discrete and $B$ is continuous. The marginal distribution for $B$ is $U[0,2]$.}
+    \label{table:marginal_counter}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.49\textwidth}
+    \centering
+    \vspace{1em}
+    \resizebox {\columnwidth}{!}{
+      \begin{tikzpicture}
+      \begin{axis}[xlabel=$b$, ylabel=probability density, ymin=0, ymax=1.5,
+        legend style={
+          draw=none,
+          at={(0.95,0.85)},
+          anchor=east,
+          legend columns=1,
+          font=\small,
+          /tikz/every even column/.append style={column sep=0.5cm},
+          /pgfplots/legend image code/.code={%
+            \draw[##1,/tikz/.cd,yshift=-0.25em]
+            (0cm,0cm) rectangle (0.8em,0.8em);
+          },
+        },
+      ]
+      \addplot+[ybar interval, mark=none, black!80, fill=black!80] plot coordinates
+        {(0,1) (1,1)};
+        \addplot+[ybar interval, mark=none, black!40, fill=black!40] plot coordinates
+        {(1,1) (2,1)};
+        \legend{$P(b\mid a^1)$, $P(b\mid a^2)$}
+      \end{axis}
+      \end{tikzpicture}
+    }
+    \captionof{figure}{The resulting conditional probability distribution for $B$. Marginal methods see one uniform distribution.}
+    \label{fig:marginal_counter}
+  \end{minipage}
+\end{minipage}
 
 \section*{Appendix B}
-\label{sec:appendix}
+\label{sec:appendixB}
 
 This section gives two examples of Bayesian networks where MDL produces comparable results to the Bayesian method.
 The first example used the Auto MPG dataset.
@@ -1475,14 +1522,14 @@ The dataset has \num{150} samples over five variables.
 Only variables $E$ is discrete-valued, and corresponds to the species category.
 The following experiment was conducted on the naive Bayes structure: variable $E$ is the parent of variable $A$, $B$, $C$, and $D$. Table \ref{table:iris_table_1} shows the discretization edges, the prediction accuracy of the learned classifiers, and the mean log-likelihood.
 The discretization policy shown is for running the algorithms on the full dataset; the likelihood and prediction accuracies were found with 10-fold cross validation.
-The MDL discretization method and the Bayesian method have same discretization result: all discretization edges coincide. In addition, both methods have $94 \%$ accuarcy, which matches the number in \cite{Friedman_1996}.
+The MDL discretization method and the Bayesian method have the same discretization result: all discretization edges coincide. In addition, both methods have $94 \%$ accuarcy, which matches the number in \cite{Friedman_1996}.
 The Bayesian method likelihood is slightly higher across folds than the MDL method likelihood.
 
 \begin{table}[ht]
   \centering
   \caption{
     The discretization policies for the Iris dataset with the naive Bayes structure.
-    The two methods produce the same discretization policy on each continuous variable and have close 10-fold prediction accuracy and log-likelihood.
+    The two methods produce the same discretization policy on each continuous variable and have nearly identical 10-fold prediction accuracy and log-likelihood.
   }
 \input{Table5.tex}
   \label{table:iris_table_1}
