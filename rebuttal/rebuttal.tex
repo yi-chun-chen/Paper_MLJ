@@ -1,0 +1,162 @@
+\documentclass{article}
+\title{Response to the Reviewer's Comments}
+\author{Yi-Chun Chen \and Tim Wheeler \and Mykel Kochenderfer}
+\begin{document}
+
+\maketitle
+
+The authors thank the reviewers for their anonymous reviews.
+We have restructured the paper to include additional experimental results and have added clarifications in areas identified by the reviewers.
+Below is a summary of our responses.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Reviewer \#1} \\
+
+1. I do not understand based on what the proposed method is superior. What is the evaluation criterion? such as KL divergence between the original continuous BN and the obtained discretized BN, or How many edges are missing and extra? Note that Log-Likelihood values such as in Tables 1 and 2 can be zero
+(maximum)  if each variable has only one interval when discretization
+completes, and should not be used as a final evaluation.
+\\
+
+2. I think that the goal  is to estimate the true DAG of the original continuous BN. Because even if the variables are discretized, the conditional  independence (CI) relations should remain the same if the discretization is appropriate.  I do not understand why alternating between K2 structure learning  and discretization until K2 algorithm converges yields a good estimation of the CI relations.  Just because K2 falls into a local optimum does not mean that a good estimation is obtained.  I think that the processes of discretization and structure learning should be at the same time rather than alternately.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Response}:\\
+
+There seems to be an important misunderstanding.
+The goal of the paper is to learn discrete Bayesian networks from continuous data.
+All datasets are raw data and there is no true Bayesian network underlying the data.
+Therefore, we are not trying to recover the true \textit{continuous} Bayesian network, but are trying to infer the best discrete Bayesian network and discretization policies for each continuous variable.
+
+Our criterion for model performance is the likelihood of withheld data.
+There seems to be a misunderstanding of the likelihood calculation of continuous variables.
+If a variable is continuous, the corresponding likelihood is based on the probability density rather than a discrete probability.
+Therefore, even if all continuous variables have only one interval, the likelihood is not $1$, but $1$ divided by the product of each variable's discretization interval.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Reviewer \#1} \\
+
+3. It seems that  the author compares with an old and inferior method (Friedman and Goldszmidt).
+There are many other better way of continuous structure learning.
+
+\begin{itemize}
+\item S Imoto, S Kim, T Goto, S Aburatani, K Tashiro, S Kuhara, S Miyano, ``Bayesian  network and nonparametric heteroscedastic regression for nonlinear modeling of  genetic network'', Journal of bioinformatics and computational biology 1, 02,  pages 231-252 (2003)
+\item K. Zhang, J. Peters, D. Janzing, and B. Scholkopf, ``Kernel-based Conditional Independence Test and  Application in Causal Discovery''. In the proceedings of Uncertainty in Artificial Intelligence: 804-813 (2011).
+\item J. Suzuki, ``Consistency of Learning Bayesian Network Structures with Continuous Variables: An Information  Theoretic Approach'', Entropy 17(8): 5752-5770 (2015).
+\end{itemize}
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Response}:\\
+
+As discussed earlier, the goal is to learn \textit{discrete} Bayesian networks from continuous data.
+All the papers listed by Reviewer \#1 are about learning \textit{continuous} Bayesian networks.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Reviewer \#1} \\
+
+4. The author claimed that ``the MDL suffers from low sensitivity to discretization edge locations and returns too few discretization intervals for continuous variables'', which I think is false. In fact, as in Introduction, MDL and MODL are asymptotically equivalent for a single variable and a single class  (Vitanyi-Li, 2000).  Why is the statement wrong for multiple variables? Explain it. The author claims that the MDL varies less significantly with the positions than the proposed method.  If the author thinks so in general, the statement should be proved.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Response}:\\
+
+% The asymptotic equivalence between methods only holds for large enough datasets, as the definition defined.
+We are not claiming that MDL and MODL are asymptotically different.
+We are only showing empirically that the size of the dataset heavily influences the outcome, and is independent of the number of variables.
+To justify this claim we have added an additional experiment with results shown in Section 6.5.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Reviewer \#1} \\
+
+5. Comparing (18) and (19), the term  $ln(n)\cdot I(X^*,pa_X)$ should be $n\cdot I(X^*,pa_X)$ for $f_{MDL}$.  If the latter is correct, the MDL will choose more complicated model and improve very much, and the conclusion may change.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Response}:\\
+
+We thank the reviewer for helping us find a typo.
+It has been corrected in the most recent version.
+However, this change does not change the argument being made.
+First, our argument is based on the correct equation.
+Second, since both $n$ and $\log(n)$ are constant during the optimization process, where $n$ is the size of dataset, the argument still holds.
+These results are reflected in our experiments.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Reviewer \#1} \\
+
+6. The author claims that the proposed method takes $O(n^2)$ time rather than $O(n^3)$. However, for the problem setting, there are many possibilities for choosing the prior with $O(n^2)$ time that yields a good estimation. If the author thinks that there exists no such a prior, state and prove it.  I think that K2 algorithm consumes much more time than discretization.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Response}:\\
+
+% There is no need to prove other Bayesian priors do not work.
+% Bayesian priors indeed are non-unique.
+% However, by certain standard criteria such as cross validation, we can tell which one performs better.
+
+% The runtime mentioned in this paper only concerns the discretization processes, not structure learning.
+% The K2 algorithm was used due to its simplicity and ubiquity.
+
+The original MODL method and the priors suggested by Lustgarten et al. are both Bayesian methods.
+The extensions by Lustgarten et al. replaced the first prior in MODL to yield better results.
+Bayesian priors in this case express the beliefs over the sought-after discretization policy.
+We suggest a prior that produces discretizations with higher cross validated likelihood and an algorithm with $O(n^2)$ runtime.
+The runtime of the discretization method is the bottleneck for the iterative structure learning process.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Reviewer \#2} \\
+
+ The paper considers the problem of learning discrete Bayesian networks (BN) from complete continuous data, where the paper considers simultaneously learning the BN structure and learning the discretization of the data. More specifically, the paper first generalizes previous work by [1] on single-variable discretization to multi-variable discretization, and proposes an EM-style algorithm to learn a multi-variable discretization by iteratively discretize the variables with the single-variable discretization method. The paper then assumes that a topological ordering that the learned BN needs to be compatible with is given, and combines the approximate multi-variable discretization method with the K2 algorithm (which learns an optimal BN from complete discrete data, given a topological ordering), and proposes an algorithm to learn an optimal BN from complete continuous data. Finally, the paper evaluates that the proposed algorithm against the state-of-the-art.\\
+ 
+ Below summarize my comments to the current version of the manuscript:\\
+
+1. If I understand the paper and [1] correctly, the relation between a continuous variable $X$ and its discretization $Z$ can be conceptually
+understood as $X \rightarrow Z$, i.e., the value of discrete variable $Z$ depends on $X$. Moreover, when a BN is learned, the relationship between the $Z$'s are learned.
+
+For example, if we have two continuous variables $X_1$ and $X_2$ that are discretized into $Z_1$ and $Z_2$, and learn the BN over $Z_1$ and $Z_2$ as DAG: $Z_1 \rightarrow Z_2$, then the relationship of the four involved variables $X_1$, $X_2$, $Z_1$, and $Z_2$ can modeled as the following BN
+
+
+$$X_1 \rightarrow Z_1 \rightarrow Z_2 \leftarrow X_2$$
+
+
+In this BN, even though the two discrete variables $Z_1$ and $Z_2$ are related, the two continuous variables $X_1$ and $X_2$ are not (they are d-separated). In this case, I wonder if this is the intended semantics of the discretization, i.e., after the discretization, then the continuous variables $X_1$ and $X_2$, which are what we are truly interested in, become independent. In general, I would much appreciated a clarification on the semantics of the discretization in structure learning (for example, [2] provides the semantics of such discretization).
+
+On the other hand, if the relation between $X$ and $Z$ is understood as $X \leftarrow Z$, then $X_1$ and $X_2$ are not d-separated:
+
+$$X_1 \leftarrow Z_1 \rightarrow Z_2 \rightarrow X_2$$
+
+However, if this is the case, the framework discussed in this paper appears to be closely related to [2]. More specifically, [2] also considers learning the BN structure and learning the discretization of the data simultaneously, consider the same type of discretization policy as this paper. However [2] only sets up the learning problem, but do not provide any algorithm to solve it.\\
+
+[1] Lustgarten, Jonathan L., et al. "Application of an efficient Bayesian discretization method to biomedical data." BMC bioinformatics 12.1 (2011): 1.
+
+[2] Monti, Stefano, and Gregory F. Cooper. "A multivariate discretization method for learning Bayesian networks from mixed data." UAI. 1998.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Response}:\\
+
+The difference between our proposed method and [2] is that we did not introduce an additional augmented variable $Z$ for continuous variable $X$ during discretization and optimization process.
+For example, if we have a Bayesian network as follows: $A \rightarrow X \rightarrow C$, where both $A$ and $C$ are discrete and $X$ is continuous, then our proposed method replaces $X$ by its discretized version $Z$ as $A \rightarrow Z \rightarrow C$.
+The prior 1 in our proposed method provides the prior for $P(Z)$, and the priors 2-4 provide the calculation for $P(D_{A,C} \mid Z)$, where $D_{A,C}$ is the data of variables $A$ and $C$.
+Therefore, the mechanism in this paper is different from the method in [2].
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Reviewer \#2} \\
+
+In the experiment session, three datasets with known network structures are used to show that the proposed method learns better than previous work on MDL-based discretization by [3]. More specifically, the paper first assumes given Bayesian network structures, and compares its discretization results with the MDL discretization in [3]. The experiment results show that the proposed approach learns a discretization with a notable higher log-likelihood than the MDL discretization (i.e., the proposed approach learns a discretization such that the known BN structure with the discretized variable has a higher log-likelihood). The paper then learns BNs with both its proposed discretization and an uniform discretization, and compare the learned BNs. Here, in the current form of the manuscript, it does not appear to be clear if the proposed discretization learned a better BN (in terms of say comparing to the ground truth). Moreover, I believe the effectiveness of the proposed method would be more strongly supported if the scale of the experiment is larger, especially given the experimental results on two additional dataset in the appendix, where the performance of the proposed approach is similar to the MDL approach by [3].
+
+In sum, I believe this paper has some promising ideas. However, I would appreciate if the proposed approach is justified better (such as the semantics of the discretization), and its relation to prior work clarified better (particularly with [2]). Further, I would appreciate if the experiments provide a broader evaluation to claim that the paper improves on the state-of-the-art.\\
+
+[3] Friedman, Nir, and Moises Goldszmidt. "Discretizing continuous attributes while learning Bayesian networks." Icml. 1996.
+
+\noindent\rule{8cm}{0.4pt}\\
+{\bf Response}:\\
+
+As the reviewer suggested, we added an illustration of discretization semantics in Section 2.1.
+We also added a larger and more diverse set of test datasets in the end of section 6.5.
+In order to facilitate a comparison with a known underlying structure, we have added an experiment on a synthetic dataset, also in Section 6.5.
+This additional test shows that as the dataset size becomes large, the results of MDL and the proposed method do indeed converge to the same discretization scheme.
+This demonstrates the asymptotic equivalence between the two methods.
+On the other hand, when the data samples are small and not sufficiently representative, the two methods have significantly different outcomes and the proposed method outperforms the MDL method, as is observed in all other experiments on real datasets.
+
+As mentioned earlier, all datasets are raw data and there are no true Bayesian networks behind them. Therefore, no ground truth can be compared to the learned discrete network. We use cross-validated likelihood to measure the effectiveness of each discretization method.
+
+\end{document}
+
+
+
