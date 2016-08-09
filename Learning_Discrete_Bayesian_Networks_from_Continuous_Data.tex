@@ -199,7 +199,7 @@ It is common to discretize all continuous variables before learning a Bayesian n
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
 
-A common discretization method for Bayesian networks is to split continuous variables into uniform-width intervals or to use field-specific expertise.
+A common discretization method for Bayesian networks is to split continuous variables into uniform-width intervals or to use field-specific expertise \citep{scott1979optimal, freedman1981histogram, knuth2013optimal, scargle2013studies}.
 A more principled method is the minimum description length (MDL) principle discretization \citep{Friedman_1996}.
 The MDL principle proposed by \cite{MDL_1978} states that the best model for a dataset is the one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
 MDL methods trade off goodness-of-fit against model complexity to reduce generalization error.
@@ -354,8 +354,10 @@ The four principles, which can be considered an extension of the priors in MODL 
   1 - \exp \paren{- L \cdot \frac{\cu_{i+1} - \cu_i}{\cu_m - \cu_1}}\text{,}
   \end{equation}
 
-where $L$ is the largest number of intervals among discrete variables in $\cX$'s Markov blanket.
-This encourages edges between well-separated values over edges between closely packed samples.
+where larger values of $L$ encourage more discretization intervals.
+This prior encourages edges between well-separated values over edges between closely packed samples.
+All experiments set $L$ to the largest number of intervals among discrete variables in $\cX$'s Markov blanket, which encourages Bayesian networks with consistent interval counts.
+In some cases it may be desirable to use higher values for $L$, such as when discrete variables are binary and the continuous variable requires higher fidelity.
 
 \item For a given discretization interval, every distribution over the parents of $\cX$ is equiprobable.
 \item For each pair $\anglebrackets{C_i,\bm{S}_i}$ and a given discretization interval, every distribution over $C_i$ given an instance of $\bm{S}_i$ is equiprobable.
