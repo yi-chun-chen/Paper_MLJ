@@ -31,11 +31,12 @@ Our criterion for model performance is the likelihood of withheld data.
 There seems to be a misunderstanding of the likelihood calculation of continuous variables.
 If a variable is continuous, the corresponding likelihood is based on the probability density rather than a discrete probability.
 Therefore, even if all continuous variables have only one interval, the likelihood is not $1$, but $1$ divided by the product of each variable's discretization interval.
+Please refer to Equation 15 and the surrounding discussion.
 
 \noindent\rule{8cm}{0.4pt}\\
 {\bf Reviewer \#1} \\
 
-3. It seems that  the author compares with an old and inferior method (Friedman and Goldszmidt).
+3. It seems that the author compares with an old and inferior method (Friedman and Goldszmidt).
 There are many other better way of continuous structure learning.
 
 \begin{itemize}
@@ -60,13 +61,13 @@ All the papers listed by Reviewer \#1 are about learning \textit{continuous} Bay
 
 % The asymptotic equivalence between methods only holds for large enough datasets, as the definition defined.
 We are not claiming that MDL and MODL are asymptotically different.
-We are only showing empirically that the size of the dataset heavily influences the outcome, and is independent of the number of variables.
+We are showing empirically that the size of the dataset heavily influences the outcome, and is independent of the number of variables.
 To justify this claim we have added an additional experiment with results shown in Section 6.5.
 
 \noindent\rule{8cm}{0.4pt}\\
 {\bf Reviewer \#1} \\
 
-5. Comparing (18) and (19), the term  $ln(n)\cdot I(X^*,pa_X)$ should be $n\cdot I(X^*,pa_X)$ for $f_{MDL}$.  If the latter is correct, the MDL will choose more complicated model and improve very much, and the conclusion may change.
+5. Comparing (18) and (19), the term  $\ln(n)\cdot I(X^*,pa_X)$ should be $n\cdot I(X^*,pa_X)$ for $f_{MDL}$.  If the latter is correct, the MDL will choose more complicated model and improve very much, and the conclusion may change.
 
 \noindent\rule{8cm}{0.4pt}\\
 {\bf Response}:\\
@@ -75,7 +76,7 @@ We thank the reviewer for helping us find a typo.
 It has been corrected in the most recent version.
 However, this change does not change the argument being made.
 First, our argument is based on the correct equation.
-Second, since both $n$ and $\log(n)$ are constant during the optimization process, where $n$ is the size of dataset, the argument still holds.
+Second, since both $n$ and $\ln(n)$ are constant during the optimization process, where $n$ is the size of dataset, the argument still holds.
 These results are reflected in our experiments.
 
 \noindent\rule{8cm}{0.4pt}\\
@@ -93,17 +94,23 @@ These results are reflected in our experiments.
 % The runtime mentioned in this paper only concerns the discretization processes, not structure learning.
 % The K2 algorithm was used due to its simplicity and ubiquity.
 
-The original MODL method and the priors suggested by Lustgarten et al. are both Bayesian methods.
-The extensions by Lustgarten et al. replaced the first prior in MODL to yield better results.
-Bayesian priors in this case express the beliefs over the sought-after discretization policy.
-We suggest a prior that produces discretizations with higher cross validated likelihood and an algorithm with $O(n^2)$ runtime.
-The runtime of the discretization method is the bottleneck for the iterative structure learning process.
+Bayesian priors express one's beliefs about the result before evidence is taken into account and they can be different among different methods.
+For example, the original MODL method and the priors suggested by Lustgarten et al. are both for discretizing one continous variable with respect to one categorical variable.
+Both methods have four priors, and their priors are different.
+Both methods are shown to do well on a variety of datasets, even though their differing choice of priors lead to sightly different outcomes.
+The effectiveness of a choice of priors are evaluated by cross validation or other standard statistical criteria.
+Priors are thus often non-unique.
+
+In this paper we propose a discretization method with $O(n^2)$ runtime.
+This is better than the traditional MDL discretization method, which has a $O(n^3)$ runtime.
+Discretization is in the inner loop of the K2 algorithm, and thus is a bottleneck during the combined discretization-structure learning process.
+Due to the nested relation, it is not correct to compare the runtime of $K2$ with the runtime of the discretization procedure.
 
 \noindent\rule{8cm}{0.4pt}\\
 {\bf Reviewer \#2} \\
 
  The paper considers the problem of learning discrete Bayesian networks (BN) from complete continuous data, where the paper considers simultaneously learning the BN structure and learning the discretization of the data. More specifically, the paper first generalizes previous work by [1] on single-variable discretization to multi-variable discretization, and proposes an EM-style algorithm to learn a multi-variable discretization by iteratively discretize the variables with the single-variable discretization method. The paper then assumes that a topological ordering that the learned BN needs to be compatible with is given, and combines the approximate multi-variable discretization method with the K2 algorithm (which learns an optimal BN from complete discrete data, given a topological ordering), and proposes an algorithm to learn an optimal BN from complete continuous data. Finally, the paper evaluates that the proposed algorithm against the state-of-the-art.\\
- 
+
  Below summarize my comments to the current version of the manuscript:\\
 
 1. If I understand the paper and [1] correctly, the relation between a continuous variable $X$ and its discretization $Z$ can be conceptually
@@ -148,13 +155,13 @@ In sum, I believe this paper has some promising ideas. However, I would apprecia
 {\bf Response}:\\
 
 As the reviewer suggested, we added an illustration of discretization semantics in Section 2.1.
-We also added a larger and more diverse set of test datasets in the end of section 6.5.
+We also added a larger and more diverse set of test datasets in the end of Section 6.5.
 In order to facilitate a comparison with a known underlying structure, we have added an experiment on a synthetic dataset, also in Section 6.5.
 This additional test shows that as the dataset size becomes large, the results of MDL and the proposed method do indeed converge to the same discretization scheme.
 This demonstrates the asymptotic equivalence between the two methods.
 On the other hand, when the data samples are small and not sufficiently representative, the two methods have significantly different outcomes and the proposed method outperforms the MDL method, as is observed in all other experiments on real datasets.
 
-As mentioned earlier, all datasets are raw data and there are no true Bayesian networks behind them. Therefore, no ground truth can be compared to the learned discrete network. We use cross-validated likelihood to measure the effectiveness of each discretization method.
+As mentioned earlier, all real-world datasets lack known underlying Bayesian networks. Therefore, no ground truth can be compared to the learned discrete network. We use cross-validated likelihood to measure the effectiveness of each discretization method.
 
 \end{document}
 
