@@ -161,12 +161,17 @@
 
 \begin{abstract}
 
-Real data often contains a mixture of discrete and continuous variables, but many Bayesian network structure learning and inference algorithms assume all random variables are discrete.
-Continuous variables are often discretized, but the choice of discretization policy has significant impact on the accuracy, speed, and interpretability of the resulting models.
+Learning Bayesian networks from raw data can help users to interpret the relations between variables and acquire knowledge without field-specific experts.
+While real data often contains a mixture of discrete and continuous-valued variables, many Bayesian network structure learning algorithms assume all random variables are discrete. 
+Thus, continuous variables are often discretized while learning a Bayesian network. 
+However, the choice of discretization policy has significant impact on the accuracy, speed, and interpretability of the resulting models.
 This paper introduces a principled Bayesian discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of other standard techniques.
-Empirical demonstrations show that the proposed method is superior to the state of the art.
+Empirical demonstrations show that the proposed method is superior to the classic method.
 In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
-%The proposed method was incorporated and its performance was empirically demonstrated.
+
+%%%%%% Old Abstract %%%%%
+%Real data often contains a mixture of discrete and continuous variables, but many Bayesian network structure learning and inference algorithms assume all random variables are discrete. Continuous variables are often discretized, but the choice of discretization policy has significant impact on the accuracy, speed, and interpretability of the resulting models. This paper introduces a principled Bayesian discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of other standard techniques. Empirical demonstrations show that the proposed method is superior to the state of the art. In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
+%%%%%%%%%%%%%%%%%%
 
 \keywords{Discretization \and Bayesian Network \and Continuous Variable}
   % \PACS{PACS code1 \and PACS code2 \and more}
@@ -177,16 +182,13 @@ In addition, this paper shows how to incorporate existing methods into the struc
 
 \section{Introduction}
 
-Bayesian networks \citep{Pearl_1988, PGM_2009} are often used to model uncertainty and causality, with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnosis \citep{Lustgarten_2011}.
-Bayesian networks provide an efficient factorization of the joint probability distribution over a set of random variables.
-It is common to assume that the random variables in a Bayesian network are discrete, since many Bayesian network learning and inference algorithms are unable to efficiently handle continuous variables.
-In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables.
-However, many applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
+Bayesian networks \citep{Pearl_1988, PGM_2009} are often used to model uncertainty and causality, with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnosis \citep{Lustgarten_2011}. Learning Bayesian networks from raw data can help users to discover knowledge without field-specific experts, such as causality and probabilistic relation between variables. It is common to assume that the random variables in a Bayesian network are discrete, since many Bayesian network learning algorithms are unable to efficiently handle continuous variables. In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables. However, many applications require the use of continuous data, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
 
-There are three common approaches to extending Bayesian networks to continuous variables.
-The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning and inference algorithms based on the parameterizations.
-One example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
-%For other parametric distributions and non-linear functions \citep{Ihler_2009}, however, these redesigned algorithms can be computationally expensive.
+%Bayesian networks \citep{Pearl_1988, PGM_2009} are often used to model uncertainty and causality, with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnosis \citep{Lustgarten_2011}. Bayesian networks provide an efficient factorization of the joint probability distribution over a set of random variables. It is common to assume that the random variables in a Bayesian network are discrete, since many Bayesian network learning and inference algorithms are unable to efficiently handle continuous variables. In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables. However, many applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
+
+There are three common approaches to extending Bayesian network learning algorithms to continuous variables. The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning algorithms based on the parameterizations. One example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
+
+%There are three common approaches to extending Bayesian networks to continuous variables. The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning and inference algorithms based on the parameterizations. One example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
 
 The second approach is to use nonparametric distributions, such as particle representations and Gaussian processes \citep{Ickstadt_2010}.
 Unlike parametric methods, nonparametric methods can often fit any underlying probability distribution given sufficient data.
@@ -195,12 +197,12 @@ Parametric models have a fixed number of parameters, whereas the number of param
 
 The third approach is discretization.
 Automated discretization methods have been studied in machine learning and statistics for many years \citep{Dougherty_1995, Kerber_1992, Holte_1993, Fayyad_1993}, primarily for classification problems.
-These methods search for the best discretization policy for a continuous attribute by considering its interaction with a class variable.
+These methods learn for the best discretization policy for a continuous attribute by considering its interaction with a class variable.
 It is common to discretize all continuous variables before learning a Bayesian network structure to avoid having to consider variable interactions, as the interactions and dependencies between variables in Bayesian networks introduce complexity.
 %The discretization of a variable in a network requires considering the impact on the variable's Markov blanket.
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
-A common discretization method for Bayesian networks is to split continuous variables into uniform-width intervals or to use field-specific expertise.
+A common discretization method for Bayesian networks is to split continuous data into uniform-width intervals or to use field-specific expertise.
 Several Bayesian methods exist to discretize according to the marginal distribution \citep{scott1979optimal, freedman1981histogram, knuth2013optimal, scargle2013studies}, but this ignores dependencies between variables and leads to suboptimal performance, as demonstrated in Appendix A.
 A more principled method is the minimum description length (MDL) principle discretization \citep{Friedman_1996}.
 The MDL principle proposed by \cite{MDL_1978} states that the best model for a dataset is the one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
