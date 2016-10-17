@@ -193,13 +193,11 @@ There are three common approaches to extending Bayesian network learning algorit
 The second approach is to use nonparametric distributions, such as particle representations and Gaussian processes \citep{Ickstadt_2010}.
 Unlike parametric methods, nonparametric methods can often fit any underlying probability distribution given sufficient data.
 Parametric models have a fixed number of parameters, whereas the number of parameters in a nonparametric model grow with the amount of training data.
-%Inference algorithms on nonparametric models can be also inefficient.
 
 The third approach is discretization.
 Automated discretization methods have been studied in machine learning and statistics for many years \citep{Dougherty_1995, Kerber_1992, Holte_1993, Fayyad_1993}, primarily for classification problems.
 These methods learn for the best discretization policy for a continuous attribute by considering its interaction with a class variable.
 It is common to discretize all continuous variables before learning a Bayesian network structure to avoid having to consider variable interactions, as the interactions and dependencies between variables in Bayesian networks introduce complexity.
-%The discretization of a variable in a network requires considering the impact on the variable's Markov blanket.
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
 A common discretization method for Bayesian networks is to split continuous data into uniform-width intervals or to use field-specific expertise.
@@ -224,16 +222,6 @@ Results in this work suggest that the MDL method suffers from low sensitivity to
 This is caused by MDL's use of mutual information to measure the quality of discretization edges.
 Mutual information, which is composed of empirical probabilities computed using event count ratios, varies less significantly with the positions of discretization edges than the method we suggest in this article.
 
-
-% The probability of the data given the model typically increases with the number of discretization intervals, and the model prior is chosen to decrease with the number of discretization intervals
-% Maximizing the model likelihood thus requires a trade-off in the number of discretization intervals.
-
-
-%Bayesian methods select the model with maximum posterior probability given the data, %$P(\textit{Model} \mid \textit{Data})$.
-%An application of Bayes' rule and constant $P(\textit{Data})$ shows that this is %equivalent to maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid %\textit{Model})}$, where $P(\textit{Model})$ is a prior over models and ${P(\textit{Data} %\mid \textit{Model})}$ is the data likelihood.
-%The data likelihood usually increases with the number of discretization intervals, as %more intervals allow for richer representations.
-%The prior is chosen to influence the relative merit between models, and for %discretization policies the prior is negatively correlated with the number of %discretization intervals to favor simpler models and prevent overfitting.
-%Maximizing ${P(\textit{Model}) \cdot P(\textit{Data} \mid \textit{Model})}$ thus requires %a trade-off when determining the number of discretization intervals.
 
 MODL \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable, which selects the model with maximum probability given the data.
 The MODL method uses dynamic programming to find the optimal discretization policy for a continuous variable given a discrete class variable, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of class variable instantiations.
