@@ -161,12 +161,12 @@
 
 \begin{abstract}
 
-Learning Bayesian networks from raw data can help users to interpret the relations between variables and acquire knowledge without field-specific experts.
-While real data often contains a mixture of discrete and continuous-valued variables, many Bayesian network structure learning algorithms assume all random variables are discrete. 
-Thus, continuous variables are often discretized while learning a Bayesian network. 
+Learning Bayesian networks from raw data can help interpret the variable iterrelationships and structure without relying on field-specific experts.
+While real data often contains a mixture of discrete and continuous-valued variables, many Bayesian network structure learning algorithms assume all random variables are discrete.
+Thus, continuous variables are often discretized when learning a Bayesian network.
 However, the choice of discretization policy has significant impact on the accuracy, speed, and interpretability of the resulting models.
 This paper introduces a principled Bayesian discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of other standard techniques.
-Empirical demonstrations show that the proposed method is superior to the classic method.
+Empirical demonstrations show that the proposed method is superior to the established minimum description length algorithm.
 In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
 
 %%%%%% Old Abstract %%%%%
@@ -196,7 +196,7 @@ Parametric models have a fixed number of parameters, whereas the number of param
 
 The third approach is discretization.
 Automated discretization methods have been studied in machine learning and statistics for many years \citep{Dougherty_1995, Kerber_1992, Holte_1993, Fayyad_1993}, primarily for classification problems.
-These methods learn for the best discretization policy for a continuous attribute by considering its interaction with a class variable.
+These methods learn the best discretization policy for a continuous attribute by considering its interaction with a class variable.
 It is common to discretize all continuous variables before learning a Bayesian network structure to avoid having to consider variable interactions, as the interactions and dependencies between variables in Bayesian networks introduce complexity.
 Prior work exists for discretizing continuous variables in naive Bayesian networks and tree-augmented networks \citep{Fried_naive}, but only a few discretization methods for general Bayesian networks have been proposed \citep{Friedman_1996, Kozlov_1997, Monti_1998, Steck_2007}.
 
