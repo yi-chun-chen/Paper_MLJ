@@ -235,7 +235,6 @@ The $\lambda_{1:k}$ representation is the number of instances before every discr
   \centering
   \caption{
     Assignments for variables defined in Section~\ref{subsec:disc_policy} according to the dataset in Table~\ref{table:data_demo}. Note that $\Lambda^{\text{ex}}_{\cX}$ is an example of a valid discretization policy. Discretization policies can be represented by their edges $\anglebrackets{}_{e}$, their sorted unique dataset indices $\anglebrackets{}_{\lambda}$, or by the interval between sorted unique dataset indices $\anglebrackets{}_{\gamma}$. That is to say, in the edge representation, $e_1 = 1.55$ and $e_2 = 4.65$. In the $\lambda_{1:k}$ representation, $\lambda_1 = 3$, $\lambda_2 = 9$, and $\lambda_3 = 10$. In the $\gamma_{1:k}$ representation, $\gamma_1 = 3$, $\gamma_2 = 6$, and $\gamma_3 = 10$. Furthermore, one can check that $\lambda_1 = \gamma_1 = 3$, $\lambda_2 - \lambda_1 = \gamma_2$, and $\lambda_3 - \lambda_2 = \gamma_2$.
-  	
   }
 	\begin{tabular}{cc}
 		\toprule
@@ -254,8 +253,7 @@ The $\lambda_{1:k}$ representation is the number of instances before every discr
 
 \subsection{Bayesian Networks}
 
-A Bayesian Network $B$ over $N$ random variables $X_{1:N}$ is defined by a directed acyclic graph $G$ containing one node for each variable $X_i$, and each node is associated with a conditional probability distribution $P(x_i \mid \parents(i))$ for the node given its parents in $G$. The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$.
-The children of node $X_i$ are denoted $\Ch_{X_i}$.
+A Bayesian Network $B$ over $N$ random variables $X_{1:N}$ is defined by a directed acyclic graph $G$ containing one node for each variable $X_i$, and each node is associated with a conditional probability distribution $P(X_i \mid \Pa_{X_i})$ for the node given its parents in $G$. The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$. The children of node $X_i$ are denoted $\Ch_{X_i}$.
 
 When discussing the discretization of a particular continuous variable $\cX$, let $P_i$ be the $i$th parent of $\cX$, let $C_i$ be the $i$th child of $\cX$, and let $\bm{S}_i$ be the set of spouses of $\cX$ associated with the $i$th child. Note that the set of variables $P \cup C \cup \bm{S}$ is called Markov blanket.  
 %The context should make it clear when $P$ refers to a discrete probability and when it refers to a variable's parent.
@@ -1123,7 +1121,7 @@ The Bayesian discretization method has higher mean cross-validated log likelihoo
 	\label{table:more_data_set}
 \end{table}
 
-Finding optimal discretization policy to \cref{eq:opt_prob} through dynamic programming leads to high computation time when the datasets have more than $100$ variables. The runtime issue becomes more severe if one adapts the MDL approach instead of the proposed Bayesian method in this paper. Thus, approximation approaches are reasonable alternatives, and one possibility is the greedy heuristic \cite{Friedman_1996}. Other approximation methods to dynamic programming are also applicable to solve \cref{eq:opt_prob}
+Finding optimal discretization policy to equation \ref{eq:opt_prob} through dynamic programming leads to high computation time when the datasets have more than $100$ variables. The runtime issue becomes more severe if one adapts the MDL approach instead of the proposed Bayesian method in this paper. Thus, approximation approaches are reasonable alternatives, and one possibility is the greedy heuristic \cite{Friedman_1996}. Other approximation methods to dynamic programming are also applicable to solve equation \ref{eq:opt_prob}
 
 \subsection{Discussion}
 \label{subsec:discuss_exp}
