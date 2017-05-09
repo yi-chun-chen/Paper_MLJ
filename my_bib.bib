@@ -1,11 +1,13 @@
 % This file was created with JabRef 2.10.
 % Encoding: UTF-8
 
+
 @String { aaai        = {National Conference on Artificial Intelligence (AAAI)} }
 @String { aamas       = {International Conference on Autonomous Agents and Multiagent Systems (AAMAS)} }
 @String { acc         = {American Control Conference (ACC)} }
 @String { aiaa_info   = {AIAA Infotech@Aerospace Conference} }
 @String { aiaa_jacic  = {Journal of Aerospace Computing, Information, and Communication} }
+@String { aistats     = {International Conference on Artificial Intelligence and Statistics (AISTATS)} }
 @String { allerton    = {Allerton Conference on Communication, Control, and Compution} }
 @String { atio        = {AIAA Aviation Technology, Integration, and Operations Conference (ATIO)} }
 @String { bmc         = {BMC Bioinformatics} }
@@ -20,7 +22,6 @@
 @String { icassp      = {International Conference on Acoustics, Speech, and Signal Processing (ICASSP)} }
 @String { icml        = {International Conference on Machine Learning (ICML)} }
 @String { icmla       = {International Conference on Machine Learning and Applications (ICMLA)} }
-@String { aistats     = {International Conference on Artificial Intelligence and Statistics (AISTATS)}}
 @String { icra        = {IEEE International Conference on Robotics and Automation (ICRA)} }
 @String { icslp       = {International Conference on Spoken Language Processing (ICSLP)} }
 @String { ieee_csm    = {IEEE Control Systems Magazine} }
@@ -29,9 +30,9 @@
 @String { ieeeciaig   = {IEEE Transactions on Computational Intelligence and AI in Games} }
 @String { ieeecst     = {IEEE Transactions on Control Systems Technology} }
 @String { ieeetac     = {IEEE Transactions on Automatic Control} }
+@String { ieeetit     = {IEEE Transactions on Information Theory} }
 @String { ieeetits    = {IEEE Transactions on Intelligent Transportation Systems} }
 @String { ieeetsp     = {IEEE Transactions on Signal Processing} }
-@String { ieeetit     = {IEEE Transactions on Information Theory} }
 @String { ijcai       = {International Joint Conference on Artificial Intelligence (IJCAI)} }
 @String { interspeech = {Annual Conference of the International Speech Communication Association (INTERSPEECH)} }
 @String { iros        = {IEEE/RSJ International Conference on Intelligent Robots and Systems (IROS)} }
@@ -40,13 +41,13 @@
 @String { jair        = {Journal of Artificial Intelligence Research} }
 @String { jgcd        = {AIAA Journal of Guidance, Control, and Dynamics} }
 @String { jmlr        = {Journal of Machine Learning Research} }
-@String { mlj         = {Machine Learning} }
 @String { jota        = {Journal of Optimization Theory and Applications} }
 @String { lion        = {Learning and Intelligent Optimization (LION)} }
 @String { mit         = {Massachusetts Institute of Technology} }
 @String { mitaa       = {Massachusetts Institute of Technology, Department of Aeronautics and Astronautics} }
 @String { mitee       = {Massachusetts Institute of Technology, Department of Electrical Engineering and Computer Science} }
 @String { mitme       = {Massachusetts Institute of Technology, Department of Mechanical Engineering} }
+@String { mlj         = {Machine Learning} }
 @String { mor         = {Mathematics of Operations Research} }
 @String { nhtsa       = {National Highway and Traffic Safety Administration (NHTSA)} }
 @String { nips        = {Advances in Neural Information Processing Systems (NIPS)} }
@@ -61,8 +62,6 @@
 @String { taes        = {IEEE Transactions on Aerospace and Electronic Systems} }
 @String { uai         = {Conference on Uncertainty in Artificial Intelligence (UAI)} }
 
-Booktitle                = {12th International Conference on Machine Learning (ICML)},
-
 @Article{Boulle_2006,
   Title                    = {{MODL}: A {B}ayes optimal discretization method for continuous attributes},
   Author                   = {Marc Boull\'e},
@@ -72,11 +71,25 @@ Booktitle                = {12th International Conference on Machine Learning (I
   Volume                   = {65}
 }
 
+@Article{cooper1992bayesian,
+  Title                    = {A {B}ayesian Method for the Induction of Probabilistic Networks from Data},
+  Author                   = {Cooper, Gregory F. and Herskovits, Edward},
+  Journal                  = mlj,
+  Year                     = {1992},
+
+  Month                    = oct,
+  Number                   = {4},
+  Pages                    = {309--347},
+  Volume                   = {9},
+
+  Publisher                = {Springer}
+}
+
 @Article{K2,
   Title                    = {A {B}ayes method for the induction of probabilistic network from data},
   Author                   = {Cooper, G. F. and Herskovits, E.},
   Journal                  = mlj,
- Year                      = {1992},
+  Year                     = {1992},
   Pages                    = {309--147},
   Volume                   = {9}
 }
@@ -97,12 +110,33 @@ Booktitle                = {12th International Conference on Machine Learning (I
   Publisher                = {Morgan Kaufman}
 }
 
+@InProceedings{druzdzel1999smile,
+  Title                    = {{SMILE}: Structural Modeling, Inference, and Learning Engine and {G}e{NI}e: a development environment for graphical decision-theoretic models},
+  Author                   = {Druzdzel, Marek J.},
+  Booktitle                = aaai,
+  Year                     = {1999},
+  Month                    = jul,
+  Pages                    = {902--903}
+}
+
 @InProceedings{Fayyad_1993,
   Title                    = {Multi-interval discretization of continuous-valued attributes for classification learning},
   Author                   = {Fayyad, U.M. and Irani, K.B.},
   Booktitle                = ijcai,
   Year                     = {1993},
   Pages                    = {1022--1027}
+}
+
+@Article{freedman1981histogram,
+  Title                    = {On the histogram as a density estimator: {L2} theory},
+  Author                   = {Freedman, David and Diaconis, Persi},
+  Journal                  = {Wahrscheinlichkeitstheorie und verwandte Gebiete},
+  Year                     = {1981},
+  Number                   = {4},
+  Pages                    = {453--476},
+  Volume                   = {57},
+
+  Publisher                = {Springer}
 }
 
 @Article{Fried_naive,
@@ -138,6 +172,16 @@ Booktitle                = {12th International Conference on Machine Learning (I
   Volume                   = {11}
 }
 
+@Article{Ickstadt_2010,
+  Title                    = {Nonparametric {B}ayesian network},
+  Author                   = {Ickstadt, K. and Bornkamp, B. and Grzegorczyk, M. and
+Wieczorek, J. and Sheriff, M. R. and Grecco, H. E. and Zamir, E.},
+  Journal                  = {Bayesian Statistics},
+  Year                     = {2010},
+  Pages                    = {283--316},
+  Volume                   = {9}
+}
+
 @InProceedings{Ihler_2009,
   Title                    = {Particle belief propagation},
   Author                   = {Ihler, A. and McAllester, D.},
@@ -155,11 +199,47 @@ Booktitle                = {12th International Conference on Machine Learning (I
   Publisher                = {AAAI Press}
 }
 
+@Article{knuth2013optimal,
+  Title                    = {Optimal data-based binning for histograms},
+  Author                   = {Knuth, Kevin H.},
+  Journal                  = {arXiv preprint},
+  Year                     = {2013},
+
+  Month                    = may,
+  Number                   = {0605197},
+  Pages                    = {1-30},
+  Volume                   = {physics}
+}
+
 @Book{DMU_2015,
   Title                    = {Decision {M}aking {U}nder {U}ncertainty},
   Author                   = {Kochenderfer, M. J.},
   Publisher                = {MIT Lincoln Laboratory Series},
   Year                     = {2015}
+}
+
+@Article{kochenderfer2012next,
+  Title                    = {Next-Generation Airborne Collision Avoidance System},
+  Author                   = {Kochenderfer, Mykel J. and Holland, Jessica E. and Chryssanthacopoulos, James P.},
+  Journal                  = {Lincoln Laboratory Journal},
+  Year                     = {2012},
+  Number                   = {1},
+  Pages                    = {17-33},
+  Volume                   = {19},
+
+  Publisher                = {Citeseer}
+}
+
+@Article{kochenderfer2010airspace,
+  Title                    = {Airspace Encounter Models for Estimating Collision Risk},
+  Author                   = {Kochenderfer, Mykel J. and M. Edwards, Matthew W. and Espindle, Leo P. and Kuchar, James K. and Griffith, Daniel J.},
+  Journal                  = jgcd,
+  Year                     = {2010},
+  Number                   = {2},
+  Pages                    = {487--499},
+  Volume                   = {33},
+
+  File                     = {:SISLLiterature/VAIL/kochenderfer2010.pdf:PDF}
 }
 
 @Book{PGM_2009,
@@ -173,8 +253,8 @@ Booktitle                = {12th International Conference on Machine Learning (I
   Title                    = {Nonuniform dynamic discretization in hybrid networks},
   Author                   = {Kozlov, A.V. and Koller, D.},
   Booktitle                = uai,
-  Pages                    = {314--325},
-  Year                     = {1997}
+  Year                     = {1997},
+  Pages                    = {314--325}
 }
 
 @Misc{Lichman_2013,
@@ -191,19 +271,18 @@ Booktitle                = {12th International Conference on Machine Learning (I
   Title                    = {Application of An Efficient {B}ayesian Discretization Method to Biomedical Data},
   Author                   = {Lustgarten, J. L. and Visweswaran, S. and Gopalakrishnan, V. and Cooper, G. F.},
   Journal                  = bmc,
-  Volume                   = {12},
+  Year                     = {2011},
   Number                   = {1},
-  pages={309},
-  Year                     = {2011}
+  Pages                    = {309},
+  Volume                   = {12}
 }
-
 
 @InProceedings{Monti_1998,
   Title                    = {A multivariate discretization method for learning {B}ayesian networks from mixed data},
   Author                   = {Monti, S. and Cooper, G.F.},
   Booktitle                = uai,
-  Pages                    = {404--413},
-  Year                     = {1998}
+  Year                     = {1998},
+  Pages                    = {404--413}
 }
 
 @Book{neapolitan2004learning,
@@ -211,14 +290,26 @@ Booktitle                = {12th International Conference on Machine Learning (I
   Author                   = {Neapolitan, Richard E.},
   Publisher                = {Prentice Hall},
   Year                     = {2004},
+
   Address                  = {Upper Saddle River, NJ}
 }
 
-@Article{Pearl_1988,
+@Misc{netica1992,
+  Title                    = {Netica {B}ayesian network software package},
+
+  Author                   = {Norsys},
+  Year                     = {1992--2009},
+
+  Url                      = {http://www.norsys.com}
+}
+
+@Book{Pearl_1988,
   Title                    = {Probabilistic {R}easoning in {I}ntelligent {S}ystems: {N}etworks of {P}lausible {I}nference},
   Author                   = {Pearl, J.},
-  Journal                  = {Morgan Kaufman},
-  Year                     = {1988}
+  Publisher                = {Morgan Kaufman},
+  Year                     = {1988},
+
+  Journal                  = {Morgan Kaufman}
 }
 
 @Article{MDL_1978,
@@ -226,156 +317,77 @@ Booktitle                = {12th International Conference on Machine Learning (I
   Author                   = {Rissanen, J.},
   Journal                  = {Automatica},
   Year                     = {1978},
+  Number                   = {5},
   Pages                    = {465--471},
-  Volume                   = {14},
-  Number                   = {5}
+  Volume                   = {14}
 }
 
+@Article{scargle2013studies,
+  Title                    = {Studies in astronomical time series analysis. {VI}. {B}ayesian block representations},
+  Author                   = {Scargle, Jeffrey D. and Norris, Jay P. and Jackson, Brad and Chiang, James},
+  Journal                  = {The Astrophysical Journal},
+  Year                     = {2013},
+  Number                   = {2},
+  Pages                    = {167},
+  Volume                   = {764},
 
-@incollection{Steck_2007,
-  title={Predictive discretization during model selection},
-  author={Steck, Harald and Jaakkola, Tommi S},
-  booktitle={Pattern Recognition},
-  pages={1--8},
-  year={2004},
-  publisher={Springer},
-  Volume                   = {3175},
-  series = {Lecture Notes in Computer Science}
+  Publisher                = {Institute of Physics Publishing}
+}
+
+@Article{scott1979optimal,
+  Title                    = {On optimal and data-based histograms},
+  Author                   = {Scott, David W.},
+  Journal                  = {Journal of Statistical Software},
+  Year                     = {1979},
+  Number                   = {3},
+  Pages                    = {605--610},
+  Volume                   = {66},
+
+  Publisher                = {Biometrika}
+}
+
+@Article{bnlearn2010,
+  Title                    = {Learning {B}ayesian Networks with the {bnlearn} {R} Package},
+  Author                   = {Marco Scutari},
+  Journal                  = {Journal of Statistical Software},
+  Year                     = {2010},
+  Number                   = {3},
+  Pages                    = {1--22},
+  Volume                   = {35},
+
+  Url                      = {http://www.jstatsoft.org/v35/i03/}
+}
+
+@InCollection{Steck_2007,
+  Title                    = {Predictive discretization during model selection},
+  Author                   = {Steck, Harald and Jaakkola, Tommi S},
+  Booktitle                = {Pattern Recognition},
+  Publisher                = {Springer},
+  Year                     = {2004},
+  Pages                    = {1--8},
+  Series                   = {Lecture Notes in Computer Science},
+  Volume                   = {3175}
 }
 
 @Article{VL_2000,
-  title={Minimum description length induction, {B}ayesianism, and {K}olmogorov complexity},
-  author={Vit{\'a}nyi, Paul and Li, Ming},
-  journal={Information Theory, IEEE Transactions on},
-  volume={46},
-  number={2},
-  pages={446--464},
-  year={2000},
-  publisher={IEEE}
+  Title                    = {Minimum description length induction, {B}ayesianism, and {K}olmogorov complexity},
+  Author                   = {Vit{\'a}nyi, Paul and Li, Ming},
+  Journal                  = {Information Theory, IEEE Transactions on},
+  Year                     = {2000},
+  Number                   = {2},
+  Pages                    = {446--464},
+  Volume                   = {46},
+
+  Publisher                = {IEEE}
 }
 
 @Article{Weiss_2011,
   Title                    = {Correctness of belief propagation in gaussian graphical models of arbitrary topology},
   Author                   = {Weiss, Y. and Freeman, W. T.},
   Journal                  = {Neural Computation},
-  Volume                   = {13},
+  Year                     = {2001},
   Number                   = {10},
   Pages                    = {2173--2200},
-  Year                     = {2001}
+  Volume                   = {13}
 }
 
-
-@Article{cooper1992bayesian,
-  Title                    = {A {B}ayesian Method for the Induction of Probabilistic Networks from Data},
-  Author                   = {Cooper, Gregory F. and Herskovits, Edward},
-  Journal                  = mlj,
-  Year                     = {1992},
-
-  Month                    = oct,
-  Number                   = {4},
-  Pages                    = {309--347},
-  Volume                   = {9},
-
-  Publisher                = {Springer}
-}
-
-@Article{kochenderfer2010airspace,
-  Title                    = {Airspace Encounter Models for Estimating Collision Risk},
-  Author                   = {Kochenderfer, Mykel J. and M. Edwards, Matthew W. and Espindle, Leo P. and Kuchar, James K. and Griffith, Daniel J.},
-  Journal                  = jgcd,
-  Year                     = {2010},
-  Number                   = {2},
-  Pages                    = {487--499},
-  Volume                   = {33},
-  File                     = {:SISLLiterature/VAIL/kochenderfer2010.pdf:PDF}
-}
-
-@Article{Ickstadt_2010,
-  Title                    = {Nonparametric {B}ayesian network},
-  Author                   = {Ickstadt, K. and Bornkamp, B. and Grzegorczyk, M. and
-Wieczorek, J. and Sheriff, M. R. and Grecco, H. E. and Zamir, E.},
- journal={Bayesian Statistics},
-  volume={9},
-  pages={283--316},
-  year={2010}
-}
-
-@Article{kochenderfer2012next,
-  Title                    = {Next-Generation Airborne Collision Avoidance System},
-  Author                   = {Kochenderfer, Mykel J. and Holland, Jessica E. and Chryssanthacopoulos, James P.},
-  Journal                  = {Lincoln Laboratory Journal},
-  Year                     = {2012},
-  Number                   = {1},
-  Pages                    = {17-33},
-  Volume                   = {19},
-
-  Publisher                = {Citeseer}
-}
-
-@Misc{netica1992,
-  Author                   = {Norsys},
-  Title                    = {Netica {B}ayesian network software package},
-  Year                     = {1992--2009},
-  Url                      = {http://www.norsys.com}
-}
-
-@Article{bnlearn2010,
-  Title                    = {Learning {B}ayesian Networks with the {bnlearn} {R} Package},
-  author                   = {Marco Scutari},
-  journal                  = {Journal of Statistical Software},
-  year                     = {2010},
-  volume                   = {35},
-  number                   = {3},
-  pages                    = {1--22},
-  url                      = {http://www.jstatsoft.org/v35/i03/},
-}
-
-@InProceedings{druzdzel1999smile,
-  Title                    = {{SMILE}: Structural Modeling, Inference, and Learning Engine and {G}e{NI}e: a development environment for graphical decision-theoretic models},
-  Author                   = {Druzdzel, Marek J.},
-  Booktitle                = aaai,
-  Year                     = {1999},
-  Month                    = jul,
-  Pages                    = {902--903}
-}
-
-@Article{scott1979optimal,
-  Title                    = {On optimal and data-based histograms},
-  author                   = {Scott, David W.},
-  journal                  = {Journal of Statistical Software},
-  year                     = {1979},
-  volume                   = {66},
-  number                   = {3},
-  pages                    = {605--610},
-  publisher                = {Biometrika}
-}
-
-@article{freedman1981histogram,
-  title={On the histogram as a density estimator: {L2} theory},
-  author={Freedman, David and Diaconis, Persi},
-  journal={Wahrscheinlichkeitstheorie und verwandte Gebiete},
-  volume={57},
-  number={4},
-  pages={453--476},
-  year={1981},
-  publisher={Springer}
-}
-
-@article{knuth2013optimal,
-  title={Optimal data-based binning for histograms},
-  author={Knuth, Kevin H.},
-  journal={arXiv preprint},
-  year={2013},
-  publisher={arXiv}
-}
-
-@article{scargle2013studies,
-  title={Studies in astronomical time series analysis. {VI}. {B}ayesian block representations},
-  author={Scargle, Jeffrey D. and Norris, Jay P. and Jackson, Brad and Chiang, James},
-  journal={The Astrophysical Journal},
-  volume={764},
-  number={2},
-  pages={167},
-  year={2013},
-  publisher={Institute of Physics Publishing}
-}
