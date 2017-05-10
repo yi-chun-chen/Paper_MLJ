@@ -19,7 +19,7 @@
 \usepackage{lscape}
 \usepackage{siunitx}
 \usepackage{booktabs}
-% \usepackage{BOONDOX-cal} % for lowercase caligraphic
+\usepackage{BOONDOX-cal} % for lowercase caligraphic
 \usepackage[font=small,skip=5pt]{caption}
 \usepackage[hyphens]{url}
 \usepackage{subcaption}
@@ -84,10 +84,10 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%\jairheading{X}{XXXX}{XXX}{MM/YY}{MM/YY}
-%\ShortHeadings{Learning Discrete Bayesian Networks from Continuous Data}
-%{Chen, Wheeler, \& Kochenderfer}
-%\firstpageno{25}
+\jairheading{X}{XXXX}{XXX}{MM/YY}{MM/YY}
+\ShortHeadings{Learning Discrete Bayesian Networks from Continuous Data}
+{Chen, Wheeler, \& Kochenderfer}
+\firstpageno{25}
 
 
 \begin{document}
@@ -100,7 +100,7 @@
 
 %\titlerunning{Short form of title}        % if too long for running head
 
-\author{\name Yi-Chun Chen \email yichunc@stanford.edu \\
+\author{\name Yi-Chun Chen \email yichunc0419@alumni.stanford.edu \\
 	\addr Institute of Computational and Mathematical Engineering, Stanford University,\\
 	Stanford, CA  94035 USA
 	\AND
@@ -137,11 +137,9 @@ In addition, this paper shows how to incorporate existing methods into the struc
 
 Bayesian networks \citep{Pearl_1988,PGM_2009} are often used to model uncertainty and causality, with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnosis \citep{Lustgarten_2011}. Learning Bayesian networks from raw data can help users to discover knowledge without field-specific experts, such as causality and probabilistic relation between variables. It is common to assume that the random variables in a Bayesian network are discrete, since many Bayesian network learning algorithms are unable to efficiently handle continuous variables. In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables. However, many applications require the use of continuous data, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
 
-%Bayesian networks \citep{Pearl_1988, PGM_2009} are often used to model uncertainty and causality, with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnosis \citep{Lustgarten_2011}. Bayesian networks provide an efficient factorization of the joint probability distribution over a set of random variables. It is common to assume that the random variables in a Bayesian network are discrete, since many Bayesian network learning and inference algorithms are unable to efficiently handle continuous variables. In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables. However, many applications require the use of continuous variables, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
 
 There are three common approaches to extending Bayesian network learning algorithms to continuous variables. The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning algorithms based on the parameterizations. One example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
 
-%There are three common approaches to extending Bayesian networks to continuous variables. The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning and inference algorithms based on the parameterizations. One example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
 
 The second approach is to use nonparametric distributions, such as particle representations and Gaussian processes \citep{Ickstadt_2010}.
 Unlike parametric methods, nonparametric methods can often fit any underlying probability distribution given sufficient data.
@@ -156,9 +154,9 @@ Prior work exists for discretizing continuous variables in naive Bayesian networ
 A common discretization method for Bayesian networks is to split continuous data into uniform-width intervals or to use field-specific expertise.
 Several Bayesian methods exist to discretize according to the marginal distribution \citep{scott1979optimal,freedman1981histogram,knuth2013optimal,scargle2013studies}, but this ignores dependencies between variables and leads to suboptimal performance, as demonstrated in Appendix A.
 A more principled method is the minimum description length (MDL) principle discretization \citep{Friedman_1996}.
-The MDL principle proposed by \cite{MDL_1978} states that the best model for a dataset is the one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
+The MDL principle proposed by \citet{MDL_1978} states that the best model for a dataset is the one that minimizes the amount of information needed to describe it \citep{Grunwald_2009}.
 MDL methods trade off goodness-of-fit against model complexity to reduce generalization error.
-In the context of Bayesian networks, \cite{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and the optimal positions of their discretization edges.
+In the context of Bayesian networks, \citet{Friedman_1996} applied the MDL principle to determine the optimal number of discretization intervals for continuous variables and the optimal positions of their discretization edges.
 Their approach selects a discretization policy that minimizes the sum of the description length of the discretized Bayesian network and the information necessary for recovering the continuous values from the discretized data.
 
 The optimal discretization policy of a single continuous variable under MDL can be found using dynamic programming in cubic runtime with the number of data instances.
@@ -178,7 +176,7 @@ Mutual information, which is composed of empirical probabilities computed using 
 
 MODL \citep{Boulle_2006} is a Bayesian method for discretizing a continuous feature according to a class variable, which selects the model with maximum probability given the data.
 The MODL method uses dynamic programming to find the optimal discretization policy for a continuous variable given a discrete class variable, and has an $\bigo\paren{n^3 + r \cdot n^2}$ runtime, where $r$ is the number of class variable instantiations.
-\cite{Lustgarten_2011} suggest several formulations for the prior over models. The asymptotic equivalence between MDL and MODL on the single-variable, single-class problem was examined by \citet{VL_2000}.
+\citet{Lustgarten_2011} suggested several formulations for the prior over models. The asymptotic equivalence between MDL and MODL on the single-variable, single-class problem was examined by \citet{VL_2000}.
 
 This paper describes a new Bayesian discretization method for continuous variables in Bayesian networks, extending prior work on single-variable discretization methods from \citet{Boulle_2006} and \citet{Lustgarten_2011}.
 The proposed method optimizes the discretization policy relative to the network and takes parents, children, and spouse variables into account.
@@ -282,7 +280,7 @@ An optimal discretization policy for a dataset $D$ maximizes $P(\Lambda)\cdot P(
 
 Let $D_{\bm{Y}}$ be the subset of the training data corresponding to variable subset $\bm{Y}$.
 Four principles for the optimal discretization policy enable the formulation of $P(\Lambda)$ and $P(D_{-\cX} \mid \Lambda)$, where $D_{-\cX}$ is the subset of the dataset for all variables but $\cX$, and the probability of the data associated with the target variable, $P(D_{\cX})$, is already captured in $P(\Lambda)$.
-The four principles, which can be considered an extension of the priors in MODL and \cite{Lustgarten_2011} to Bayesian networks, are:
+The four principles, which can be considered an extension of the priors in MODL \citep{Boulle_2006} and \citet{Lustgarten_2011} to Bayesian networks, are:
 
 \begin{enumerate}
 \item The prior probability of a discretization edge between two consecutive unique values $\cu_i$ and $\cu_{i+1}$ is proportional to their difference:
@@ -372,7 +370,8 @@ It follows that
 \end{equation}
 
 The two factors on the right hand side come from the second principle: all distributions of values of the parents of $\cX$ in a given interval are equiprobable.
-The fourth principle is that the distributions for each interval are independent, so the factors can be multiplied together.
+The fourth principle is that the distributions for each interval are independent, so the factors can be multiplied together. Note that the combinatorics of factors ${{\gamma_i + J_\text{P} - 1}\choose{J_\text{P} - 1}}$ and $\frac{
+	{\gamma_i}!}{{n^{(\text{P})}_{i,1}}! \cdots \; {n^{(\text{P})}_{i,J_\text{P}}}!}$ are explained in MODL \citep{Boulle_2006}.
 
 \subsubsection{Evaluation of $P(D_{C_j} \mid \Lambda, D_{\bm{S}_j})$}
 Let $J_{C_j}$ be the number of instantiations of the $j$th child of $\cX$, let $J_{\bm{S}}^{(j)}$ be the number of instantiations of the $j$th spouse set $\bm{S}_j$, and let $n^{(j)}_{i,m,\ell}$ be the number of instances of $\cX$ in the $i$th discretization interval of $\Lambda$ given the $m$th instantiation of $C_j$ and the $\ell$th instantiation of $\bm{S}_j$.
@@ -1125,8 +1124,8 @@ The Bayesian discretization method has higher mean cross-validated log likelihoo
 
 Finding optimal discretization policies according to equation~\ref{eq:opt_prob} via dynamic programming requires long computation times when the dataset has more than \num{100} variables.
 The runtime for the MDL approach is even more severe.
-Approximation approaches are reasonable alternatives for datasets with more variables, including a greedy heuristic~\cite{Friedman_1996}.
-Approximations can also be applied during dynamic programming when solving equation~\ref{eq:opt_prob}.
+Approximation approaches are reasonable alternatives for datasets with more variables, including a greedy heuristic~\citep{Friedman_1996}.
+Approximations can also be applied during dynamic programming when solving equation~\ref{eq:opt_prob} \citep{Boulle_2006}.
 
 \subsection{Discussion}
 \label{subsec:discuss_exp}
@@ -1154,7 +1153,7 @@ If $\Pa_{\cX} = \curly{P_1, P_2}$ and $D_{\cX} = \curly{1,2,3, \ldots n}$, then 
 
 \noindent
 where $Z_1$ and $Z_2$ are constant over discretizations, $k$ is the number of discretization intervals, and $I\paren{A, B} = \sum_{a,b} \hat{P}(a,b) \ln\frac{\hat{P}(a,b)}{\hat{P}(a)\hat{P}(b)}$ is the mutual information based on estimated probabilities.
-Note that the third term of $f_\text{MDL}$ was approximated using $H(p)$ (see Equation~\ref{eqn:MDL}) in the original work by \cite{Friedman_1996}, but it is written here without that approximation.
+Note that the third term of $f_\text{MDL}$ was approximated using $H(p)$ (see Equation~\ref{eqn:MDL}) in the original work by \citet{Friedman_1996}, but it is written here without that approximation.
 
 The penalty terms tend to increase with the number of discretization intervals; the edge position terms vary with the position and number of the discretization edges.
 A policy with a larger number of discretization edges is only optimal if the edge position term varies enough with respect to the penalty term in order to produce a local minimum of sufficiently low value.
@@ -1331,7 +1330,7 @@ This section gives two examples of Bayesian networks where MDL produces comparab
 The first example used the Auto MPG dataset.
 Instead of testing on the network obtained using initially uniform discretization and structure learning, the tested network is obtained by Algorithm \ref{alg:structure_learn}, which can be considered better-structured than the network in Figure \ref{fig:auto_graph_1}.
 The second example is on the Iris dataset \citep{Lichman_2013}.
-In the work of \cite{Friedman_1996}, the Iris dataset was tested on the naive Bayes network structure and the prediction accuracy was shown.
+In the work of \citet{Friedman_1996}, the Iris dataset was tested on the naive Bayes network structure and the prediction accuracy was shown.
 The same test is reproduced below to compare the Bayesian method to the MDL discretization method.
 
 \subsection*{Auto MPG with Comparable MDL Performance}
@@ -1366,7 +1365,7 @@ The dataset has \num{150} samples over five variables.
 Only variables $E$ is discrete-valued, and corresponds to the species category.
 The following experiment was conducted on the naive Bayes structure: variable $E$ is the parent of variable $A$, $B$, $C$, and $D$. Table \ref{table:iris_table_1} shows the discretization edges, the prediction accuracy of the learned classifiers, and the mean log-likelihood.
 The discretization policy shown is for running the algorithms on the full dataset; the likelihood and prediction accuracies were found with 10-fold cross validation.
-The MDL discretization method and the Bayesian method have the same discretization result: all discretization edges coincide. In addition, both methods have $94 \%$ accuarcy, which matches the number in \cite{Friedman_1996}.
+The MDL discretization method and the Bayesian method have the same discretization result: all discretization edges coincide. In addition, both methods have $94 \%$ accuarcy, which matches the number in \citet{Friedman_1996}.
 The Bayesian method likelihood is slightly higher across folds than the MDL method likelihood.
 
 \begin{table}[ht]
