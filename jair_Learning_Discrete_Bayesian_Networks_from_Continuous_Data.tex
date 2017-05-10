@@ -19,7 +19,7 @@
 \usepackage{lscape}
 \usepackage{siunitx}
 \usepackage{booktabs}
-\usepackage{BOONDOX-cal} % for lowercase caligraphic
+% \usepackage{BOONDOX-cal} % for lowercase caligraphic
 \usepackage[font=small,skip=5pt]{caption}
 \usepackage[hyphens]{url}
 \usepackage{subcaption}
@@ -106,7 +106,7 @@
 	\AND
 	\name Tim A. Wheeler \email wheelert@stanford.edu \\
 	\addr Department of Aeronautics and Astronautics, Stanford University,\\
-	Stanford, CA  94035 USA\\
+	Stanford, CA  94035 USA
 	\AND
 	\name Mykel J. Kochenderfer \email mykel@stanford.edu \\
 	\addr Department of Aeronautics and Astronautics, Stanford University,\\
@@ -257,7 +257,7 @@ The $\lambda_{1:k}$ representation is the number of instances before every discr
 
 A Bayesian Network $B$ over $N$ random variables $X_{1:N}$ is defined by a directed acyclic graph $G$ containing one node for each variable $X_i$, and each node is associated with a conditional probability distribution $P(X_i \mid \Pa_{X_i})$ for the node given its parents in $G$. The edges in a Bayesian network represent probabilistic dependencies among nodes and encode the Markov property: each node $X_i$ is independent of its non-descendants given its parents $\Pa_{X_i}$ in $G$. The children of node $X_i$ are denoted $\Ch_{X_i}$.
 
-When discussing the discretization of a particular continuous variable $\cX$, let $P_i$ be the $i$th parent of $\cX$, let $C_i$ be the $i$th child of $\cX$, and let $\bm{S}_i$ be the set of spouses of $\cX$ associated with the $i$th child. Note that the set of variables $P \cup C \cup \bm{S}$ is called Markov blanket.  
+When discussing the discretization of a particular continuous variable $\cX$, let $P_i$ be the $i$th parent of $\cX$, let $C_i$ be the $i$th child of $\cX$, and let $\bm{S}_i$ be the set of spouses of $\cX$ associated with the $i$th child. Note that the set of variables $P \cup C \cup \bm{S}$ is called Markov blanket.
 %The context should make it clear when $P$ refers to a discrete probability and when it refers to a variable's parent.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1123,7 +1123,10 @@ The Bayesian discretization method has higher mean cross-validated log likelihoo
 	\label{table:more_data_set}
 \end{table}
 
-Finding optimal discretization policy to equation \ref{eq:opt_prob} through dynamic programming leads to high computation time when the datasets have more than $100$ variables. The runtime issue becomes more severe if one adapts the MDL approach instead of the proposed Bayesian method in this paper. Thus, approximation approaches are reasonable alternatives, and one possibility is the greedy heuristic \cite{Friedman_1996}. Other approximation methods to dynamic programming are also applicable to solve equation \ref{eq:opt_prob}
+Finding optimal discretization policies according to equation~\ref{eq:opt_prob} via dynamic programming requires long computation times when the dataset has more than \num{100} variables.
+The runtime for the MDL approach is even more severe.
+Approximation approaches are reasonable alternatives for datasets with more variables, including a greedy heuristic~\cite{Friedman_1996}.
+Approximations can also be applied during dynamic programming when solving equation~\ref{eq:opt_prob}.
 
 \subsection{Discussion}
 \label{subsec:discuss_exp}
