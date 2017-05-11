@@ -117,7 +117,7 @@
 
 \begin{abstract}
 
-Learning Bayesian networks from raw data can help interpret the variable interrelationships and structure without relying on field-specific experts.
+Learning Bayesian networks from raw data can help provide insights into the relationships between variables. 
 While real data often contains a mixture of discrete and continuous-valued variables, many Bayesian network structure learning algorithms assume all random variables are discrete.
 Thus, continuous variables are often discretized when learning a Bayesian network.
 However, the choice of discretization policy has significant impact on the accuracy, speed, and interpretability of the resulting models.
@@ -135,7 +135,7 @@ In addition, this paper shows how to incorporate existing methods into the struc
 
 \section{Introduction}
 
-Bayesian networks \citep{Pearl_1988,PGM_2009} are often used to model uncertainty and causality, with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnosis \citep{Lustgarten_2011}. Learning Bayesian networks from raw data can help users to discover knowledge without field-specific experts, such as causality and probabilistic relation between variables. It is common to assume that the random variables in a Bayesian network are discrete, since many Bayesian network learning algorithms are unable to efficiently handle continuous variables. In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are geared towards discrete variables. However, many applications require the use of continuous data, such as position and velocity in dynamic systems \citep{kochenderfer2010airspace}.
+Bayesian networks \citep{Pearl_1988,PGM_2009} are often used to model uncertainty and causality, with applications ranging from decision-making systems \citep{kochenderfer2012next} to medical diagnosis \citep{Lustgarten_2011}. Learning Bayesian networks from raw data can help users discover knowledge without field-specific experts, such as causality and probabilistic relation between variables. It is common to assume that the random variables in a Bayesian network are discrete, since many Bayesian network learning algorithms are unable to efficiently handle continuous variables. In addition, many of the commonly used Bayesian network software packages, such as Netica \citep{netica1992}, SMILearn \citep{druzdzel1999smile}, and bnlearn \citep{bnlearn2010}, are designed for discrete variables. However, many applications require the use of continuous data, such as positions and velocities in dynamic systems \citep{kochenderfer2010airspace}.
 
 
 There are three common approaches to extending Bayesian network learning algorithms to continuous variables. The first is to model the conditional probability density of each continuous variable using specific families of parametric distributions, and then to redesign Bayesian network learning algorithms based on the parameterizations. One example of parametric continuous distributions in Bayesian networks is the Gaussian graphical model \citep{Weiss_2011}.
@@ -195,7 +195,7 @@ This section also provides a brief overview of Bayesian networks.
 \label{subsec:disc_policy}
 
 Let $\cX$ be a continuous variable and let $\cx$ be a specific instance of $\cX$.
-A discretization policy $\Lambda_{\cX} = \anglebrackets{e_1 < e_2 < \ldots < e_{k-1}}$ for $\cX$ is a mapping from $\mathbb{R}$ to $\curly{1,2,3,\ldots,k}$ such that
+A discretization policy $\Lambda_{\cX} = \anglebrackets{e_1 < e_2 < \ldots < e_{k-1}}$ for $\cX$ is a mapping from $\mathbb{R}$ to $\curly{1,2,\ldots,k}$ such that
 \begin{equation}
   \Lambda_{\cX}(\cx) = \begin{cases}
     1, & \text{if $x<e_1$}\\
@@ -328,7 +328,7 @@ For example, in Figure~\ref{fig:example_factorization}, $P(D_{-\cX} \mid \Lambda
 \begin{figure}[ht]
   \centering
   \input{Fig1}
-  \caption{Factorization of $P(_{-\cX} \mid \Lambda)$.}
+  \caption{Factorization of $P(D_{-\cX} \mid \Lambda)$.}
   \label{fig:example_factorization}
 \end{figure}
 
@@ -886,8 +886,7 @@ The MDL method creates significantly fewer discretization edges.
 % The heuristic method discretizes the variables $G$, $H$, and $J$ into one fewer interval and the variable $M$ into one more interval than the optimal Bayesian approach, resulting in a slightly lower mean cross validated log likelihood.
 % The overall performance of the heuristic method is still very high, and if runtime is the primary concern, the heuristic method can be considered the better approach.
 
-Some discretization edges appear in all three discretization methods, such as \num{1.42} and \num{2.35} for variable $C$ and \num{0.785} for variable $L$.
-This indicates sufficiently MDL indeed can find some important discretization edges, but it is not sensitive to find more edges.
+Some discretization edges appear in all three discretization methods, such as \num{1.42} and \num{2.35} for variable $C$ and \num{0.785} for variable $L$. MDL can find some important discretization edges, but it is not sensitive to find more edges.
 
 \begin{figure}[ht]
   \centering
@@ -1086,8 +1085,7 @@ The Bayesian discretization method has higher mean cross-validated log likelihoo
 \begin{table}[ht]
 	\centering
 	\caption{
-		Discretization results for several datasets.
-    The number of samples, number of variables, network structure, and mean cross-validated log-likelihood under each discretization method are given.
+		Discretization results for several datasets, summarizing the number of samples, number of variables, network structure, and mean cross-validated log-likelihood under each discretization method.
     The Bayesian method consistently has higher likelihood.
 	}
   \resizebox{\textwidth}{!}{
