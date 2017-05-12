@@ -886,7 +886,7 @@ The MDL method creates significantly fewer discretization edges.
 % The heuristic method discretizes the variables $G$, $H$, and $J$ into one fewer interval and the variable $M$ into one more interval than the optimal Bayesian approach, resulting in a slightly lower mean cross validated log likelihood.
 % The overall performance of the heuristic method is still very high, and if runtime is the primary concern, the heuristic method can be considered the better approach.
 
-Some discretization edges appear in all three discretization methods, such as \num{1.42} and \num{2.35} for variable $C$ and \num{0.785} for variable $L$. MDL can find some important discretization edges, but it is not sensitive to find more edges.
+Some discretization edges appear in both discretization methods, such as \num{1.42} and \num{2.35} for variable $C$ and \num{0.785} for variable $L$. MDL can find some important discretization edges, but it is not sensitive to find more edges. Actually, as shown later in Section \ref{subsec:discuss_exp}, while the MDL and Bayesian methods both produce the optimal discretization as the training data grows, the Bayesian method can produce these discretizations with fewer data samples.
 
 \begin{figure}[ht]
   \centering
