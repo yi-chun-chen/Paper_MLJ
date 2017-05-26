@@ -548,7 +548,7 @@ The single-variable discretization method can be extended to Bayesian networks w
 The discretization process for a single variable requires that all other variables be discrete.
 The iterative approach uses an initial discretization policy in order to start the process which assigns $k$ equal-width intervals to each continuous variable, where $k$ is the largest number of intervals of initially discrete variables in the network.
 
-After the initial discretization, the one-variable discretization method is iteratively applied over each continuous variable in reverse topoligical order, from the leaves to the root.
+After the initial discretization, the one-variable discretization method is iteratively applied over each continuous variable in reverse topological order, from the leaves to the root.
 Reverse topological order has the advantage of relying on fewer initial discretizations of the continuous variables during the first pass.
 For example, in the network of Figure~\ref{fig:example_networks}, if $S_2$ is the only discrete variable, then the discretization of $P_1$ involves both $P_2$ and $X$, whereas the discretization of $C_1$ only involves $X$.
 
@@ -707,7 +707,7 @@ As such, Algorithm~\ref{alg:structure_learn} is run multiple times with differen
 \label{sec:experiments}
 
 This section describes experiments conducted to evaluate the Bayesian discretization method.
-All experiments were run on datasets from the publically available University of California, Irvine machine learning repository \citep{Lichman_2013}.
+All experiments were run on datasets from the publicly available University of California, Irvine machine learning repository \citep{Lichman_2013}.
 Variables are labeled alphabetically in the order given on the dataset information webpage.
 In the figures that follow, shaded nodes correspond to initially discrete variables and the subscripts indicate the number of discrete instantiations.
 
@@ -805,7 +805,7 @@ This structure was obtained by initially discretizing each continuous variable i
 Table~\ref{table:auto_disc_table_1} lists the discretization edges and mean log-likelihoods under \num{10}-fold cross validation of the discrete Bayesian network resulting from the two discretization methods.
 The MDL method does not produce any discretization edges, assigning one continuous interval to each continuous variable, and produces the result with the lower likelihood.
 The reason why MDL produces fewer discretization edges is discussed in Section~\ref{subsec:discuss_exp}.
-Two examples that MDL produces comparble results to the Bayesian method are given in Appendix B.
+Two examples that MDL produces comparable results to the Bayesian method are given in Appendix B.
 
 \begin{table}[ht]
   \centering
@@ -1335,7 +1335,7 @@ The dataset has \num{150} samples over five variables.
 Only variables $E$ is discrete-valued, and corresponds to the species category.
 The following experiment was conducted on the naive Bayes structure: variable $E$ is the parent of variable $A$, $B$, $C$, and $D$. Table \ref{table:iris_table_1} shows the discretization edges, the prediction accuracy of the learned classifiers, and the mean log-likelihood.
 The discretization policy shown is for running the algorithms on the full dataset; the likelihood and prediction accuracies were found with 10-fold cross validation.
-The MDL discretization method and the Bayesian method have the same discretization result: all discretization edges coincide. In addition, both methods have $94 \%$ accuarcy, which matches the number in \citet{Friedman_1996}.
+The MDL discretization method and the Bayesian method have the same discretization result: all discretization edges coincide. In addition, both methods have $94 \%$ accuracy, which matches the number in the literature \citep{Friedman_1996}.
 The Bayesian method likelihood is slightly higher across folds than the MDL method likelihood.
 
 \begin{table}[ht]
