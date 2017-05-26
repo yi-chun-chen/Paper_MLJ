@@ -84,7 +84,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\jairheading{X}{XXXX}{XXX}{MM/YY}{MM/YY}
+\jairheading{59}{2017}{XXX}{10/16}{05/17}
 \ShortHeadings{Learning Discrete Bayesian Networks from Continuous Data}
 {Chen, Wheeler, \& Kochenderfer}
 \firstpageno{25}
@@ -101,8 +101,8 @@
 %\titlerunning{Short form of title}        % if too long for running head
 
 \author{\name Yi-Chun Chen \email yichunc0419@alumni.stanford.edu \\
-	\addr Institute of Computational and Mathematical Engineering, Stanford University,\\
-	Stanford, CA  94035 USA
+	\addr Institute of Computational and Mathematical Engineering,\\
+	Stanford University, Stanford, CA  94035 USA
 	\AND
 	\name Tim A. Wheeler \email wheelert@stanford.edu \\
 	\addr Department of Aeronautics and Astronautics, Stanford University,\\
@@ -541,7 +541,7 @@ For faster methods with suboptimal results, see \citet{Boulle_2006}.
 \end{algorithm}
 
 
-\section{Multi-Variable Discretization}
+\section{Multi-variable Discretization}
 \label{sec:multi_var}
 
 The single-variable discretization method can be extended to Bayesian networks with multiple continuous variables by iteratively discretizing individual variables.
@@ -778,7 +778,7 @@ Hence, if ${\Lambda = \anglebrackets{\gamma_1, \gamma_2, \ldots, \gamma_k}}$ is 
 This procedure takes runtime $\bigo \paren{ n^3 + \paren{ n_c \cdot {L}^{n_s}  + {L}^{n_p}} \cdot n^2 }$.
 All variables are defined in Section \ref{subsec:algo}.
 Therefore, the runtime of the proposed method in this paper is less than the MDL discretization method by $\bigo \paren{n^3}$, since the former has a more efficient form of dynamical programming.
-For faster methods of MDL discretization with suboptimal results, see \citet{Friedman_1996}.
+For faster methods of MDL discretization with suboptimal results also, see \citet{Friedman_1996}.
 
 Note that the preliminary discretization and the discretization order of variables can be arbitrary for the MDL discretization method, as stated in the original work \citep{Friedman_1996}. In order to make a fair comparison between the Bayesian and MDL method, the preliminary discretization and the discretization order follows the same procedure as in Section \ref{sec:multi_var}.
 
@@ -1230,7 +1230,7 @@ All software is publicly available at \url{github.com/sisl/LearnDiscreteBayesNet
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Appendix A}
+\section*{Appendix A.}
 \label{sec:appendixA}
 
 
@@ -1293,7 +1293,7 @@ This example shows that structure-aware discretization methods can leverage addi
   \end{minipage}
 \end{minipage}
 
-\section*{Appendix B}
+\section*{Appendix B.}
 \label{sec:appendixB}
 
 This section gives two examples of Bayesian networks where MDL produces comparable results to the Bayesian method.
@@ -1303,7 +1303,7 @@ The second example is on the Iris dataset \citep{Lichman_2013}.
 In the work of \citet{Friedman_1996}, the Iris dataset was tested on the naive Bayes network structure and the prediction accuracy was shown.
 The same test is reproduced below to compare the Bayesian method to the MDL discretization method.
 
-\subsection*{Auto MPG with Comparable MDL Performance}
+\subsection*{B.1 Auto MPG with Comparable MDL Performance}
 The Bayesian network structure in Figure~\ref{fig:auto_graph_3} and the discretization results in Table~\ref{table:auto_disc_table_3} demonstrate that the MDL method does not always produce fewer discretization intervals than the Bayesian approach and that the MDL method can produce discretization policies with comparable likelihood.
 The Bayesian network in Figure~\ref{fig:auto_graph_3} was obtained by running Algorithm~\ref{alg:structure_learn} fifty times on the Auto MPG dataset with a maximum of two parents per variable.
 The network is structured more favorably with regards to discretization than the network in Figure~\ref{fig:auto_graph_1}, as the discretization policies were simultaneously learned with the network structure, resulting in higher data likelihood.
@@ -1328,7 +1328,7 @@ Many edges appear in both discretization results and are bolded in Table~\ref{ta
   \label{table:auto_disc_table_3}
 \end{table}
 
-\subsection*{Reproducing MDL Results from the Literature}
+\subsection*{B.2 Reproducing MDL Results from the Literature}
 
 The Iris dataset contains variables related to the morphologic variation of three Iris flower species.
 The dataset has \num{150} samples over five variables.
