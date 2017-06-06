@@ -84,10 +84,10 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\jairheading{59}{2017}{1-30}{10/16}{05/17}
+\jairheading{59}{2017}{103-132}{10/16}{06/17}
 \ShortHeadings{Learning Discrete Bayesian Networks from Continuous Data}
 {Chen, Wheeler, \& Kochenderfer}
-\firstpageno{1}
+\firstpageno{103}
 
 
 \begin{document}
@@ -105,11 +105,11 @@
 	Stanford University, Stanford, CA  94035 USA
 	\AND
 	\name Tim A. Wheeler \email wheelert@stanford.edu \\
-	\addr Department of Aeronautics and Astronautics, Stanford University,\\
+	\addr Department of Aeronautics and Astronautics,\\ Stanford University,
 	Stanford, CA  94035 USA
 	\AND
 	\name Mykel J. Kochenderfer \email mykel@stanford.edu \\
-	\addr Department of Aeronautics and Astronautics, Stanford University,\\
+	\addr Department of Aeronautics and Astronautics,\\ Stanford University,
 	Stanford, CA  94035 USA}
 %\authorrunning{Short form of author list} % if too long for running head
 
@@ -125,13 +125,10 @@ This paper introduces a principled Bayesian discretization method for continuous
 Empirical demonstrations show that the proposed method is superior to the established minimum description length algorithm.
 In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
 
-%%%%%% Old Abstract %%%%%
-%Real data often contains a mixture of discrete and continuous variables, but many Bayesian network structure learning and inference algorithms assume all random variables are discrete. Continuous variables are often discretized, but the choice of discretization policy has significant impact on the accuracy, speed, and interpretability of the resulting models. This paper introduces a principled Bayesian discretization method for continuous variables in Bayesian networks with quadratic complexity instead of the cubic complexity of other standard techniques. Empirical demonstrations show that the proposed method is superior to the state of the art. In addition, this paper shows how to incorporate existing methods into the structure learning process to discretize all continuous variables and simultaneously learn Bayesian network structures.
-%%%%%%%%%%%%%%%%%%
 
 \end{abstract}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Introduction}
 
@@ -259,15 +256,6 @@ When discussing the discretization of a particular continuous variable $\cX$, le
 
 This section covers the discretization of a single continuous variable $\cX$ in a Bayesian network where all other variables are discrete.
 An optimal discretization policy for a dataset $D$ maximizes $P(\Lambda)\cdot P(D\mid \Lambda)$ for some prior $P(\Lambda)$ and likelihood $P(D\mid \Lambda)$.
-
-% Let $n_p$ and $n_c$ respectively refer to the number of parents and number of children of $X$.
-
-% Let $D$ be a dataset of $N$ samples from which the discretization will be learned, sorted in ascending order according to $X$.
-% Let $D_{\boldsymbol{Y}}$ will refer to the data instances associated with variables $\boldsymbol{Y}$, thus $D_X = \{ x_1,x_2,x_3,\ldots,x_n \}$.
-% In order to facilitate understanding, we temporarily assume all values in $D_X$ are unique, that is, $x_1 < x_2 < \ldots < x_n$.
-% It follows that a discretization policy $\Lambda$ on $X$ can be written as $M_X = \brock{n_1,n_2,\ldots,n_k}$, where $k$, $n_1$, $n_2$, $\ldots,n_k$ are positive integers satisfying $N = \sum_{i=1}^k n_i$.
-
-%Furthermore, since there might have repeated values for $D_x$, we assume there are $N'$ unique values of $D_x$ and $N' \leq N$. Note that the allowable discretization edges happens between two consective values of non-repeated value of $D_x$. For example, if $D_X = \{ 1.0,1.0,2.0\}$, then the only possible discretization edge is on $1.5$.
 
 
 \subsection{Priors and Objective Function}
@@ -1243,55 +1231,104 @@ The Bayesian Blocks method~\citep{scargle2013studies}, as with any marginal meth
 The resulting log likelihood is worse, at \num{-0.69}.
 This example shows that structure-aware discretization methods can leverage additional information and thus produce better joint representations.
 
-\begin{minipage}{\textwidth}
-  \begin{minipage}[b]{0.49\textwidth}
-    \centering
-    \begin{tabular}{cl}
-      \toprule
-      Variable               & Distribution                                   \\ \midrule
-      \multirow{2}{*}{$A$}&$P(a^1) = 0.5$     \\
-      & $P( a^2) = 0.5$     \\ \midrule
+\begin{table}
+	\centering
+	\begin{tabular}{cl}
+		\toprule
+		Variable               & Distribution                                   \\ \midrule
+		\multirow{2}{*}{$A$}&$P(a^1) = 0.5$     \\
+		& $P( a^2) = 0.5$     \\ \midrule
+		
+		\multirow{2}{*}{$B$} & $p(b \mid A = a^1) \sim U[0,1]$\\
+		& $p(b \mid A = a^2) \sim U[1,2]$\\
+		\bottomrule
+	\end{tabular}
+	\vspace{1cm}
+	\caption{Probability distributions for $A \rightarrow B$, in which $A$ is discrete and $B$ is continuous. The marginal distribution for $B$ is $U[0,2]$.}
+\label{table:marginal_counter}
+\end{table}
 
-      \multirow{2}{*}{$B$} & $p(b \mid A = a^1) \sim U[0,1]$\\
-      & $p(b \mid A = a^2) \sim U[1,2]$\\
-      \bottomrule
-    \end{tabular}
-    \vspace{1cm}
-    \captionof{table}{Probability distributions for $A \rightarrow B$, in which $A$ is discrete and $B$ is continuous. The marginal distribution for $B$ is $U[0,2]$.}
-    \label{table:marginal_counter}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[b]{0.49\textwidth}
+\begin{figure}[ht]
     \centering
     \vspace{1em}
-    \resizebox {\columnwidth}{!}{
-      \begin{tikzpicture}
-      \begin{axis}[xlabel=$b$, ylabel=probability density, ymin=0, ymax=1.5,
-        legend style={
-          draw=none,
-          at={(0.95,0.85)},
-          anchor=east,
-          legend columns=1,
-          font=\small,
-          /tikz/every even column/.append style={column sep=0.5cm},
-          /pgfplots/legend image code/.code={%
-            \draw[##1,/tikz/.cd,yshift=-0.25em]
-            (0cm,0cm) rectangle (0.8em,0.8em);
-          },
-        },
-      ]
-      \addplot+[ybar interval, mark=none, black!80, fill=black!80] plot coordinates
-        {(0,1) (1,1)};
-        \addplot+[ybar interval, mark=none, black!40, fill=black!40] plot coordinates
-        {(1,1) (2,1)};
-        \legend{$P(b\mid a^1)$, $P(b\mid a^2)$}
-      \end{axis}
-      \end{tikzpicture}
-    }
-    \captionof{figure}{The resulting conditional probability distribution for $B$. Marginal methods see one uniform distribution.}
+%    \resizebox {\columnwidth}{!}{
+    	\begin{tikzpicture}
+    	\begin{axis}[xlabel=$b$, ylabel=probability density, ymin=0, ymax=1.5,
+    	legend style={
+    		draw=none,
+    		at={(0.95,0.85)},
+    		anchor=east,
+    		legend columns=1,
+    		font=\small,
+    		/tikz/every even column/.append style={column sep=0.5cm},
+    		/pgfplots/legend image code/.code={%
+    			\draw[##1,/tikz/.cd,yshift=-0.25em]
+    			(0cm,0cm) rectangle (0.8em,0.8em);
+    		},
+    	},
+    	]
+    	\addplot+[ybar interval, mark=none, black!80, fill=black!80] plot coordinates
+    	{(0,1) (1,1)};
+    	\addplot+[ybar interval, mark=none, black!40, fill=black!40] plot coordinates
+    	{(1,1) (2,1)};
+    	\legend{$P(b\mid a^1)$, $P(b\mid a^2)$}
+    	\end{axis}
+    	\end{tikzpicture}
+%    }
+    \caption{The resulting conditional probability distribution for $B$. Marginal methods see one uniform distribution.}
     \label{fig:marginal_counter}
-  \end{minipage}
-\end{minipage}
+\end{figure}
+
+%
+%\begin{minipage}{\textwidth}
+%  \begin{minipage}[b]{0.49\textwidth}
+%    \centering
+%    \begin{tabular}{cl}
+%      \toprule
+%      Variable               & Distribution                                   \\ \midrule
+%      \multirow{2}{*}{$A$}&$P(a^1) = 0.5$     \\
+%      & $P( a^2) = 0.5$     \\ \midrule
+%
+%      \multirow{2}{*}{$B$} & $p(b \mid A = a^1) \sim U[0,1]$\\
+%      & $p(b \mid A = a^2) \sim U[1,2]$\\
+%      \bottomrule
+%    \end{tabular}
+%    \vspace{1cm}
+%    \captionof{table}{Probability distributions for $A \rightarrow B$, in which $A$ is discrete and $B$ is continuous. The marginal distribution for $B$ is $U[0,2]$.}
+%    \label{table:marginal_counter}
+%  \end{minipage}
+%  \hfill
+%  \begin{minipage}[b]{0.49\textwidth}
+%    \centering
+%    \vspace{1em}
+%    \resizebox {\columnwidth}{!}{
+%      \begin{tikzpicture}
+%      \begin{axis}[xlabel=$b$, ylabel=probability density, ymin=0, ymax=1.5,
+%        legend style={
+%          draw=none,
+%          at={(0.95,0.85)},
+%          anchor=east,
+%          legend columns=1,
+%          font=\small,
+%          /tikz/every even column/.append style={column sep=0.5cm},
+%          /pgfplots/legend image code/.code={%
+%            \draw[##1,/tikz/.cd,yshift=-0.25em]
+%            (0cm,0cm) rectangle (0.8em,0.8em);
+%          },
+%        },
+%      ]
+%      \addplot+[ybar interval, mark=none, black!80, fill=black!80] plot coordinates
+%        {(0,1) (1,1)};
+%        \addplot+[ybar interval, mark=none, black!40, fill=black!40] plot coordinates
+%        {(1,1) (2,1)};
+%        \legend{$P(b\mid a^1)$, $P(b\mid a^2)$}
+%      \end{axis}
+%      \end{tikzpicture}
+%    }
+%    \captionof{figure}{The resulting conditional probability distribution for $B$. Marginal methods see one uniform distribution.}
+%    \label{fig:marginal_counter}
+%  \end{minipage}
+%\end{minipage}
 
 \section*{Appendix B.}
 \label{sec:appendixB}
